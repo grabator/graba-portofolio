@@ -2,7 +2,7 @@
 
 Lični portfolio Ahmeda Grabusa (Graba), softverskog inženjera iz Bosne i Hercegovine.
 
-Bez frameworka i bez build koraka: čisti HTML, CSS i JavaScript. Hero animacija je sfera od tačaka nacrtana na canvasu, a pomjeranjem miša se okreće. Stranica je na engleskom i bosanskom.
+Bez frameworka i bez build koraka: čisti HTML, CSS i JavaScript. Na prvom ekranu je robotić nacrtan u CSS-u koji u 3D okreće glavu i očima prati kursor. Stranica je na engleskom i bosanskom.
 
 ## Pokretanje
 

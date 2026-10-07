@@ -1,4 +1,4 @@
-/* Portfolio: crtanje sadržaja, jezik, animacije i kugla od tačaka na prvom ekranu. */
+/* Portfolio: crtanje sadržaja, jezik, animacije i robotić na prvom ekranu koji prati kursor. */
 (function () {
   'use strict';
   var D = window.PF, C = D.contact, root = document.documentElement;
@@ -18,9 +18,18 @@
   function get(path) { return path.split('.').reduce(function (o, k) { return o == null ? o : o[k]; }, T()); }
 
   /* ---------------- naslovi koji izlaze riječ po riječ ---------------- */
+  /* riječi između *zvjezdica* su naglašene ljubičastom */
   function split(el, text) {
-    el.innerHTML = text.split(' ').map(function (w, i) { return '<span class="w"><span style="--i:' + i + '">' + esc(w) + '</span></span>'; }).join(' ');
+    var hot = false;
+    el.innerHTML = text.split(' ').map(function (w, i) {
+      var start = w.charAt(0) === '*', end = w.slice(-1) === '*';
+      if (start) hot = true;
+      var h = esc(w.replace(/\*/g, '')), out = '<span class="w"><span style="--i:' + i + '">' + (hot ? '<em>' + h + '</em>' : h) + '</span></span>';
+      if (end) hot = false;
+      return out;
+    }).join(' ');
   }
+  function plain(text) { return String(text).replace(/\*/g, ''); }
 
   /* ---------------- naslovne slike za projekte bez screenshota ---------------- */
   var ART = {
@@ -36,7 +45,7 @@
     root.lang = lang;
     document.title = t.title;
     var md = $('meta[name="description"]'); if (md) md.setAttribute('content', t.desc);
-    $$('[data-t]').forEach(function (el) { var v = get(el.getAttribute('data-t')); if (typeof v === 'string') { if (el.classList.contains('split')) split(el, v); else el.textContent = v; } });
+    $$('[data-t]').forEach(function (el) { var v = get(el.getAttribute('data-t')); if (typeof v === 'string') { if (el.classList.contains('split')) split(el, v); else el.textContent = plain(v); } });
     $$('[data-lang]').forEach(function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-lang') === lang)); });
     $('.burger').setAttribute('aria-label', t.menu);
 
@@ -46,13 +55,13 @@
 
     var copyIc = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2.5"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>';
     var links = ['#work', '#contact', 'tel:' + C.tel, C.viber];
-    $('.pills').innerHTML = t.pills.map(function (p, i) { return '<a class="pill" href="' + esc(links[i]) + '">' + esc(p) + '</a>'; }).join('') +
-      '<button type="button" class="pill line" data-copy aria-label="' + esc(t.reach + ' ' + C.email + ', ' + t.copy) + '">' + esc(t.reach) + ' <u>' + esc(C.email) + '</u>' + copyIc + '</button>';
+    $('.pills').innerHTML = t.pills.map(function (p, i) { return '<a class="pill' + (i === 0 ? ' main' : '') + '" href="' + esc(links[i]) + '" style="--k:' + i + '">' + esc(p) + '</a>'; }).join('') +
+      '<button type="button" class="pill line" style="--k:4" data-copy aria-label="' + esc(t.reach + ' ' + C.email + ', ' + t.copy) + '">' + esc(t.reach) + ' <u>' + esc(C.email) + '</u>' + copyIc + '</button>';
 
     $('.work').innerHTML = D.work.map(function (w, i) {
       var it = t.items[w.id];
       return '<li class="job reveal" data-i="' + i + '">' +
-        '<div class="job-row" role="button" tabindex="0" aria-expanded="false" aria-controls="job-' + i + '"><span class="job-n">' + (i < 9 ? '0' : '') + (i + 1) + '</span><h3 class="job-t">' + esc(it[0]) + '</h3><span class="job-k">' + esc(it[1]) + '</span><span class="job-y">' + esc(w.year) + '</span></div>' +
+        '<div class="job-row" role="button" tabindex="0" aria-expanded="false" aria-controls="job-' + i + '"><span class="job-n">' + (i < 9 ? '0' : '') + (i + 1) + '</span><h3 class="job-t">' + esc(it[0]) + '</h3><span class="job-k">' + esc(it[1]) + (w.live ? '<span class="live">' + esc(t.liveTag) + '</span>' : '') + '</span><span class="job-y">' + esc(w.year) + '</span></div>' +
         '<div class="job-body" id="job-' + i + '"><a class="job-img" href="' + esc(w.live || w.src) + '" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">' + cover(w) + '</a>' +
         '<p class="job-p">' + esc(it[2]) + '</p><ul class="tags">' + w.tags.map(function (g) { return '<li>' + esc(g) + '</li>'; }).join('') + '</ul>' +
         '<p class="job-links">' + (w.live ? '<a href="' + esc(w.live) + '" target="_blank" rel="noopener">' + esc(t.live) + ' ↗</a>' : '') + '<a href="' + esc(w.src) + '" target="_blank" rel="noopener">' + esc(t.code) + ' ↗</a></p></div></li>';
@@ -71,6 +80,8 @@
       ['email', C.email, 'mailto:' + C.email], ['phone', C.phone, 'tel:' + C.tel], ['viber', C.phone, C.viber], ['whatsapp', C.phone, C.whatsapp], ['github', 'github.com/grabator', C.github]
     ].map(function (c) { return '<li><a href="' + esc(c[2]) + '"' + (/^https/.test(c[2]) ? ' target="_blank" rel="noopener"' : '') + '><span>' + esc(t[c[0]]) + '</span><b>' + esc(c[1]) + '</b></a></li>'; }).join('');
     $('.year').textContent = '© ' + new Date().getFullYear();
+    $('.scrub-hint [data-t]').textContent = fine ? t.scrub : t.tapBot;
+    $('.totop').setAttribute('aria-label', t.top);
     reveal();
     startType();
   }
@@ -158,80 +169,112 @@
   });
 
   /* traka napretka, čvrsta navigacija i aktivni link */
-  var bar = $('.progress'), nav = $('#nav'), ticking = false, secs = ['work', 'services', 'process', 'about', 'contact'];
+  var ring = $('.totop .fill'), totop = $('.totop'), nav = $('#nav'), ticking = false, secs = ['work', 'services', 'process', 'about', 'contact'];
   function onScroll() {
     ticking = false;
     var y = window.scrollY, max = document.documentElement.scrollHeight - window.innerHeight;
-    bar.style.transform = 'scaleX(' + (max > 0 ? y / max : 0).toFixed(4) + ')';
+    ring.style.strokeDashoffset = (132 * (1 - (max > 0 ? Math.min(1, y / max) : 0))).toFixed(1);
+    totop.classList.toggle('on', y > window.innerHeight * 0.6);
     nav.classList.toggle('solid', y > 30);
     var cur = '';
     secs.forEach(function (id) { var s = document.getElementById(id); if (s && s.getBoundingClientRect().top < window.innerHeight * 0.4) cur = id; });
     $$('.links a').forEach(function (a) { a.classList.toggle('on', a.getAttribute('href') === '#' + cur); });
-    orb.scroll = Math.min(1, y / (window.innerHeight * 0.7));
-    orb.wake();
+    bot.scroll(y);
   }
   window.addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(onScroll); } }, { passive: true });
 
-  /* ---------------- kugla od tačaka (prvi ekran) ----------------
-   * Pomjeranje miša lijevo-desno "premotava" rotaciju (kao video koji pratite mišem).
-   * Kad se skrola, tačke se slože u monogram "AG". */
-  var orb = (function () {
-    var cv = $('.orb'), ctx = cv.getContext('2d'), N = 1100, P = [], A = [], W = 0, H = 0, dpr = 1;
-    var ang = 0.6, target = 0.6, tilt = -0.35, tiltT = -0.35, prevX = null, visible = true, raf = 0, api = { scroll: 0 };
-    var morph = 0;
-    for (var i = 0; i < N; i++) {
-      var yv = 1 - (i / (N - 1)) * 2, r = Math.sqrt(1 - yv * yv), th = i * 2.39996;
-      P.push([Math.cos(th) * r, yv, Math.sin(th) * r]);
-    }
-    (function letters() {
-      var c = document.createElement('canvas'); c.width = 420; c.height = 240;
-      var x = c.getContext('2d'); x.fillStyle = '#000'; x.font = '600 210px Arial, Helvetica, sans-serif'; x.textAlign = 'center'; x.textBaseline = 'middle';
-      x.fillText('AG', 210, 128);
-      var d = x.getImageData(0, 0, 420, 240).data, pts = [];
-      for (var yy = 0; yy < 240; yy += 4) for (var xx = 0; xx < 420; xx += 4) if (d[(yy * 420 + xx) * 4 + 3] > 128) pts.push([(xx - 210) / 120, (yy - 120) / 120]);
-      for (var k = 0; k < N; k++) { var p = pts[(k * 7919) % pts.length]; A.push([p[0], p[1], ((k * 31) % 17 - 8) / 60]); }
-    })();
-    function size() {
-      dpr = Math.min(2, window.devicePixelRatio || 1);
-      W = cv.clientWidth; H = cv.clientHeight; cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    }
-    function draw() {
+  /* ---------------- robotić (prvi ekran) ----------------
+   * Glava se okreće u 3D prema kursoru, lice se pomjera unutar ekrana,
+   * antena se njiše kad naglo okrene glavu. Kad miš miruje, sam razgleda okolo. */
+  var bot = (function () {
+    var el = $('.bot'), api = { scroll: function () {}, wake: function () {} };
+    if (!el) return api;
+    var head = $('.bot-head', el), face = $('.bot-face', el), disc = $('.bot-disc', el), shadow = $('.bot-shadow', el), neck = $('.bot-neck', el), stick = $('.stick', el), bubble = $('.bubble', el);
+    var W = 0, cx = 0, cy = 0, mx = -1, my = -1, lastMove = -1e9, sy = 0;
+    var lx = 0, ly = 0, tx = 0, ty = 0, plx = 0, ang = 0, angV = 0, jumpT = -1e9, wanderAt = 0, raf = 0, visible = true;
+    function measure() { var r = el.getBoundingClientRect(); W = r.width; cx = r.left + r.width * 0.5; cy = r.top + window.scrollY + r.height * 0.48; }
+    function clamp(v, a) { return v < -a ? -a : v > a ? a : v; }
+    function frame(now) {
       raf = 0;
-      if (!reduced) { ang += (target - ang) * 0.08; tilt += (tiltT - tilt) * 0.06; target += 0.0025; }
-      morph += (api.scroll - morph) * 0.12;
-      var desk = W >= 900, cx = desk ? W * 0.68 : W * 0.5, cy = desk ? H * 0.5 : H * 0.33, R = desk ? Math.min(W, H) * 0.34 : Math.min(W * 0.42, H * 0.22);
-      ctx.clearRect(0, 0, W, H);
-      var ca = Math.cos(ang), sa = Math.sin(ang), ct = Math.cos(tilt), st = Math.sin(tilt), m = morph * morph * (3 - 2 * morph);
-      for (var i = 0; i < N; i++) {
-        var p = P[i], a = A[i];
-        var x = p[0] * ca - p[2] * sa, z = p[0] * sa + p[2] * ca, y = p[1] * ct - z * st; z = p[1] * st + z * ct;
-        x = x + (a[0] - x) * m; y = y + (a[1] - y) * m; z = z + (a[2] - z) * m;
-        var s = 2.4 / (3.2 - z), X = cx + x * R * s, Y = cy + y * R * s, depth = (z + 1) / 2;
-        ctx.globalAlpha = 0.18 + depth * 0.72;
-        ctx.fillStyle = i % 9 === 0 ? '#6d4aff' : '#0e0e10';
-        var d = (0.9 + depth * 1.9) * (1 + m * 0.2);
-        ctx.fillRect(X - d / 2, Y - d / 2, d, d);
+      var idle = now - lastMove > 3200;
+      if (!idle && mx >= 0) {
+        tx = clamp((mx - cx) / (window.innerWidth * 0.42), 1);
+        ty = clamp((my - (cy - window.scrollY)) / (window.innerHeight * 0.48), 1);
+      } else if (now > wanderAt) {
+        tx = Math.random() * 1.6 - 0.8; ty = Math.random() * 1 - 0.45;
+        wanderAt = now + 1300 + Math.random() * 1900;
       }
-      ctx.globalAlpha = 1;
-      if (visible && !reduced && !document.hidden) raf = requestAnimationFrame(draw);
+      var tty = clamp(ty + sy * 0.9, 1);
+      var k = reduced ? 1 : 0.085;
+      lx += (tx - lx) * k; ly += (tty - ly) * k;
+      var u = W / 100, fl = reduced ? 0 : Math.sin(now / 950) * 0.9;
+      var jt = now - jumpT, jump = jt < 900 ? -Math.abs(Math.sin(jt / 120)) * 4 * Math.exp(-jt / 260) : 0;
+      var y = ly * 1.6 + fl + jump;
+      head.style.transform = 'translate3d(' + (lx * 2.4 * u).toFixed(2) + 'px,' + (y * u).toFixed(2) + 'px,0) rotateY(' + (lx * 30).toFixed(2) + 'deg) rotateX(' + (-ly * 22).toFixed(2) + 'deg)';
+      face.style.transform = 'translate3d(' + (lx * 3.6 * u).toFixed(2) + 'px,' + (ly * 2.8 * u).toFixed(2) + 'px,0)';
+      shadow.style.transform = 'translate3d(' + ((1.5 - lx * 2.6) * u).toFixed(2) + 'px,' + ((3.2 - ly * 1.4 + (fl + jump) * 0.4) * u).toFixed(2) + 'px,0) scale(' + (1 - jump * 0.02).toFixed(3) + ')';
+      disc.style.transform = 'translate3d(' + (-lx * 1.4 * u).toFixed(2) + 'px,' + (-ly * u).toFixed(2) + 'px,0)';
+      neck.style.transform = 'translate3d(' + (lx * 1.4 * u - lx * 1.4 * u * 0.4).toFixed(2) + 'px,' + ((fl + jump) * 0.35 * u).toFixed(2) + 'px,0)';
+      if (!reduced) {
+        angV += -ang * 0.07 - (lx - plx) * 120 - (jt < 900 ? Math.cos(jt / 120) * 0.8 * Math.exp(-jt / 260) : 0);
+        angV *= 0.84; ang = clamp(ang + angV, 38);
+      }
+      plx = lx;
+      stick.style.transform = 'rotate(' + (ang + (reduced ? 0 : Math.sin(now / 1400) * 3)).toFixed(2) + 'deg)';
+      if (visible && !document.hidden && (!reduced || Math.abs(tx - lx) + Math.abs(tty - ly) > 0.002)) raf = requestAnimationFrame(frame);
     }
-    api.wake = function () { if (!raf && visible) raf = requestAnimationFrame(draw); };
-    window.addEventListener('resize', function () { size(); api.wake(); });
-    if (fine) window.addEventListener('mousemove', function (e) {
-      if (prevX != null) target += ((e.clientX - prevX) / window.innerWidth) * 0.8 * Math.PI * 2;
-      prevX = e.clientX; tiltT = -0.35 + (e.clientY / window.innerHeight - 0.5) * 0.5;
-    }, { passive: true });
-    /* na dodir: prevlačenje prstom okreće kuglu */
-    var tx0 = null;
-    cv.parentNode.addEventListener('touchstart', function (e) { tx0 = e.touches[0].clientX; }, { passive: true });
-    cv.parentNode.addEventListener('touchmove', function (e) { if (tx0 == null) return; var x = e.touches[0].clientX; target += ((x - tx0) / window.innerWidth) * Math.PI * 2; tx0 = x; }, { passive: true });
-    if ('IntersectionObserver' in window) new IntersectionObserver(function (en) { visible = en[0].isIntersecting; api.wake(); }).observe(cv);
+    api.wake = function () { if (!raf && visible && !document.hidden) raf = requestAnimationFrame(frame); };
+    api.scroll = function (y) { sy = Math.min(1, y / (window.innerHeight * 0.7)); };
+
+    /* treptanje */
+    (function blink() {
+      setTimeout(function () {
+        if (!reduced && visible) {
+          el.classList.add('blink');
+          setTimeout(function () { el.classList.remove('blink'); }, 130);
+          if (Math.random() < 0.22) setTimeout(function () { el.classList.add('blink'); setTimeout(function () { el.classList.remove('blink'); }, 120); }, 260);
+        }
+        blink();
+      }, 2200 + Math.random() * 3200);
+    })();
+
+    /* oblačić sa porukom */
+    var sayT = 0, said = 0;
+    function say(text, ms) { bubble.textContent = text; bubble.classList.add('on'); clearTimeout(sayT); sayT = setTimeout(function () { bubble.classList.remove('on'); }, ms || 2400); }
+    setTimeout(function () { say(T().hi[0], 2800); }, 1500);
+    var happyT = 0;
+    function poke() {
+      var hi = T().hi; said = said % (hi.length - 1) + 1;
+      say(hi[said]);
+      el.classList.add('happy'); clearTimeout(happyT); happyT = setTimeout(function () { el.classList.remove('happy'); }, 1500);
+      jumpT = performance.now(); api.wake();
+    }
+    el.addEventListener('click', poke);
+
+    /* praćenje kursora, a na mobitelu prsta */
+    window.addEventListener('pointermove', function (e) { if (e.pointerType === 'mouse') { mx = e.clientX; my = e.clientY; lastMove = performance.now(); api.wake(); } }, { passive: true });
+    window.addEventListener('pointerdown', function (e) { mx = e.clientX; my = e.clientY; lastMove = performance.now(); api.wake(); }, { passive: true });
+    document.addEventListener('mouseleave', function () { lastMove = -1e9; });
+    /* oduševi se kad je kursor iznad dugmeta ili linka */
+    document.addEventListener('pointerover', function (e) { el.classList.toggle('excited', !!(e.target.closest && e.target.closest('a, button, [role="button"]'))); });
+
+    if ('IntersectionObserver' in window) new IntersectionObserver(function (en) { visible = en[0].isIntersecting; api.wake(); }).observe(el);
     document.addEventListener('visibilitychange', api.wake);
-    size();
+    window.addEventListener('resize', function () { measure(); api.wake(); });
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
+    measure();
     return api;
+  })();
+
+  /* dugme sa emailom se lagano "lijepi" za kursor */
+  (function () {
+    var m = $('.mail');
+    if (!fine || reduced || !m) return;
+    m.addEventListener('mousemove', function (e) { var r = m.getBoundingClientRect(); m.style.transform = 'translate(' + ((e.clientX - r.left - r.width / 2) * 0.18).toFixed(1) + 'px,' + ((e.clientY - r.top - r.height / 2) * 0.3).toFixed(1) + 'px)'; });
+    m.addEventListener('mouseleave', function () { m.style.transform = ''; });
   })();
 
   render();
   onScroll();
-  orb.wake();
+  bot.wake();
 })();

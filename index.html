@@ -14,14 +14,13 @@
 <link rel="preload" href="assets/fonts/inter-tight-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="css/style.css">
 <script type="application/ld+json">
-{ "@context": "https://schema.org", "@type": "Person", "name": "Ahmed Grabus", "alternateName": "Graba", "jobTitle": "Software Engineer", "worksFor": { "@type": "Organization", "name": "ZIRA" }, "address": { "@type": "PostalAddress", "addressCountry": "BA" }, "email": "mailto:grabafaceit@gmail.com", "telephone": "+387 60 349 4625", "url": "https://github.com/grabator", "sameAs": ["https://github.com/grabator"] }
+{ "@context": "https://schema.org", "@type": "Person", "name": "Ahmed Grabus", "alternateName": "Graba", "jobTitle": "Software Engineer", "address": { "@type": "PostalAddress", "addressCountry": "BA" }, "email": "mailto:grabafaceit@gmail.com", "telephone": "+387 60 349 4625", "url": "https://github.com/grabator", "sameAs": ["https://github.com/grabator"] }
 </script>
 <script src="js/i18n.js" defer></script>
 <script src="js/app.js" defer></script>
 </head>
 <body>
 <a class="skip" href="#work">Skip to content</a>
-<div class="progress" aria-hidden="true"></div>
 
 <header class="nav" id="nav">
   <a class="logo" href="#top"><span>Graba<sup>®</sup></span><span class="star" aria-hidden="true">✳︎</span></a>
@@ -36,7 +35,27 @@
 
 <main>
   <section class="hero" id="top">
-    <canvas class="orb" aria-hidden="true"></canvas>
+    <div class="bot" aria-hidden="true">
+      <div class="bot-disc"><i class="ring r1"></i><i class="ring r2"></i><i class="spark s1"></i><i class="spark s2"></i><i class="spark s3"></i></div>
+      <div class="bot-shadow"></div>
+      <div class="bot-neck"><i></i><i></i><i></i></div>
+      <div class="bot-head">
+        <div class="bot-ant"><i class="stick"><i class="ball"></i></i></div>
+        <i class="bot-depth" style="--z:1"></i><i class="bot-depth" style="--z:2"></i><i class="bot-depth" style="--z:3"></i><i class="bot-depth" style="--z:4"></i><i class="bot-depth" style="--z:5"></i><i class="bot-depth" style="--z:6"></i>
+        <div class="bot-frame">
+          <i class="bolt b1"></i><i class="bolt b2"></i>
+          <div class="bot-screen">
+            <div class="bot-face">
+              <span class="eye el"><i></i></span><span class="eye er"><i></i></span>
+              <span class="cheek cl"></span><span class="cheek cr"></span>
+              <span class="mouth"><i></i></span>
+            </div>
+            <i class="glare g1"></i><i class="glare g2"></i>
+          </div>
+        </div>
+      </div>
+      <p class="bubble"></p>
+    </div>
     <div class="hero-in">
       <p class="blurred" aria-hidden="true"><span data-t="blur1"></span><br><span data-t="blur2"></span></p>
       <p class="sr-only"><span data-t="blur1"></span> <span data-t="blur2"></span></p>
@@ -44,7 +63,7 @@
       <h1 class="sr-only" data-t="type"></h1>
       <div class="pills"></div>
     </div>
-    <p class="scrub-hint" aria-hidden="true"><span class="arrows">←→</span> <span data-t="scrub"></span></p>
+    <p class="scrub-hint" aria-hidden="true"><span class="dot"></span><span data-t="scrub"></span></p>
   </section>
 
   <section class="sec" id="work" aria-labelledby="work-h">
@@ -93,8 +112,8 @@
   <div class="wrap foot-in">
     <p class="foot-word" aria-hidden="true">Graba<span>✳︎</span></p>
     <p class="foot-line"><span data-t="foot"></span> <span class="year"></span></p>
-    <a href="#top" class="foot-top" data-t="top">Back to top</a>
   </div>
+  <a class="totop" href="#top" aria-label="Back to top"><svg viewBox="0 0 48 48" aria-hidden="true"><circle class="trk" cx="24" cy="24" r="21"/><circle class="fill" cx="24" cy="24" r="21"/><path class="arr" d="M24 31V17m-6 6 6-6 6 6"/></svg></a>
 </footer>
 <div class="toast" role="status" aria-live="polite"></div>
 <noscript><p style="padding:24px">Ahmed Grabus, software engineer. Email: grabafaceit@gmail.com · Phone: +387 60 349 4625</p></noscript>
