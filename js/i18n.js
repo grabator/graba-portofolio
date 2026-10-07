@@ -29,7 +29,7 @@ window.PF = {
     type: 'Good to see you here. I build fast, beautiful websites and full-stack products. So, what are we building?',
     pills: ['See my work', 'Start a project', 'Give me a call', 'Message on Viber'],
     reach: 'Reach me:', copy: 'Copy email', copied: 'Email copied',
-    scrub: 'Move your mouse, he is watching', tapBot: 'Tap him', hi: ['Hi there!', 'Nice to meet you!', 'Let\'s build something.', 'Hehe, that tickles!', 'I like your cursor.'],
+    scrub: 'Move your mouse, click him', tapBot: 'Tap him, he knows tricks',
     workK: 'Selected work', workH: 'Things I designed, built and *shipped.*',
     view: 'View', live: 'Live site', code: 'Source', liveTag: 'Live',
     items: {
@@ -62,7 +62,13 @@ window.PF = {
     contactK: 'Contact', contactH: 'Let\'s build something *good.*',
     contactP: 'Tell me about your idea, your business or a project you need help with. I usually reply the same day.',
     email: 'Email', phone: 'Phone', viber: 'Viber', whatsapp: 'WhatsApp', github: 'GitHub',
-    foot: 'Designed and built by Ahmed Grabus.', top: 'Back to top'
+    foot: 'Designed and built by Ahmed Grabus.', top: 'Back to top',
+    sheetP: 'Prefer a quick chat? Call or message me directly.', swipe: 'Swipe',
+    bot: {
+      hi: 'Hi there!', wake: 'Oops, I am awake!', dizzy: 'Whoa, I am dizzy...',
+      tricks: ['Hehe, that tickles!', 'Wheee!', 'I like you already.', 'Compiling...', 'Psst, check my work.'],
+      pills: ['The good stuff is below.', 'Tell me your idea!', 'Ring ring!', 'Viber works great.', 'Copy it and write to me.']
+    }
   },
 
   bs: {
@@ -75,7 +81,7 @@ window.PF = {
     type: 'Drago mi je što ste tu. Pravim brze i lijepe web stranice i full-stack proizvode. Šta pravimo?',
     pills: ['Pogledaj radove', 'Pokreni projekat', 'Pozovi me', 'Piši na Viber'],
     reach: 'Pišite mi:', copy: 'Kopiraj email', copied: 'Email kopiran',
-    scrub: 'Pomjeri miš, gleda te', tapBot: 'Dodirni ga', hi: ['Zdravo!', 'Drago mi je!', 'Hajmo nešto napraviti.', 'Hehe, škaklja!', 'Sviđa mi se tvoj kursor.'],
+    scrub: 'Pomjeri miš, klikni ga', tapBot: 'Dodirni ga, zna trikove',
     workK: 'Izabrani radovi', workH: 'Stvari koje sam dizajnirao, napravio i *objavio.*',
     view: 'Pogledaj', live: 'Otvori stranicu', code: 'Kod', liveTag: 'Uživo',
     items: {
@@ -108,6 +114,12 @@ window.PF = {
     contactK: 'Kontakt', contactH: 'Napravimo nešto *dobro.*',
     contactP: 'Pišite mi o ideji, biznisu ili projektu za koji vam treba pomoć. Obično odgovorim istog dana.',
     email: 'Email', phone: 'Telefon', viber: 'Viber', whatsapp: 'WhatsApp', github: 'GitHub',
-    foot: 'Dizajnirao i napravio Ahmed Grabus.', top: 'Na vrh'
+    foot: 'Dizajnirao i napravio Ahmed Grabus.', top: 'Na vrh',
+    sheetP: 'Brže je uživo? Pozovite ili pišite direktno.', swipe: 'Prevuci',
+    bot: {
+      hi: 'Zdravo!', wake: 'Ups, budan sam!', dizzy: 'Joj, vrti mi se...',
+      tricks: ['Hehe, škaklja!', 'Juhuuu!', 'Već mi se sviđaš.', 'Kompajliram...', 'Pst, pogledaj radove.'],
+      pills: ['Najbolje je dole.', 'Pričaj mi ideju!', 'Zvoni, zvoni!', 'Viber radi odlično.', 'Kopiraj i piši mi.']
+    }
   }
 };

@@ -50,8 +50,12 @@
     $('.burger').setAttribute('aria-label', t.menu);
 
     var navHtml = ['work', 'services', 'process', 'about'].map(function (k) { return '<a href="#' + k + '">' + esc(t.nav[k]) + '</a>'; });
-    $('.links').innerHTML = navHtml.join('<span aria-hidden="true">,&nbsp;</span>');
-    $('#sheet').innerHTML = navHtml.join('') + '<a href="#contact">' + esc(t.touch) + '</a>';
+    $('.links').innerHTML = '<span class="blob" aria-hidden="true"></span>' + navHtml.join('');
+    var ic = { call: '<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/>', viber: '<path d="M7.5 19.5 4 21l1.2-3.6A8.5 8.5 0 1 1 7.5 19.5Z"/><path d="M9.5 9.5c.5 2 2 3.5 4 4"/>', mail: '<rect x="3" y="5" width="18" height="14" rx="3"/><path d="m4 7 8 6 8-6"/>' };
+    function svg(k) { return '<svg viewBox="0 0 24 24" aria-hidden="true">' + ic[k] + '</svg>'; }
+    $('#sheet').innerHTML = '<p class="kicker sheet-k">' + esc(t.menu) + '</p><ul class="sheet-list">' +
+      ['work', 'services', 'process', 'about', 'contact'].map(function (k, i) { return '<li><a href="#' + k + '"' + (k === 'contact' ? ' class="main"' : '') + ' style="--k:' + i + '"><b>0' + (i + 1) + '</b><span>' + esc(k === 'contact' ? t.touch : t.nav[k]) + '</span><i aria-hidden="true">' + (k === 'contact' ? '↗' : '→') + '</i></a></li>'; }).join('') +
+      '</ul><div class="sheet-foot"><p>' + esc(t.sheetP) + '</p><div><a href="tel:' + esc(C.tel) + '">' + svg('call') + esc(t.phone) + '</a><a href="' + esc(C.viber) + '">' + svg('viber') + 'Viber</a><a href="mailto:' + esc(C.email) + '">' + svg('mail') + 'Email</a></div></div>';
 
     var copyIc = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2.5"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>';
     var links = ['#work', '#contact', 'tel:' + C.tel, C.viber];
@@ -84,6 +88,8 @@
     $('.totop').setAttribute('aria-label', t.top);
     reveal();
     startType();
+    curSec = null; requestAnimationFrame(onScroll);
+    cars();
   }
 
   /* ---------------- pisaća mašina ---------------- */
@@ -93,11 +99,13 @@
     clearTimeout(typeTimer); clearInterval(typeTimer);
     caret.classList.remove('done');
     if (reduced) { el.textContent = text; caret.classList.add('done'); return; }
+    if (bot) bot.talk(false);
     el.textContent = '';
     typeTimer = setTimeout(function () {
+      if (bot) bot.talk(true);
       typeTimer = setInterval(function () {
         n++; el.textContent = text.slice(0, n);
-        if (n >= text.length) { clearInterval(typeTimer); caret.classList.add('done'); }
+        if (n >= text.length) { clearInterval(typeTimer); caret.classList.add('done'); if (bot) bot.talk(false); }
       }, 34);
     }, 600);
   }
@@ -146,7 +154,7 @@
   var toastT = 0;
   function toast(msg) { var el = $('.toast'); el.textContent = msg; el.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(function () { el.classList.remove('on'); }, 2200); }
   function copy() {
-    var done = function () { toast(T().copied); };
+    var done = function () { toast(T().copied); bot.cheer(T().copied); };
     if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(C.email).then(done, function () { location.href = 'mailto:' + C.email; });
     else location.href = 'mailto:' + C.email;
   }
@@ -169,6 +177,17 @@
   });
 
   /* traka napretka, čvrsta navigacija i aktivni link */
+  /* klizni "blob" iza aktivnog linka u meniju */
+  var curSec = null;
+  function blobTo(a) {
+    var blob = $('.links .blob'); if (!blob) return;
+    if (!a) { blob.style.opacity = '0'; return; }
+    blob.style.opacity = '1'; blob.style.width = a.offsetWidth + 'px'; blob.style.transform = 'translateX(' + a.offsetLeft + 'px)';
+  }
+  document.addEventListener('mouseover', function (e) {
+    var a = e.target.closest && e.target.closest('.links a');
+    if (a) blobTo(a); else if (e.target.closest && !e.target.closest('.links')) blobTo($('.links a.on'));
+  });
   var ring = $('.totop .fill'), totop = $('.totop'), nav = $('#nav'), ticking = false, secs = ['work', 'services', 'process', 'about', 'contact'];
   function onScroll() {
     ticking = false;
@@ -178,58 +197,89 @@
     nav.classList.toggle('solid', y > 30);
     var cur = '';
     secs.forEach(function (id) { var s = document.getElementById(id); if (s && s.getBoundingClientRect().top < window.innerHeight * 0.4) cur = id; });
-    $$('.links a').forEach(function (a) { a.classList.toggle('on', a.getAttribute('href') === '#' + cur); });
+    if (cur !== curSec) { curSec = cur; $$('.links a').forEach(function (a) { a.classList.toggle('on', a.getAttribute('href') === '#' + cur); }); blobTo($('.links a.on')); }
     bot.scroll(y);
   }
   window.addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(onScroll); } }, { passive: true });
 
   /* ---------------- robotić (prvi ekran) ----------------
-   * Glava se okreće u 3D prema kursoru, lice se pomjera unutar ekrana,
-   * antena se njiše kad naglo okrene glavu. Kad miš miruje, sam razgleda okolo. */
+   * Glava se okreće u 3D prema kursoru, lice se pomjera unutar ekrana, antena se njiše.
+   * Zna i trikove: skok, okret, srca u očima, kod na ekranu, namigivanje.
+   * Kad ga dugo niko ne dira zaspe, a ako brzo tresete mišem, zavrti mu se. */
   var bot = (function () {
-    var el = $('.bot'), api = { scroll: function () {}, wake: function () {} };
+    var el = $('.bot'), api = { scroll: function () {}, wake: function () {}, talk: function () {}, cheer: function () {}, hint: function () {} };
     if (!el) return api;
     var head = $('.bot-head', el), face = $('.bot-face', el), disc = $('.bot-disc', el), shadow = $('.bot-shadow', el), neck = $('.bot-neck', el), stick = $('.stick', el), bubble = $('.bubble', el);
-    var W = 0, cx = 0, cy = 0, mx = -1, my = -1, lastMove = -1e9, sy = 0;
-    var lx = 0, ly = 0, tx = 0, ty = 0, plx = 0, ang = 0, angV = 0, jumpT = -1e9, wanderAt = 0, raf = 0, visible = true;
+    var W = 0, cx = 0, cy = 0, mx = -1, my = -1, lastMove = -1e9, lastAct = performance.now(), sy = 0;
+    var lx = 0, ly = 0, tx = 0, ty = 0, plx = 0, ang = 0, angV = 0, jumpT = -1e9, spinT = -1e9, wobT = -1e9, wanderAt = 0, raf = 0, visible = true;
+    var mood = '', moodT = 0, sleeping = false;
     function measure() { var r = el.getBoundingClientRect(); W = r.width; cx = r.left + r.width * 0.5; cy = r.top + window.scrollY + r.height * 0.48; }
     function clamp(v, a) { return v < -a ? -a : v > a ? a : v; }
+    function ease(x) { return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; }
+
+    /* raspoloženja: happy, hearts, code, wink, dizzy (privremeno) */
+    function setMood(m, ms) {
+      if (mood) el.classList.remove(mood);
+      mood = m; if (m) el.classList.add(m);
+      clearTimeout(moodT);
+      if (m && ms) moodT = setTimeout(function () { el.classList.remove(m); mood = ''; }, ms);
+    }
+    var burst = $('.burst', el);
+    function pop() { burst.classList.remove('go'); void burst.offsetWidth; burst.classList.add('go'); }
+
+    var sayT = 0;
+    function say(text, ms) { bubble.textContent = text; bubble.classList.add('on'); clearTimeout(sayT); sayT = setTimeout(function () { bubble.classList.remove('on'); }, ms || 2400); }
+
+    function sleep(on) {
+      if (sleeping === on) return;
+      sleeping = on; el.classList.toggle('sleep', on);
+      if (!on) { jumpT = performance.now(); say(T().bot.wake, 1800); }
+    }
+    function act() { lastAct = performance.now(); if (sleeping) sleep(false); }
+
     function frame(now) {
       raf = 0;
+      if (!reduced && !sleeping && now - lastAct > 16000) sleep(true);
       var idle = now - lastMove > 3200;
-      if (!idle && mx >= 0) {
+      if (sleeping) { tx = 0; ty = 0.75; }
+      else if (!idle && mx >= 0) {
         tx = clamp((mx - cx) / (window.innerWidth * 0.42), 1);
         ty = clamp((my - (cy - window.scrollY)) / (window.innerHeight * 0.48), 1);
       } else if (now > wanderAt) {
         tx = Math.random() * 1.6 - 0.8; ty = Math.random() * 1 - 0.45;
         wanderAt = now + 1300 + Math.random() * 1900;
       }
-      var tty = clamp(ty + sy * 0.9, 1);
-      var k = reduced ? 1 : 0.085;
+      var tty = clamp(ty + (sleeping ? 0 : sy * 0.9), 1);
+      var k = reduced ? 1 : sleeping ? 0.03 : 0.085;
       lx += (tx - lx) * k; ly += (tty - ly) * k;
-      var u = W / 100, fl = reduced ? 0 : Math.sin(now / 950) * 0.9;
+      var u = W / 100, fl = reduced ? 0 : Math.sin(now / (sleeping ? 1600 : 950)) * (sleeping ? 0.5 : 0.9);
       var jt = now - jumpT, jump = jt < 900 ? -Math.abs(Math.sin(jt / 120)) * 4 * Math.exp(-jt / 260) : 0;
+      var st = now - spinT, spin = st < 1000 ? ease(st / 1000) * 360 : 0;
+      var wt = now - wobT, wob = wt < 1600 ? Math.sin(wt / 70) * 9 * (1 - wt / 1600) : 0;
       var y = ly * 1.6 + fl + jump;
-      head.style.transform = 'translate3d(' + (lx * 2.4 * u).toFixed(2) + 'px,' + (y * u).toFixed(2) + 'px,0) rotateY(' + (lx * 30).toFixed(2) + 'deg) rotateX(' + (-ly * 22).toFixed(2) + 'deg)';
+      head.style.transform = 'translate3d(' + (lx * 2.4 * u).toFixed(2) + 'px,' + (y * u).toFixed(2) + 'px,0) rotateY(' + (lx * 30 + spin).toFixed(2) + 'deg) rotateX(' + (-ly * 22).toFixed(2) + 'deg) rotateZ(' + (wob + (sleeping ? 6 : 0) * Math.min(1, ly)).toFixed(2) + 'deg)';
       face.style.transform = 'translate3d(' + (lx * 3.6 * u).toFixed(2) + 'px,' + (ly * 2.8 * u).toFixed(2) + 'px,0)';
       shadow.style.transform = 'translate3d(' + ((1.5 - lx * 2.6) * u).toFixed(2) + 'px,' + ((3.2 - ly * 1.4 + (fl + jump) * 0.4) * u).toFixed(2) + 'px,0) scale(' + (1 - jump * 0.02).toFixed(3) + ')';
       disc.style.transform = 'translate3d(' + (-lx * 1.4 * u).toFixed(2) + 'px,' + (-ly * u).toFixed(2) + 'px,0)';
-      neck.style.transform = 'translate3d(' + (lx * 1.4 * u - lx * 1.4 * u * 0.4).toFixed(2) + 'px,' + ((fl + jump) * 0.35 * u).toFixed(2) + 'px,0)';
+      neck.style.transform = 'translate3d(' + (lx * 0.84 * u).toFixed(2) + 'px,' + ((fl + jump) * 0.35 * u).toFixed(2) + 'px,0)';
       if (!reduced) {
-        angV += -ang * 0.07 - (lx - plx) * 120 - (jt < 900 ? Math.cos(jt / 120) * 0.8 * Math.exp(-jt / 260) : 0);
+        angV += -ang * 0.07 - (lx - plx) * 120 - (jt < 900 ? Math.cos(jt / 120) * 0.8 * Math.exp(-jt / 260) : 0) - (st < 1000 ? Math.sin(st / 160) * 1.2 : 0);
         angV *= 0.84; ang = clamp(ang + angV, 38);
       }
       plx = lx;
-      stick.style.transform = 'rotate(' + (ang + (reduced ? 0 : Math.sin(now / 1400) * 3)).toFixed(2) + 'deg)';
+      stick.style.transform = 'rotate(' + (ang + (reduced ? 0 : Math.sin(now / 1400) * 3) + wob * 1.5).toFixed(2) + 'deg)';
       if (visible && !document.hidden && (!reduced || Math.abs(tx - lx) + Math.abs(tty - ly) > 0.002)) raf = requestAnimationFrame(frame);
     }
     api.wake = function () { if (!raf && visible && !document.hidden) raf = requestAnimationFrame(frame); };
-    api.scroll = function (y) { sy = Math.min(1, y / (window.innerHeight * 0.7)); };
+    api.scroll = function (y) { sy = Math.min(1, y / (window.innerHeight * 0.7)); act(); };
+    api.talk = function (on) { el.classList.toggle('talk', on); };
+    api.cheer = function (text) { act(); setMood('happy', 1500); pop(); jumpT = performance.now(); say(text, 1800); api.wake(); };
+    api.hint = function (i) { if (sleeping || !visible) return; var h = T().bot.pills[i]; if (h) say(h, 2000); if (i === 1) setMood('hearts', 1600); };
 
     /* treptanje */
     (function blink() {
       setTimeout(function () {
-        if (!reduced && visible) {
+        if (!reduced && visible && !sleeping) {
           el.classList.add('blink');
           setTimeout(function () { el.classList.remove('blink'); }, 130);
           if (Math.random() < 0.22) setTimeout(function () { el.classList.add('blink'); setTimeout(function () { el.classList.remove('blink'); }, 120); }, 260);
@@ -237,34 +287,81 @@
         blink();
       }, 2200 + Math.random() * 3200);
     })();
+    setTimeout(function () { say(T().bot.hi, 2800); }, 1500);
 
-    /* oblačić sa porukom */
-    var sayT = 0, said = 0;
-    function say(text, ms) { bubble.textContent = text; bubble.classList.add('on'); clearTimeout(sayT); sayT = setTimeout(function () { bubble.classList.remove('on'); }, ms || 2400); }
-    setTimeout(function () { say(T().hi[0], 2800); }, 1500);
-    var happyT = 0;
-    function poke() {
-      var hi = T().hi; said = said % (hi.length - 1) + 1;
-      say(hi[said]);
-      el.classList.add('happy'); clearTimeout(happyT); happyT = setTimeout(function () { el.classList.remove('happy'); }, 1500);
-      jumpT = performance.now(); api.wake();
-    }
-    el.addEventListener('click', poke);
+    /* klik: svaki put drugi trik */
+    var trick = 0;
+    var tricks = [
+      function (b) { setMood('happy', 1500); pop(); jumpT = performance.now(); say(b.tricks[0]); },
+      function (b) { setMood('happy', 1100); spinT = performance.now(); say(b.tricks[1], 1600); },
+      function (b) { setMood('hearts', 1800); pop(); say(b.tricks[2]); },
+      function (b) { setMood('code', 1900); say(b.tricks[3], 1900); },
+      function (b) { setMood('wink', 1100); jumpT = performance.now(); say(b.tricks[4]); }
+    ];
+    el.addEventListener('click', function () { act(); tricks[trick](T().bot); trick = (trick + 1) % tricks.length; api.wake(); });
 
-    /* praćenje kursora, a na mobitelu prsta */
-    window.addEventListener('pointermove', function (e) { if (e.pointerType === 'mouse') { mx = e.clientX; my = e.clientY; lastMove = performance.now(); api.wake(); } }, { passive: true });
-    window.addEventListener('pointerdown', function (e) { mx = e.clientX; my = e.clientY; lastMove = performance.now(); api.wake(); }, { passive: true });
+    /* praćenje kursora; brzo tresenje mišem = vrtoglavica */
+    var flips = [], pdx = 0, dizzyUntil = 0;
+    window.addEventListener('pointermove', function (e) {
+      act();
+      if (e.pointerType !== 'mouse') return;
+      var now = performance.now(), dx = e.clientX - (mx < 0 ? e.clientX : mx);
+      if (Math.abs(dx) > 6) {
+        if (pdx && (dx > 0) !== (pdx > 0)) { flips.push(now); flips = flips.filter(function (t) { return now - t < 1000; }); }
+        pdx = dx;
+      }
+      if (flips.length >= 7 && now > dizzyUntil && visible) { flips = []; dizzyUntil = now + 4000; setMood('dizzy', 1800); wobT = now; say(T().bot.dizzy, 1800); }
+      mx = e.clientX; my = e.clientY; lastMove = now; api.wake();
+    }, { passive: true });
+    window.addEventListener('pointerdown', function (e) { act(); mx = e.clientX; my = e.clientY; lastMove = performance.now(); api.wake(); }, { passive: true });
+    window.addEventListener('keydown', act);
     document.addEventListener('mouseleave', function () { lastMove = -1e9; });
-    /* oduševi se kad je kursor iznad dugmeta ili linka */
     document.addEventListener('pointerover', function (e) { el.classList.toggle('excited', !!(e.target.closest && e.target.closest('a, button, [role="button"]'))); });
 
-    if ('IntersectionObserver' in window) new IntersectionObserver(function (en) { visible = en[0].isIntersecting; api.wake(); }).observe(el);
+    if ('IntersectionObserver' in window) new IntersectionObserver(function (en) { visible = en[0].isIntersecting; if (visible) act(); api.wake(); }).observe(el);
     document.addEventListener('visibilitychange', api.wake);
     window.addEventListener('resize', function () { measure(); api.wake(); });
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
     measure();
     return api;
   })();
+
+  /* hover na dugmad na prvom ekranu: robotić komentariše */
+  document.addEventListener('pointerover', function (e) {
+    var p = e.target.closest && e.target.closest('.pills > *');
+    if (p && e.pointerType === 'mouse' && p !== lastPill) bot.hint(Number(p.style.getPropertyValue('--k')));
+    lastPill = p;
+  });
+  var lastPill = null;
+
+  /* ---------------- listanje usluga i koraka na mobitelu ---------------- */
+  function cars() {
+    $$('.car-ui').forEach(function (ui) {
+      var list = $('.' + ui.getAttribute('data-car')), items = list.children, n = items.length;
+      ui.innerHTML = '<div class="dots">' + [].map.call(items, function (x, i) { return '<button type="button" aria-label="' + (i + 1) + ' / ' + n + '"></button>'; }).join('') + '</div><span class="swipe" aria-hidden="true">' + esc(T().swipe) + ' <i>→</i></span>';
+      var dots = $$('.dots button', ui);
+      function at() { var w = items[0].offsetWidth + 12; return Math.max(0, Math.min(n - 1, Math.round(list.scrollLeft / w))); }
+      function mark() { var i = at(); dots.forEach(function (d, j) { d.classList.toggle('on', j === i); d.setAttribute('aria-current', String(j === i)); }); ui.classList.toggle('end', i === n - 1); }
+      dots.forEach(function (d, i) { d.addEventListener('click', function () { list.scrollTo({ left: items[i].offsetLeft - items[0].offsetLeft, behavior: 'smooth' }); }); });
+      if (!list.__car) {
+        list.__car = true;
+        var t = false;
+        list.addEventListener('scroll', function () { if (!t) { t = true; requestAnimationFrame(function () { t = false; list.__mark(); }); } }, { passive: true });
+        /* kad se prvi put pojavi, lagano "povuče" karticu da se vidi da se lista */
+        if (!reduced && 'IntersectionObserver' in window) {
+          var o = new IntersectionObserver(function (en) {
+            if (!en[0].isIntersecting || list.scrollWidth <= list.clientWidth + 4) return;
+            o.disconnect();
+            setTimeout(function () { if (list.scrollLeft < 4) { list.scrollTo({ left: 70, behavior: 'smooth' }); setTimeout(function () { list.scrollTo({ left: 0, behavior: 'smooth' }); }, 650); } }, 500);
+          }, { threshold: 0.6 });
+          o.observe(list);
+        }
+      }
+      list.__mark = mark;
+      mark();
+    });
+  }
+  window.addEventListener('resize', function () { $$('.car-ui').forEach(function (ui) { var l = $('.' + ui.getAttribute('data-car')); if (l.__mark) l.__mark(); }); });
 
   /* dugme sa emailom se lagano "lijepi" za kursor */
   (function () {
