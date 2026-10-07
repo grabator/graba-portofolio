@@ -35,6 +35,8 @@ em { font-style: normal; color: var(--violet); }
 .nav { position: fixed; inset: 0 0 auto; z-index: 50; display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: calc(16px + env(safe-area-inset-top)) var(--pad) 16px; transition: background-color 0.35s, padding 0.35s, backdrop-filter 0.35s; }
 .nav.solid { background: rgba(243, 241, 236, 0.82); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); padding-top: calc(10px + env(safe-area-inset-top)); padding-bottom: 10px; }
 .logo { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 500; font-size: clamp(20px, 1.7vw, 23px); letter-spacing: -0.03em; }
+.logo-bot { width: 34px; height: 34px; margin-right: -2px; transition: transform 0.6s cubic-bezier(0.3, 1.6, 0.5, 1); }
+.logo:hover .logo-bot { transform: rotate(-12deg) scale(1.08); }
 .logo sup { font-size: 0.45em; vertical-align: super; margin-left: 1px; }
 .star { display: inline-block; font-size: 1.15em; letter-spacing: -0.02em; transition: transform 0.8s var(--ease); }
 .logo:hover .star { transform: rotate(180deg); }
