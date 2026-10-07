@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ahmed Grabus · Software Engineer</title>
+<meta name="description" content="Ahmed Grabus (Graba), software engineer from Bosnia and Herzegovina. Fast, beautiful websites and full-stack products.">
+<meta name="theme-color" content="#f3f1ec">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230e0e10'/%3E%3Ctext x='32' y='43' text-anchor='middle' font-family='Arial' font-weight='700' font-size='30' fill='%23f3f1ec'%3EG%3C/text%3E%3Ccircle cx='48' cy='18' r='5' fill='%236d4aff'/%3E%3C/svg%3E">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Ahmed Grabus · Software Engineer">
+<meta property="og:description" content="Fast, beautiful websites and full-stack products.">
+<link rel="preload" href="assets/fonts/inter-tight-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/inter-tight-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/style.css">
+<script type="application/ld+json">
+{ "@context": "https://schema.org", "@type": "Person", "name": "Ahmed Grabus", "alternateName": "Graba", "jobTitle": "Software Engineer", "worksFor": { "@type": "Organization", "name": "ZIRA" }, "address": { "@type": "PostalAddress", "addressCountry": "BA" }, "email": "mailto:grabafaceit@gmail.com", "telephone": "+387 60 349 4625", "url": "https://github.com/grabator", "sameAs": ["https://github.com/grabator"] }
+</script>
+<script src="js/i18n.js" defer></script>
+<script src="js/app.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#work">Skip to content</a>
+<div class="progress" aria-hidden="true"></div>
+
+<header class="nav" id="nav">
+  <a class="logo" href="#top"><span>Graba<sup>®</sup></span><span class="star" aria-hidden="true">✳︎</span></a>
+  <nav class="links" aria-label="Main"></nav>
+  <div class="nav-right">
+    <div class="lang" role="group" aria-label="Language"><button type="button" data-lang="en">EN</button><button type="button" data-lang="bs">BS</button></div>
+    <a class="touch" href="#contact" data-t="touch">Get in touch</a>
+    <button type="button" class="burger" aria-expanded="false" aria-controls="sheet" aria-label="Menu"><i></i><i></i><i></i></button>
+  </div>
+</header>
+<div class="sheet" id="sheet" aria-hidden="true" inert></div>
+
+<main>
+  <section class="hero" id="top">
+    <canvas class="orb" aria-hidden="true"></canvas>
+    <div class="hero-in">
+      <p class="blurred" aria-hidden="true"><span data-t="blur1"></span><br><span data-t="blur2"></span></p>
+      <p class="sr-only"><span data-t="blur1"></span> <span data-t="blur2"></span></p>
+      <p class="type" aria-live="off"><span class="typed"></span><span class="caret" aria-hidden="true"></span></p>
+      <h1 class="sr-only" data-t="type"></h1>
+      <div class="pills"></div>
+    </div>
+    <p class="scrub-hint" aria-hidden="true"><span class="arrows">←→</span> <span data-t="scrub"></span></p>
+  </section>
+
+  <section class="sec" id="work" aria-labelledby="work-h">
+    <div class="wrap">
+      <div class="head"><p class="kicker" data-t="workK"></p><h2 id="work-h" class="split" data-t="workH"></h2></div>
+      <ol class="work"></ol>
+    </div>
+    <div class="peek" aria-hidden="true"><div class="peek-in"></div></div>
+  </section>
+
+  <section class="sec sec-dark" id="services" aria-labelledby="serv-h">
+    <div class="wrap">
+      <div class="head"><p class="kicker" data-t="servK"></p><h2 id="serv-h" class="split" data-t="servH"></h2></div>
+      <ul class="services"></ul>
+    </div>
+  </section>
+
+  <section class="sec" id="process" aria-labelledby="proc-h">
+    <div class="wrap">
+      <div class="head"><p class="kicker" data-t="procK"></p><h2 id="proc-h" class="split" data-t="procH"></h2></div>
+      <ol class="steps"></ol>
+    </div>
+  </section>
+
+  <section class="marquee" aria-label="Stack"><p class="kicker wrap" data-t="stackK"></p><div class="mq"><div class="mq-track"></div></div></section>
+
+  <section class="sec" id="about" aria-labelledby="about-h">
+    <div class="wrap about">
+      <div><p class="kicker" data-t="aboutK"></p><h2 id="about-h" class="split" data-t="aboutH"></h2></div>
+      <div class="about-side"><div class="about-p"></div><dl class="facts"></dl></div>
+    </div>
+  </section>
+
+  <section class="contact" id="contact" aria-labelledby="contact-h">
+    <div class="wrap">
+      <p class="kicker" data-t="contactK"></p>
+      <h2 id="contact-h" class="big split" data-t="contactH"></h2>
+      <p class="contact-p" data-t="contactP"></p>
+      <button type="button" class="mail" data-copy><span class="mail-addr"></span><span class="mail-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2.5"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg></span></button>
+      <ul class="channels"></ul>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-in">
+    <p class="foot-word" aria-hidden="true">Graba<span>✳︎</span></p>
+    <p class="foot-line"><span data-t="foot"></span> <span class="year"></span></p>
+    <a href="#top" class="foot-top" data-t="top">Back to top</a>
+  </div>
+</footer>
+<div class="toast" role="status" aria-live="polite"></div>
+<noscript><p style="padding:24px">Ahmed Grabus, software engineer. Email: grabafaceit@gmail.com · Phone: +387 60 349 4625</p></noscript>
+</body>
+</html>
