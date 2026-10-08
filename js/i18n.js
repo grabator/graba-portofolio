@@ -10,6 +10,7 @@ window.PF = {
   },
   work: [
     { id: 'myshishapedia', year: '2025', img: 'assets/work/myshishapedia.jpg', live: 'https://myshishapedia.com', src: 'https://github.com/grabator/myshishapedia', tags: ['JavaScript', 'Node.js', 'SVG', 'Cloudflare Pages'] },
+    { id: 'salon', year: '2026', img: 'assets/work/beauty-salon.jpg', live: 'https://beauty-salon.grabafaceit.workers.dev/', src: 'https://github.com/grabator/beauty-salon', tags: ['JavaScript', 'SVG', 'PWA', 'Cloudflare Workers'] },
     { id: 'lounge', year: '2026', img: 'assets/work/exclusive-lounge.jpg', live: 'https://rezervacije-production-6f84.up.railway.app/r/exclusive/rezervacije', src: 'https://github.com/grabator/exclusive-lounge-caffe-rezervacije', tags: ['Angular 19', '.NET 10', 'SQLite', 'Railway'] },
     { id: 'svecana', year: '2026', img: 'assets/work/svecana-sala.jpg', live: 'https://svecana-sala.grabafaceit.workers.dev/', src: 'https://github.com/grabator/svecana-sala', tags: ['JavaScript', 'Cloudflare Workers', 'Google Calendar', 'i18n'] },
     { id: 'planinka', year: '2026', img: 'assets/work/planinka.jpg', live: 'https://planinka.grabafaceit.workers.dev/', src: 'https://github.com/grabator/planinka', tags: ['JavaScript', 'SVG', 'Cloudflare'] },
@@ -34,6 +35,7 @@ window.PF = {
     view: 'View', live: 'Live site', code: 'Source', liveTag: 'Live',
     items: {
       myshishapedia: ['MyShishapedia', 'Web app · Encyclopedia', 'A bilingual hookah flavor encyclopedia: ingredient breakdowns, flavor profiles, comparisons, a mixer and a quiz. A custom static site generator prerenders 190+ pages, with fuzzy search and shareable story cards.'],
+      salon: ['Glaze Nail Studio', 'Website · Nail salon', 'A website for a nail salon: try a polish colour, shape and style on a realistic hand drawn in SVG, browse designs by style and season, get shades that match an outfit photo and send a booking inquiry to Viber or WhatsApp in three steps. Three languages, installable as an app.'],
       svecana: ['Svečana sala', 'Website · Wedding venue', 'A demo site for wedding venues: an availability calendar synced from Google Calendar through a Cloudflare Worker, an instant price estimate, inquiries straight to Viber, viewing booking and a guest page with a QR code.'],
       mostar: ['Old Bridge Mostar', 'Website · Scroll story', 'A cinematic scroll story about Mostar. Layered SVG scenes of the Old Bridge and the Neretva, a diver leaping from the arch, and an endless places slider, all drawn in code.'],
       planinka: ['Planinka', 'Website · Mountain cabin', 'A website for a mountain cabin on Vlašić: seasonal prices with a stay calculator, live weather, a gallery and booking inquiries to Viber or WhatsApp. Bosnian, English and German.'],
@@ -43,7 +45,7 @@ window.PF = {
     },
     servK: 'Services', servH: 'What I can do for *you.*',
     services: [
-      ['Websites for businesses', 'Cabins, wedding venues, restaurants and shops. Fast, mobile-first sites where customers can check availability and contact you in seconds.'],
+      ['Websites for businesses', 'Cabins, wedding venues, beauty salons, restaurants and shops. Fast, mobile-first sites where customers can check availability and contact you in seconds.'],
       ['Full-stack products', 'Web applications from database to interface: .NET and Java backends, Angular, React and Next.js frontends, clean architecture.'],
       ['Mobile apps', 'Cross-platform apps in Flutter, connected to your own API, with the same attention to detail as the web.'],
       ['Speed, SEO and care', 'Pages that load fast, rank on Google and keep working. I can also look after updates once the site is live.']
@@ -86,6 +88,7 @@ window.PF = {
     view: 'Pogledaj', live: 'Otvori stranicu', code: 'Kod', liveTag: 'Uživo',
     items: {
       myshishapedia: ['MyShishapedia', 'Web aplikacija · Enciklopedija', 'Dvojezična enciklopedija okusa za nargile: sastojci, profili okusa, poređenja, mikser i kviz. Vlastiti generator unaprijed pravi 190+ stranica, uz pametnu pretragu i kartice za dijeljenje.'],
+      salon: ['Glaze Nail Studio', 'Web stranica · Salon za nokte', 'Stranica za salon za nokte: isprobavanje boje, oblika i stila na realistično nacrtanoj ruci u SVG-u, galerija dizajna po stilu i godišnjem dobu, prijedlog nijanse uz fotografiju outfita i upit za termin na Viber ili WhatsApp u tri koraka. Tri jezika, može se instalirati kao aplikacija.'],
       svecana: ['Svečana sala', 'Web stranica · Svadbeni salon', 'Demo stranica za svadbene salone: kalendar slobodnih datuma povezan sa Google Kalendarom preko Cloudflare Workera, okvirna cijena odmah, upit na Viber, zakazivanje razgledanja i stranica za goste sa QR kodom.'],
       mostar: ['Old Bridge Mostar', 'Web stranica · Priča na skrol', 'Filmska priča o Mostaru dok skrolate. Slojevite SVG scene Starog mosta i Neretve, skakač sa mosta i beskonačna lista mjesta, sve nacrtano u kodu.'],
       planinka: ['Planinka', 'Web stranica · Vikendica', 'Stranica za vikendicu na Vlašiću: sezonske cijene sa kalkulatorom, vrijeme uživo, galerija i upit za rezervaciju na Viber ili WhatsApp. Bosanski, engleski i njemački.'],
@@ -95,7 +98,7 @@ window.PF = {
     },
     servK: 'Usluge', servH: 'Šta mogu uraditi za *vas.*',
     services: [
-      ['Web stranice za biznise', 'Vikendice, svadbeni saloni, restorani i radnje. Brze stranice prilagođene mobitelu, na kojima kupci za par sekundi provjere termin i jave vam se.'],
+      ['Web stranice za biznise', 'Vikendice, svadbeni saloni, saloni ljepote, restorani i radnje. Brze stranice prilagođene mobitelu, na kojima kupci za par sekundi provjere termin i jave vam se.'],
       ['Full-stack proizvodi', 'Web aplikacije od baze do interfejsa: .NET i Java backend, Angular, React i Next.js frontend, čista arhitektura.'],
       ['Mobilne aplikacije', 'Aplikacije u Flutteru za Android i iOS, povezane sa vašim API-jem, sa istom pažnjom na detalje kao web.'],
       ['Brzina, SEO i održavanje', 'Stranice koje se brzo učitaju, nađu se na Googleu i rade bez problema. Mogu se brinuti i o izmjenama kad stranica proradi.']
