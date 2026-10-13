@@ -10,6 +10,7 @@ window.PF = {
   },
   work: [
     { id: 'myshishapedia', year: '2025', img: 'assets/work/myshishapedia.jpg', live: 'https://myshishapedia.com', src: 'https://github.com/grabator/myshishapedia', tags: ['JavaScript', 'Node.js', 'SVG', 'Cloudflare Pages'] },
+    { id: 'squadjury', year: '2026', img: 'assets/work/squadjury.jpg', live: 'https://squadjury.com', src: 'https://github.com/grabator/squadjury', tags: ['JavaScript', 'Cloudflare Workers', 'D1', 'OCR'] },
     { id: 'salon', year: '2026', img: 'assets/work/beauty-salon.jpg', live: 'https://beauty-salon.grabafaceit.workers.dev/', src: 'https://github.com/grabator/beauty-salon', tags: ['JavaScript', 'SVG', 'PWA', 'Cloudflare Workers'] },
     { id: 'lounge', year: '2026', img: 'assets/work/exclusive-lounge.jpg', live: 'https://rezervacije-production-6f84.up.railway.app/r/exclusive/rezervacije', src: 'https://github.com/grabator/exclusive-lounge-caffe-rezervacije', tags: ['Angular 19', '.NET 10', 'SQLite', 'Railway'] },
     { id: 'svecana', year: '2026', img: 'assets/work/svecana-sala.jpg', live: 'https://svecana-sala.grabafaceit.workers.dev/', src: 'https://github.com/grabator/svecana-sala', tags: ['JavaScript', 'Cloudflare Workers', 'Google Calendar', 'i18n'] },
@@ -35,6 +36,7 @@ window.PF = {
     view: 'View', live: 'Live site', code: 'Source', liveTag: 'Live',
     items: {
       myshishapedia: ['MyShishapedia', 'Web app · Encyclopedia', 'A bilingual hookah flavor encyclopedia: ingredient breakdowns, flavor profiles, comparisons, a mixer and a quiz. A custom static site generator prerenders 190+ pages, with fuzzy search and shareable story cards.'],
+      squadjury: ['SquadJury', 'Web app · Fantasy football', 'Fantasy Premier League managers post their squad with one screenshot and the community rates it from 1 to 10 before the deadline. The squad is read in the browser (OCR), with head to head duels, private leagues, real points after each gameweek and badges. Full stack on Cloudflare Workers, D1 and R2.'],
       salon: ['Glaze Nail Studio', 'Website · Nail salon', 'A website for a nail salon: try a polish colour, shape and style on a realistic hand drawn in SVG, browse designs by style and season, get shades that match an outfit photo and send a booking inquiry to Viber or WhatsApp in three steps. Three languages, installable as an app.'],
       svecana: ['Svečana sala', 'Website · Wedding venue', 'A demo site for wedding venues: an availability calendar synced from Google Calendar through a Cloudflare Worker, an instant price estimate, inquiries straight to Viber, viewing booking and a guest page with a QR code.'],
       mostar: ['Old Bridge Mostar', 'Website · Scroll story', 'A cinematic scroll story about Mostar. Layered SVG scenes of the Old Bridge and the Neretva, a diver leaping from the arch, and an endless places slider, all drawn in code.'],
@@ -88,6 +90,7 @@ window.PF = {
     view: 'Pogledaj', live: 'Otvori stranicu', code: 'Kod', liveTag: 'Uživo',
     items: {
       myshishapedia: ['MyShishapedia', 'Web aplikacija · Enciklopedija', 'Dvojezična enciklopedija okusa za nargile: sastojci, profili okusa, poređenja, mikser i kviz. Vlastiti generator unaprijed pravi 190+ stranica, uz pametnu pretragu i kartice za dijeljenje.'],
+      squadjury: ['SquadJury', 'Web aplikacija · Fantasy fudbal', 'Igrači Fantasy Premier Leaguea objave svoj tim jednim screenshotom, a zajednica ga ocijeni od 1 do 10 prije deadlinea. Tim se čita u pregledniku (OCR), uz duele, privatne lige, stvarne bodove poslije kola i značke. Cijeli sistem na Cloudflare Workers, D1 i R2.'],
       salon: ['Glaze Nail Studio', 'Web stranica · Salon za nokte', 'Stranica za salon za nokte: isprobavanje boje, oblika i stila na realistično nacrtanoj ruci u SVG-u, galerija dizajna po stilu i godišnjem dobu, prijedlog nijanse uz fotografiju outfita i upit za termin na Viber ili WhatsApp u tri koraka. Tri jezika, može se instalirati kao aplikacija.'],
       svecana: ['Svečana sala', 'Web stranica · Svadbeni salon', 'Demo stranica za svadbene salone: kalendar slobodnih datuma povezan sa Google Kalendarom preko Cloudflare Workera, okvirna cijena odmah, upit na Viber, zakazivanje razgledanja i stranica za goste sa QR kodom.'],
       mostar: ['Old Bridge Mostar', 'Web stranica · Priča na skrol', 'Filmska priča o Mostaru dok skrolate. Slojevite SVG scene Starog mosta i Neretve, skakač sa mosta i beskonačna lista mjesta, sve nacrtano u kodu.'],
