@@ -8,6 +8,8 @@ window.PF = {
     whatsapp: 'https://wa.me/387603494625',
     github: 'https://github.com/grabator'
   },
+  credit: { name: 'Andrea Jorgensen', site: 'hideou.se', url: 'https://hideou.se' },
+  exe: { myshishapedia: 'MYSHISHA.EXE', squadjury: 'SQUADJURY.EXE', salon: 'GLAZE.EXE', lounge: 'LOUNGE.EXE', svecana: 'SVECANA.EXE', planinka: 'PLANINKA.EXE', mostar: 'MOSTAR.EXE', grabpoints: 'GRABPTS.EXE', apoteke: 'APOTEKE.EXE' },
   work: [
     { id: 'myshishapedia', year: '2025', img: 'assets/work/myshishapedia.jpg', live: 'https://myshishapedia.com', src: 'https://github.com/grabator/myshishapedia', tags: ['JavaScript', 'Node.js', 'SVG', 'Cloudflare Pages'] },
     { id: 'squadjury', year: '2026', img: 'assets/work/squadjury.jpg', live: 'https://squadjury.com', src: 'https://github.com/grabator/squadjury', tags: ['JavaScript', 'Cloudflare Workers', 'D1', 'OCR'] },
@@ -25,21 +27,8 @@ window.PF = {
     title: 'Ahmed Grabus · Software Engineer',
     desc: 'Ahmed Grabus (Graba), software engineer from Bosnia and Herzegovina. Fast, beautiful websites and full-stack products.',
     nav: { work: 'Work', services: 'Services', process: 'Process', about: 'About' },
-    touch: 'Get in touch', menu: 'Menu', close: 'Close',
-    blur1: 'Hey there, I\'m Ahmed Grabus,',
-    blur2: 'a software engineer from Bosnia and Herzegovina',
-    type: 'Good to see you here. I build fast, beautiful websites and full-stack products. So, what are we building?',
-    pills: ['See my work', 'Start a project', 'Give me a call', 'Message on Viber'],
-    reach: 'Reach me:', copy: 'Copy email', copied: 'Email copied',
-    scrub: 'Move your mouse, click him', tapBot: 'Tap him, he knows tricks',
+    copy: 'Copy email', copied: 'Email copied',
     workK: 'Selected work', workH: 'Things I designed, built and *shipped.*',
-    street: {
-      k: 'Selected work · Mostar, Kujundžiluk', h: 'Take a walk through *my old town.*',
-      p: 'Every shop on this old street in Mostar is one of my projects. Scroll to walk, tap a shop to step inside.',
-      walk: 'Scroll to walk', open: 'Step inside', list: 'All projects as a list', close: 'Close',
-      end: 'You made it to the Old Bridge.', endP: 'Every project here started with a conversation. Let\'s start yours.', endCta: 'Get in touch', bridge: 'Open the Old Bridge project',
-      night: 'Evening falls over the Neretva'
-    },
     view: 'View', live: 'Live site', code: 'Source', liveTag: 'Live',
     items: {
       myshishapedia: ['MyShishapedia', 'Web app · Encyclopedia', 'A bilingual hookah flavor encyclopedia: ingredient breakdowns, flavor profiles, comparisons, a mixer and a quiz. A custom static site generator prerenders 190+ pages, with fuzzy search and shareable story cards.'],
@@ -73,12 +62,32 @@ window.PF = {
     contactK: 'Contact', contactH: 'Let\'s build something *good.*',
     contactP: 'Tell me about your idea, your business or a project you need help with. I usually reply the same day.',
     email: 'Email', phone: 'Phone', viber: 'Viber', whatsapp: 'WhatsApp', github: 'GitHub',
-    foot: 'Designed and built by Ahmed Grabus.', top: 'Back to top',
-    sheetP: 'Prefer a quick chat? Call or message me directly.', swipe: 'Swipe',
-    bot: {
-      hi: 'Hi there!', wake: 'Oops, I am awake!', dizzy: 'Whoa, I am dizzy...',
-      tricks: ['Hehe, that tickles!', 'Wheee!', 'I like you already.', 'Compiling...', 'Psst, check my work.'],
-      pills: ['The good stuff is below.', 'Tell me your idea!', 'Ring ring!', 'Viber works great.', 'Copy it and write to me.']
+    foot: 'Designed and built by Ahmed Grabus.',
+    credit: 'Room inspired by',
+    role: 'Software engineer',
+    hero: 'Software engineer from Bosnia and Herzegovina. I build fast, beautiful websites and full-stack products.',
+    room: {
+      loading: 'Loading projects...', press: 'PRESS ANY KEY TO START', tap: 'TAP TO START', nogl: 'This room needs WebGL. Opening the classic view.',
+      hintD: 'Click anything in the room', hintM: 'Tap anything in the room',
+      back: 'Back', classic: 'Classic view', room: 'Enter the room', soundOn: 'Sound on', soundOff: 'Sound off', lang: 'Language',
+      names: { monitor: 'Projects', phone: 'Contact', answering: 'About me', coffee: 'Grab a coffee', notes: 'Services', floppies: 'Timeline', poster: 'Skoči.', aquarium: 'Aquarium', lamp: 'Desk lamp', cassette: 'Sound', keyboard: 'Tech stack' },
+      objs: { monitor: 'Old computer', phone: 'Red phone', answering: 'Answering machine', coffee: 'Džezva and fildžan', notes: 'Sticky notes', floppies: 'Floppy disks', poster: 'Poster', aquarium: 'Aquarium', lamp: 'Desk lamp', cassette: 'Cassette player', keyboard: 'Keyboard' },
+      lampOn: 'Lights on', lampOff: 'Lights off', fish: 'The fish scattered. They will be back.',
+      programs: 'Programs', run: 'Run live', source: 'Source', all: 'All programs', loadingExe: 'LOADING', noLive: 'Source only',
+      termHint: 'Type help and press Enter', termLabel: 'Terminal command',
+      ring: 'Ring ring', dial: 'Dialing', callH: 'Pick up the phone', call: 'Call', copyEmail: 'Copy email',
+      amNew: '1 NEW MESSAGE', amPlay: 'Play the message again', amFrom: 'From: Graba',
+      coffeeH: 'Let\'s grab a coffee', coffeeP: 'Pull up a chair. Tell me about your idea, your business or a project you need help with, over a Bosnian coffee or online. I usually reply the same day.', coffeeCta: 'Send a message',
+      timelineH: 'Timeline', timelineP: 'Pick a floppy to load a year.', disk: 'Disk',
+      stackP: 'The keys I press most.',
+      servP: 'Notes stuck to the monitor so I never forget.',
+      posterP: 'The divers of the Old Bridge in Mostar jump. So can you: start the project you keep postponing.'
+    },
+    term: {
+      boot: ['GRABA OS v1.0', 'Type help and press Enter.'],
+      help: ['help            this list', 'projects        all programs', 'open <name>     run a program (open glaze)', 'whoami          who lives here', 'contact         how to reach me', 'services        what I can do for you', 'stack           tools I use', 'coffee          take a break', 'skoci           jump', 'lang en|bs      change language', 'history         last commands', 'clear           clean the screen', 'exit            leave the computer'],
+      unknown: 'Bad command or file name: ', notFound: 'No such program: ', opening: 'Running ', coffee: ['  ( (', '   ) )', ' ........', ' |      |]', ' \\      /', '  `----\'', 'Coffee is ready. Write to me and we will talk.'],
+      skoci: ['3...', '2...', '1...', 'SKOČI!', '  \\o/', '   |', '  / \\', '~~~~~~ splash ~~~~~~'], empty: 'No commands yet.', bye: 'Bye.'
     }
   },
 
@@ -86,21 +95,8 @@ window.PF = {
     title: 'Ahmed Grabus · Softverski inženjer',
     desc: 'Ahmed Grabus (Graba), softverski inženjer iz Bosne i Hercegovine. Brze i lijepe web stranice i full-stack proizvodi.',
     nav: { work: 'Radovi', services: 'Usluge', process: 'Proces', about: 'O meni' },
-    touch: 'Javite se', menu: 'Meni', close: 'Zatvori',
-    blur1: 'Pozdrav, ja sam Ahmed Grabus,',
-    blur2: 'softverski inženjer iz Bosne i Hercegovine',
-    type: 'Drago mi je što ste tu. Pravim brze i lijepe web stranice i full-stack proizvode. Šta pravimo?',
-    pills: ['Pogledaj radove', 'Pokreni projekat', 'Pozovi me', 'Piši na Viber'],
-    reach: 'Pišite mi:', copy: 'Kopiraj email', copied: 'Email kopiran',
-    scrub: 'Pomjeri miš, klikni ga', tapBot: 'Dodirni ga, zna trikove',
+    copy: 'Kopiraj email', copied: 'Email kopiran',
     workK: 'Izabrani radovi', workH: 'Stvari koje sam dizajnirao, napravio i *objavio.*',
-    street: {
-      k: 'Izabrani radovi · Mostar, Kujundžiluk', h: 'Prošetajte *mojom čaršijom.*',
-      p: 'Svaki dućan u ovoj staroj mostarskoj ulici je jedan moj projekat. Skrolajte da hodate, dodirnite dućan da uđete.',
-      walk: 'Skrolaj i hodaj', open: 'Uđi u dućan', list: 'Svi radovi kao lista', close: 'Zatvori',
-      end: 'Stigli ste do Starog mosta.', endP: 'Svaki projekat ovdje je počeo jednim razgovorom. Hajde da počnemo i vaš.', endCta: 'Javite se', bridge: 'Otvori projekat Old Bridge Mostar',
-      night: 'Veče se spušta nad Neretvu'
-    },
     view: 'Pogledaj', live: 'Otvori stranicu', code: 'Kod', liveTag: 'Uživo',
     items: {
       myshishapedia: ['MyShishapedia', 'Web aplikacija · Enciklopedija', 'Dvojezična enciklopedija okusa za nargile: sastojci, profili okusa, poređenja, mikser i kviz. Vlastiti generator unaprijed pravi 190+ stranica, uz pametnu pretragu i kartice za dijeljenje.'],
@@ -134,12 +130,32 @@ window.PF = {
     contactK: 'Kontakt', contactH: 'Napravimo nešto *dobro.*',
     contactP: 'Pišite mi o ideji, biznisu ili projektu za koji vam treba pomoć. Obično odgovorim istog dana.',
     email: 'Email', phone: 'Telefon', viber: 'Viber', whatsapp: 'WhatsApp', github: 'GitHub',
-    foot: 'Dizajnirao i napravio Ahmed Grabus.', top: 'Na vrh',
-    sheetP: 'Brže je uživo? Pozovite ili pišite direktno.', swipe: 'Prevuci',
-    bot: {
-      hi: 'Zdravo!', wake: 'Ups, budan sam!', dizzy: 'Joj, vrti mi se...',
-      tricks: ['Hehe, škaklja!', 'Juhuuu!', 'Već mi se sviđaš.', 'Kompajliram...', 'Pst, pogledaj radove.'],
-      pills: ['Najbolje je dole.', 'Pričaj mi ideju!', 'Zvoni, zvoni!', 'Viber radi odlično.', 'Kopiraj i piši mi.']
+    foot: 'Dizajnirao i napravio Ahmed Grabus.',
+    credit: 'Soba inspirisana radom',
+    role: 'Softverski inženjer',
+    hero: 'Softverski inženjer iz Bosne i Hercegovine. Pravim brze i lijepe web stranice i full-stack proizvode.',
+    room: {
+      loading: 'Učitavam projekte...', press: 'PRITISNI BILO KOJU TIPKU', tap: 'DODIRNI ZA START', nogl: 'Ova soba traži WebGL. Otvaram klasičnu verziju.',
+      hintD: 'Klikni bilo šta u sobi', hintM: 'Dodirni bilo šta u sobi',
+      back: 'Nazad', classic: 'Klasična verzija', room: 'Uđi u sobu', soundOn: 'Zvuk uključen', soundOff: 'Zvuk isključen', lang: 'Jezik',
+      names: { monitor: 'Projekti', phone: 'Kontakt', answering: 'O meni', coffee: 'Idemo na kafu', notes: 'Usluge', floppies: 'Vremenska linija', poster: 'Skoči.', aquarium: 'Akvarijum', lamp: 'Stona lampa', cassette: 'Zvuk', keyboard: 'Tehnologije' },
+      objs: { monitor: 'Stari računar', phone: 'Crveni telefon', answering: 'Telefonska sekretarica', coffee: 'Džezva i fildžan', notes: 'Ceduljice', floppies: 'Diskete', poster: 'Plakat', aquarium: 'Akvarijum', lamp: 'Stona lampa', cassette: 'Kasetofon', keyboard: 'Tastatura' },
+      lampOn: 'Svjetlo upaljeno', lampOff: 'Svjetlo ugašeno', fish: 'Ribice su se razbježale. Vratit će se.',
+      programs: 'Programi', run: 'Otvori uživo', source: 'Kod', all: 'Svi programi', loadingExe: 'UČITAVAM', noLive: 'Samo kod',
+      termHint: 'Upiši help i pritisni Enter', termLabel: 'Komanda za terminal',
+      ring: 'Zvoni', dial: 'Biram', callH: 'Podigni slušalicu', call: 'Pozovi', copyEmail: 'Kopiraj email',
+      amNew: '1 NOVA PORUKA', amPlay: 'Pusti poruku ponovo', amFrom: 'Od: Graba',
+      coffeeH: 'Idemo na kafu', coffeeP: 'Primakni stolicu. Pričaj mi o ideji, biznisu ili projektu za koji ti treba pomoć, uz bosansku kafu ili online. Obično odgovorim istog dana.', coffeeCta: 'Pošalji poruku',
+      timelineH: 'Vremenska linija', timelineP: 'Izaberi disketu da učitaš godinu.', disk: 'Disketa',
+      stackP: 'Tipke koje najčešće pritišćem.',
+      servP: 'Ceduljice na monitoru, da nikad ne zaboravim.',
+      posterP: 'Skakači sa Starog mosta u Mostaru skaču. Možeš i ti: pokreni projekat koji stalno odgađaš.'
+    },
+    term: {
+      boot: ['GRABA OS v1.0', 'Upiši help i pritisni Enter.'],
+      help: ['help            ova lista', 'projects        svi programi', 'open <ime>      pokreni program (open glaze)', 'whoami          ko ovdje živi', 'contact         kako do mene', 'services        šta mogu uraditi za vas', 'stack           alati koje koristim', 'coffee          pauza za kafu', 'skoci           skoči', 'lang en|bs      promijeni jezik', 'history         zadnje komande', 'clear           očisti ekran', 'exit            ustani od računara'],
+      unknown: 'Nepoznata komanda: ', notFound: 'Nema takvog programa: ', opening: 'Pokrećem ', coffee: ['  ( (', '   ) )', ' ........', ' |      |]', ' \\      /', '  `----\'', 'Kafa je spremna. Piši mi pa da pričamo.'],
+      skoci: ['3...', '2...', '1...', 'SKOČI!', '  \\o/', '   |', '  / \\', '~~~~~~ pljus ~~~~~~'], empty: 'Još nema komandi.', bye: 'Ćao.'
     }
   }
 };
