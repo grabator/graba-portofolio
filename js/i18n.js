@@ -68,7 +68,8 @@ window.PF = {
     hero: 'Based in Bosnia and Herzegovina. I build fast, beautiful websites and full-stack products.',
     room: {
       loading: 'Loading projects...', press: 'PRESS ANY KEY TO START', tap: 'TAP TO START', nogl: 'This room needs WebGL. Opening the classic view.',
-      hintD: 'Click anything in the room', hintM: 'Tap anything in the room',
+      hintD: 'Click anything · drag to look · WASD to walk', hintM: 'Tap anything · drag to look · stick to walk',
+      reset: 'Back to the start view', showNames: 'Show all names',
       back: 'Back', classic: 'Classic view', room: 'Enter the room', soundOn: 'Sound on', soundOff: 'Sound off', lang: 'Language',
       names: { monitor: 'Projects', phone: 'Contact', answering: 'About me', coffee: 'Grab a coffee', notes: 'Services', floppies: 'Timeline', poster: 'Skoči.', aquarium: 'Aquarium', lamp: 'Desk lamp', cassette: 'Sound', keyboard: 'Tech stack' },
       objs: { monitor: 'Old computer', phone: 'Red phone', answering: 'Answering machine', coffee: 'Džezva and fildžan', notes: 'Sticky notes', floppies: 'Floppy disks', poster: 'Poster', aquarium: 'Aquarium', lamp: 'Desk lamp', cassette: 'Cassette player', keyboard: 'Keyboard' },
@@ -136,7 +137,8 @@ window.PF = {
     hero: 'Iz Bosne i Hercegovine. Pravim brze i lijepe web stranice i full-stack proizvode.',
     room: {
       loading: 'Učitavam projekte...', press: 'PRITISNI BILO KOJU TIPKU', tap: 'DODIRNI ZA START', nogl: 'Ova soba traži WebGL. Otvaram klasičnu verziju.',
-      hintD: 'Klikni bilo šta u sobi', hintM: 'Dodirni bilo šta u sobi',
+      hintD: 'Klikni bilo šta · prevuci za pogled · WASD za hod', hintM: 'Dodirni bilo šta · prevuci za pogled · krug za hod',
+      reset: 'Vrati početni pogled', showNames: 'Prikaži sva imena',
       back: 'Nazad', classic: 'Klasična verzija', room: 'Uđi u sobu', soundOn: 'Zvuk uključen', soundOff: 'Zvuk isključen', lang: 'Jezik',
       names: { monitor: 'Projekti', phone: 'Kontakt', answering: 'O meni', coffee: 'Idemo na kafu', notes: 'Usluge', floppies: 'Vremenska linija', poster: 'Skoči.', aquarium: 'Akvarijum', lamp: 'Stona lampa', cassette: 'Zvuk', keyboard: 'Tehnologije' },
       objs: { monitor: 'Stari računar', phone: 'Crveni telefon', answering: 'Telefonska sekretarica', coffee: 'Džezva i fildžan', notes: 'Ceduljice', floppies: 'Diskete', poster: 'Plakat', aquarium: 'Akvarijum', lamp: 'Stona lampa', cassette: 'Kasetofon', keyboard: 'Tastatura' },

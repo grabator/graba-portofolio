@@ -98,6 +98,17 @@ export function createCRT(PF) {
       text('PTS', x + ww - 30, y + 24, 34, AMBER, 'right');
     }
   }
+  // čuvar ekrana: kad niko ništa ne dira, monitor sam vrti projekte
+  function drawSaver(t) {
+    const i = Math.floor(t / 6) % PF.work.length, w = PF.work[i];
+    dither(w.id, w.img); const nx = PF.work[(i + 1) % PF.work.length]; dither(nx.id, nx.img);
+    frame(PF.exe[w.id]);
+    const shot = shots[w.id];
+    if (shot) { g.imageSmoothingEnabled = false; g.drawImage(shot, 36, 70, W - 72, (W - 72) * 9 / 16); g.imageSmoothingEnabled = true; }
+    else art(w, 36, 70, W - 72, (W - 72) * 9 / 16);
+    text(PF[lang].items[w.id][0].toUpperCase(), 40, 402, 34);
+    text((i + 1) + '/' + PF.work.length + '  ' + w.year, 40, 436, 24, DIM);
+  }
   function drawTerm(t) {
     frame('C:\\GRABA\\TERMINAL');
     const max = 11, lines = termLines.slice(-max);
@@ -125,6 +136,7 @@ export function createCRT(PF) {
     else if (state === 'project') drawProject(t);
     else if (state === 'term') drawTerm(t);
     else if (state === 'year') drawYear(t);
+    else if (state === 'saver') drawSaver(t);
     finish(t);
     texture.needsUpdate = true;
   }
@@ -150,6 +162,7 @@ export function createCRT(PF) {
   return {
     texture, update,
     setLang(l) { lang = l; dirty = true; },
+    saver() { state = 'saver'; dirty = true; },
     menu(i) { state = 'menu'; if (i != null) sel = i; dirty = true; },
     select(i) { sel = (i + PF.work.length) % PF.work.length; if (state === 'menu') dirty = true; },
     get selected() { return sel; },

@@ -147,7 +147,7 @@ export function buildRoom(opts) {
   const hemi = new THREE.HemisphereLight(0x2a3570, 0x1a0508, 0.55); scene.add(hemi);
   const moon = new THREE.DirectionalLight(0x7f9bff, 1.6);
   moon.position.set(0.8, 7, -1.0); moon.target.position.set(0, 0, -1.0);
-  if (shadows) { moon.castShadow = true; moon.shadow.mapSize.set(1024, 1024); moon.shadow.camera.left = -3; moon.shadow.camera.right = 3; moon.shadow.camera.top = 3; moon.shadow.camera.bottom = -3; moon.shadow.camera.near = 2; moon.shadow.camera.far = 10; moon.shadow.bias = -0.0015; moon.shadow.radius = 3; }
+  if (shadows) { moon.castShadow = true; moon.shadow.mapSize.setScalar(opts.mobile ? 512 : 1024); moon.shadow.camera.left = -3; moon.shadow.camera.right = 3; moon.shadow.camera.top = 3; moon.shadow.camera.bottom = -3; moon.shadow.camera.near = 2; moon.shadow.camera.far = 10; moon.shadow.bias = -0.0015; moon.shadow.radius = 3; }
   scene.add(moon, moon.target);
   const aqLight = new THREE.PointLight(0x2fe0ee, 9, 9, 1.6); aqLight.position.set(0, 1.45, -2.55); scene.add(aqLight);
   const aqFill = new THREE.PointLight(0x1aa9c8, 3.5, 6, 1.8); aqFill.position.set(0, 2.4, -2.2); scene.add(aqFill);
@@ -245,7 +245,7 @@ export function buildRoom(opts) {
 
   /* ---------- sto i stolice ---------- */
   const deskY = 0.78, deskZ = -1.05;
-  const deskM = mat(0xbfc4d2, 0.4, 0);
+  const deskM = mat(0xa9afbf, 0.42, 0);
   const top = new THREE.Mesh(roundedBox(2.5, 0.06, 1.05, 0.02), deskM); top.rotation.x = -Math.PI / 2; top.rotation.x = 0;
   top.position.set(0, deskY - 0.03, deskZ); top.receiveShadow = shadows; top.castShadow = shadows; scene.add(top);
   const apron = new THREE.Mesh(new THREE.BoxGeometry(2.3, 0.12, 0.95), mat(0xc9ccd8, 0.5)); apron.position.set(0, deskY - 0.12, deskZ); scene.add(apron);
@@ -268,14 +268,20 @@ export function buildRoom(opts) {
     const hit = new THREE.Mesh(new THREE.BoxGeometry(...hitSize), new THREE.MeshBasicMaterial({ visible: false }));
     hit.position.copy(hitPos); group.add(hit);
     const mats = []; group.traverse((o) => { if (o.isMesh && o !== hit && o.material && o.material.isMeshStandardMaterial && !mats.includes(o.material)) mats.push(o.material); });
-    group.traverse((o) => { if (o.isMesh && o !== hit) { o.castShadow = shadows; o.receiveShadow = shadows; } });
+    group.traverse((o) => { if (o.isMesh && o !== hit) { o.castShadow = shadows && !o.userData.noShadow; o.receiveShadow = shadows && !o.userData.noShadow; } });
     items[key] = { group, hit, mats, anchor };
   }
 
   // monitor (CRT) na kućištu računara
   const crt = new THREE.Group(); crt.position.set(0.22, deskY, deskZ - 0.18); scene.add(crt);
   const crtBody = new THREE.Mesh(roundedBox(0.5, 0.42, 0.44, 0.03), beige()); crtBody.position.set(0, 0.25, -0.02); crt.add(crtBody);
-  const crtBack = new THREE.Mesh(new THREE.BoxGeometry(0.36, 0.3, 0.2), beige()); crtBack.position.set(0, 0.24, -0.3); crt.add(crtBack);
+  // zadnji dio katodne cijevi: krnja piramida koja se sužava unazad
+  const tubeGeo = new THREE.CylinderGeometry(0.17, 0.28, 0.28, 4, 1); tubeGeo.rotateY(Math.PI / 4); tubeGeo.rotateX(-Math.PI / 2);
+  const crtBack = new THREE.Mesh(tubeGeo, beige()); crtBack.scale.set(1, 0.82, 1); crtBack.position.set(0, 0.24, -0.36); crt.add(crtBack);
+  const ventM = mat(0x5e5a50, 0.8);
+  for (let i = 0; i < 6; i++) { const v = new THREE.Mesh(new THREE.BoxGeometry(0.26, 0.004, 0.012), ventM); v.position.set(0, 0.462, -0.16 + i * 0.03); crt.add(v); }
+  const pwr = new THREE.Mesh(new THREE.BoxGeometry(0.012, 0.006, 0.004), new THREE.MeshBasicMaterial({ color: new THREE.Color(0.3, 2.6, 0.8), toneMapped: false })); pwr.position.set(0.17, 0.065, 0.2); crt.add(pwr);
+  const badge = new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.012, 0.003), mat(0x3a3832, 0.5, 0.3)); badge.position.set(-0.13, 0.065, 0.2); crt.add(badge);
   const bezel = new THREE.Mesh(roundedBox(0.43, 0.34, 0.02, 0.008), mat(0x2a2a2e, 0.6)); bezel.position.set(0, 0.26, 0.205); crt.add(bezel);
   const scrGeo = new THREE.PlaneGeometry(0.37, 0.28, 16, 12);
   { const p = scrGeo.attributes.position; for (let i = 0; i < p.count; i++) { const x = p.getX(i) / 0.185, y = p.getY(i) / 0.14; p.setZ(i, (1 - x * x * 0.5 - y * y * 0.5) * 0.012); } scrGeo.computeVertexNormals(); }
@@ -285,8 +291,10 @@ export function buildRoom(opts) {
   const knob = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 0.01, 12), mat(0x333, 0.4)); knob.rotation.x = Math.PI / 2; knob.position.set(0.2, 0.08, 0.21); crt.add(knob);
   // ceduljice (usluge) na rubu monitora
   const notes = new THREE.Group(); crt.add(notes);
-  const noteM = (i) => mat(0xd8cf86, 0.85, 0, { side: THREE.DoubleSide, map: opts.noteTextures[i] });
+  // ceduljice blago svijetle same od sebe, da se vide i u sjeni monitora
+  const noteM = (i) => mat(0xd8cf86, 0.85, 0, { side: THREE.DoubleSide, map: opts.noteTextures[i], emissiveMap: opts.noteTextures[i], emissive: 0xffffff, emissiveIntensity: 0.35 });
   [[-0.25, 0.4, -0.25], [-0.27, 0.27, 0.12], [0.255, 0.43, 0.2], [0.27, 0.3, -0.1]].forEach(([x, y, rz], i) => { const n = new THREE.Mesh(new THREE.PlaneGeometry(0.075, 0.075), noteM(i)); n.position.set(x, y, 0.218); n.rotation.z = rz; notes.add(n); });
+  notes.children.forEach((n) => { n.userData.noShadow = true; });
   reg('monitor', crt, [0.42, 0.34, 0.12], new THREE.Vector3(0, 0.26, 0.2), new THREE.Vector3(0.22, deskY + 0.56, deskZ - 0.0));
   const notesHit = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.3, 0.05), new THREE.MeshBasicMaterial({ visible: false })); notesHit.position.set(-0.26, 0.34, 0.23); crt.add(notesHit);
   items.notes = { group: notes, hit: notesHit, mats: [], anchor: new THREE.Vector3(0.22 - 0.3, deskY + 0.5, deskZ + 0.02) };
@@ -332,6 +340,8 @@ export function buildRoom(opts) {
   handset.add(new THREE.Mesh(new THREE.TubeGeometry(hsCurve, 20, 0.022, 10), redM));
   for (const s of [-1, 1]) { const cup = new THREE.Mesh(new THREE.CylinderGeometry(0.036, 0.03, 0.05, 18), redM); cup.position.set(s * 0.13, -0.012, 0); handset.add(cup); }
   const cord = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3([new THREE.Vector3(-0.12, 0.02, -0.05), new THREE.Vector3(-0.2, 0.0, 0.0), new THREE.Vector3(-0.22, -0.0, 0.12), new THREE.Vector3(-0.15, 0.0, 0.16)]), 20, 0.005, 6), mat(0x5e0a10, 0.6)); ph.add(cord);
+  // viljuške na koje se spušta slušalica
+  for (const sx of [-0.1, 0.1]) { const f = new THREE.Mesh(new THREE.CylinderGeometry(0.009, 0.012, 0.05, 8), redM); f.position.set(sx, 0.135, 0); ph.add(f); const tip = new THREE.Mesh(new THREE.SphereGeometry(0.011, 8, 6), redM); tip.position.set(sx, 0.16, 0); ph.add(tip); }
   reg('phone', ph, [0.36, 0.24, 0.3], new THREE.Vector3(0, 0.1, 0), new THREE.Vector3(-0.62, deskY + 0.3, deskZ - 0.12));
   items.phone.handset = handset; items.phone.dial = dial;
 
@@ -407,7 +417,8 @@ export function buildRoom(opts) {
   // stolni predmeti: [x, z, okret]; zidni: [x, y, veličina]
   const LAYOUT = {
     wide: { monitor: [0.22, deskZ - 0.18, 0], keyboard: [0.22, deskZ + 0.27, 0], drive: [-0.32, deskZ - 0.2, 0], floppies: [-0.78, deskZ + 0.22, 0], phone: [-0.62, deskZ - 0.12, 0.35], answering: [-0.93, deskZ - 0.3, 0.25], coffee: [0.82, deskZ + 0.22, 0], cassette: [0.98, deskZ - 0.3, -0.3], lamp: [1.08, deskZ - 0.05, 0], poster: [-2.25, 1.72, 1], clock: [2.1, 2.1, 1] },
-    tall: { monitor: [0, deskZ - 0.2, 0], keyboard: [0, deskZ + 0.26, 0], drive: [-0.43, deskZ - 0.36, 0.12], floppies: [-0.62, deskZ + 0.36, 0.2], phone: [-0.5, deskZ + 0.06, 0.3], answering: [-0.72, deskZ - 0.38, 0.3], coffee: [0.5, deskZ + 0.3, 0], cassette: [0.48, deskZ - 0.34, -0.25], lamp: [0.74, deskZ - 0.04, 0], poster: [-0.7, 2.3, 0.6], clock: [0.75, 2.38, 0.7] }
+    // na uskom ekranu sitni predmeti su malo veći (četvrti broj), da se prepoznaju
+    tall: { monitor: [0, deskZ - 0.2, 0, 1.08], keyboard: [0, deskZ + 0.26, 0], drive: [-0.45, deskZ - 0.38, 0.12], floppies: [-0.64, deskZ + 0.36, 0.2, 1.2], phone: [-0.52, deskZ + 0.06, 0.3, 1.3], answering: [-0.74, deskZ - 0.38, 0.3, 1.2], coffee: [0.5, deskZ + 0.3, 0, 1.45], cassette: [0.5, deskZ - 0.36, -0.25, 1.2], lamp: [0.76, deskZ - 0.04, 0, 1.1], poster: [-0.7, 2.3, 0.6], clock: [0.75, 2.38, 0.7] }
   };
   const groups = { monitor: crt, keyboard: kb, drive: dd, floppies: floppyBox, phone: ph, answering: am, coffee: cf, cassette: cs, lamp: lp, poster, clock };
   let layoutName = '';
@@ -416,15 +427,17 @@ export function buildRoom(opts) {
     layoutName = name;
     const L = LAYOUT[name];
     for (const k in L) {
-      const g = groups[k], [a, b, c] = L[k];
+      const g = groups[k], [a, b, c, sc = 1] = L[k];
       if (k === 'poster' || k === 'clock') { g.position.set(a, b, g.position.z); g.scale.setScalar(c); }
-      else { g.position.set(a, deskY, b); g.rotation.y = c; }
+      else { g.position.set(a, deskY, b); g.rotation.y = c; g.scale.setScalar(sc); }
     }
     crtLight.position.set(crt.position.x + 0.03, deskY + 0.28, crt.position.z + 0.23);
     lampLight.position.set(lp.position.x - 0.13, deskY + 0.6, lp.position.z - 0.07);
     lampLight.target.position.set(lp.position.x - 0.73, deskY, lp.position.z + 0.15);
     scene.updateMatrixWorld(true);
+    api.shadowDirty = true;
   }
+  const api = { shadowDirty: true, shadowsLive: shadows };
   setLayout(opts.layout || 'wide');
 
   /* ---------- prašina u zraku ---------- */
@@ -454,7 +467,7 @@ export function buildRoom(opts) {
     const sk = new THREE.Color().setRGB(0.35 + day * 1.4, 0.45 + day * 1.4, 1.0 + day * 1.2);
     sk.lerp(new THREE.Color(1.4, 0.9, 0.9), dusk * 0.5);
     skyMat.color.copy(sk).multiplyScalar(intro);
-    moon.intensity = (shadows ? 3.2 + day * 2.4 : 1.5 + day * 2.2) * intro;
+    moon.intensity = (api.shadowsLive ? 3.2 + day * 2.4 : 1.2 + day * 1.8) * intro;
     // noć hladno plava, dan skoro bijel, svitanje i sumrak ljubičasti
     moon.color.set(0x7f9bff).lerp(new THREE.Color(0xe4eaff), day).lerp(new THREE.Color(0xb592ff), dusk * 0.6);
     hemi.intensity = (0.45 + day * 1.5 + (lit ? 0.5 : 0)) * intro;
@@ -484,7 +497,7 @@ export function buildRoom(opts) {
   }
   function scatter() { fishGoal.scatter = performance.now() / 1000 + 1.2; }
 
-  return { scene, items, groups, setLayout, anim, setLighting, setClock, setRain, poke, scatter, dustMat, shadows, lights: { moon, aqLight, lampLight }, deskY, deskZ, aqRect: { ...AQ, z: BACK } };
+  return { scene, items, groups, setLayout, flags: api, anim, setLighting, setClock, setRain, poke, scatter, dustMat, shadows, lights: { moon, aqLight, lampLight }, deskY, deskZ, aqRect: { ...AQ, z: BACK } };
 }
 
 /* spoji dvije geometrije (tijelo ribe i rep) bez dodatnih biblioteka */

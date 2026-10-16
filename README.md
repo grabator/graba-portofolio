@@ -20,6 +20,8 @@ Portfolio je jedna tamna 3D soba u tri ujutro: rebrasti zidovi, krovni prozor kr
 | Kasetofon | Zvuk sobe (pamti se, ugašen po defaultu) |
 | Tastatura | Alati i tehnologije |
 
+Po sobi se može malo prošetati: prevlačenjem mišem ili prstom okreće se pogled, a hoda se strelicama ili tipkama WASD (točkić miša ide naprijed i nazad). Na mobitelu je dolje lijevo krug za kretanje kao u FIFI, a dva prsta (štipanje) idu naprijed i nazad. Kretanje je ograničeno na par koraka ispred stola, a dugme u donjem desnom uglu vraća početni pogled. Dugme "?" na tren pokaže imena svih predmeta; inače se ime vidi kad je predmet na sredini pogleda ili pod mišem. Kad niko ništa ne dira, monitor sam vrti projekte.
+
 Svjetlo kroz krovni prozor prati pravo doba dana u Mostaru (Europe/Sarajevo), a kad u Mostaru pada kiša (Open-Meteo), kapi klize niz staklo. Zidni sat pokazuje mostarsko vrijeme.
 
 Postoji i **klasična verzija**: obična stranica sa svim sadržajem. Otvara se dugmetom "Klasična verzija", a sama se prikaže ako uređaj nema WebGL ili ako je uključeno smanjeno kretanje (reduced motion). Sav sadržaj klasične verzije je i u `index.html` kao pravi HTML, zbog Googlea.

@@ -88,7 +88,7 @@ img { max-width: 100%; display: block; }
 .hot.side-t .hot-t { top: auto; bottom: calc(50% + 16px); }
 .hot.side-b .hot-t { top: calc(50% + 16px); }
 .hot.nolabel .hot-t { opacity: 0 !important; }
-.hot:hover .hot-t, .hot:focus-visible .hot-t, .hot.is-hover .hot-t { opacity: 1; }
+.hot.lbl .hot-t, .hot:focus-visible .hot-t { opacity: 1; }
 .hot.is-ringing .hot-dot { background: var(--red); box-shadow: 0 0 14px var(--red); }
 .hot.is-ringing .hot-dot::after { border-color: var(--red); animation-duration: 0.6s; }
 .hot.is-ringing .hot-t { opacity: 1; color: #fff; border-color: rgba(224, 48, 61, 0.7); }
@@ -99,6 +99,23 @@ img { max-width: 100%; display: block; }
 .room-on .room-hint { opacity: 0.85; }
 .room-hint.gone { opacity: 0 !important; }
 .is-focus .hovername { opacity: 0; }
+#gl.grab { cursor: grabbing; }
+
+/* alati u uglu i krug za kretanje (kao u FIFI) */
+.room-tools { position: absolute; right: max(16px, env(safe-area-inset-right)); bottom: max(20px, env(safe-area-inset-bottom)); display: flex; gap: 8px; opacity: 0; transition: opacity 0.6s; }
+.room-on .room-tools { opacity: 1; }
+.room-tools button { width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--line); background: rgba(5, 6, 15, 0.6); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); color: var(--text); font: 24px/1 var(--mono); cursor: pointer; display: grid; place-items: center; padding: 0; }
+.room-tools button:hover { color: var(--aqua); border-color: var(--aqua); }
+.room-tools svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.room-tools .rt-reset { display: none; }
+.room-tools.moved .rt-reset { display: grid; }
+.joy { position: absolute; left: max(20px, env(safe-area-inset-left)); bottom: max(24px, calc(env(safe-area-inset-bottom) + 12px)); width: 116px; height: 116px; border-radius: 50%; touch-action: none; opacity: 0; transition: opacity 0.6s; border: 1.5px solid rgba(63, 227, 240, 0.45); background: radial-gradient(circle, rgba(63, 227, 240, 0.1) 0 30%, rgba(5, 6, 15, 0.45) 70%); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); box-shadow: inset 0 0 22px rgba(63, 227, 240, 0.12); }
+.joy::before { content: ''; position: absolute; inset: 14px; border-radius: 50%; border: 1px dashed rgba(63, 227, 240, 0.22); }
+.room-on .joy { opacity: 1; }
+.joy-knob { position: absolute; left: 50%; top: 50%; width: 48px; height: 48px; margin: -24px; border-radius: 50%; background: radial-gradient(circle at 40% 35%, #8ff4fb, var(--aqua) 55%, #1aa9c8); box-shadow: 0 0 18px rgba(63, 227, 240, 0.55); transition: transform 0.18s ease-out; }
+.joy.on .joy-knob { transition: none; }
+.joy.on { border-color: rgba(63, 227, 240, 0.8); }
+.is-focus .joy, .is-focus .room-tools { opacity: 0 !important; pointer-events: none; }
 
 /* ---------- panel ---------- */
 .panel { position: fixed; z-index: 45; top: calc(var(--bar) + 8px); right: 16px; bottom: 16px; width: min(440px, 40vw); overflow: auto; overscroll-behavior: contain; background: rgba(7, 9, 26, 0.88); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid var(--line); border-radius: 16px; padding: 18px 24px 28px; box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5); opacity: 0; transform: translateX(24px); transition: opacity 0.35s ease, transform 0.45s cubic-bezier(.2, .8, .2, 1); }
@@ -238,7 +255,8 @@ html:not(.js) .bar-r, html:not(.js) .skip { display: none; }
   .panel-grip { display: block; width: 44px; height: 5px; border-radius: 3px; background: rgba(255, 255, 255, 0.25); margin: 0 auto 8px; }
   .panel h2 { font-size: 28px; }
   .hot { width: 56px; height: 56px; margin: -28px 0 0 -28px; }
-  .hot-t { opacity: 1; font-size: 20px; line-height: 1; padding: 4px 7px 5px; height: 30px; }
+  .hot-t { font-size: 20px; line-height: 1; padding: 4px 7px 5px; height: 30px; }
+  .room-hint { bottom: calc(150px + env(safe-area-inset-bottom)); font-size: 19px; }
   .hot.side-l .hot-t { left: auto; right: calc(50% + 12px); }
   .hot.side-r .hot-t { left: calc(50% + 12px); }
   .p-facts { grid-template-columns: 1fr; }

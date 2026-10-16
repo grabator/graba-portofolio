@@ -59,8 +59,9 @@ export async function createRoom(o) {
   /* ---------- renderer i scena ---------- */
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, alpha: false, powerPreference: 'default', stencil: false });
   renderer.toneMapping = THREE.NoToneMapping;
-  const shadowsWanted = !mobileish;
-  renderer.shadowMap.enabled = shadowsWanted; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  // sjene su statične (mjesec i namještaj se ne pomjeraju), pa se mapa sjena crta rijetko i radi i na mobitelu
+  const shadowsWanted = true;
+  renderer.shadowMap.enabled = true; renderer.shadowMap.type = mobileish ? THREE.PCFShadowMap : THREE.PCFSoftShadowMap; renderer.shadowMap.autoUpdate = false;
   const crt = createCRT(PF); crt.setLang(lang);
   const tallNow = () => (canvas.clientWidth || innerWidth) / (canvas.clientHeight || innerHeight) < 0.85;
   const room = buildRoom({ shadows: shadowsWanted, mobile: mobileish, layout: tallNow() ? 'tall' : 'wide', crtTexture: crt.texture, ...makeTextures() });
@@ -81,6 +82,7 @@ export async function createRoom(o) {
     camera.aspect = W / H;
     room.setLayout(portrait() ? 'tall' : 'wide');
     room.dustMat.uniforms.uPx.value = dpr;
+    if (typeof introP !== 'undefined') lighting();
     if (!focusKey && !tween) setRig(wideView());
     if (focusKey && !tween) setRig(closeView(focusKey), panelOffset());
   }
@@ -89,7 +91,7 @@ export async function createRoom(o) {
     if (dpr > 1) { dpr = Math.max(1, dpr - 0.25); stats.steps.push('dpr ' + dpr); resize(); }
     else if (post.bloom) { post.setBloom(false); stats.steps.push('bloom off'); }
     else if (renderer.shadowMap.enabled) {
-      renderer.shadowMap.enabled = false; room.lights.moon.castShadow = false;
+      renderer.shadowMap.enabled = false; room.lights.moon.castShadow = false; room.flags.shadowsLive = false; lighting();
       scene.traverse((m) => { if (m.material) [].concat(m.material).forEach((x) => { x.needsUpdate = true; }); });
       stats.steps.push('shadows off');
     }
@@ -105,9 +107,46 @@ export async function createRoom(o) {
   /* ---------- kamera ---------- */
   const rig = { pos: V(0, 1.4, 3), look: V(0, 1.1, -1.5), fov: 46, off: new THREE.Vector2() };
   let tween = null;
-  function wideView() {
-    return portrait() ? { pos: V(0, 2.3, 1.25), look: V(0, 1.2, -1.3), fov: 70 } : { pos: V(0, 1.36, 1.85), look: V(0, 1.16, -1.6), fov: 50 };
+  function baseView() {
+    return portrait() ? { pos: V(0, 2.25, 1.1), look: V(0, 1.16, -1.3), fov: 70 } : { pos: V(0, 1.36, 1.85), look: V(0, 1.16, -1.6), fov: 50 };
   }
+  // pogled i par koraka po sobi: okret glave i pomak su ograničeni da se ne izađe iz kadra
+  const UP = V(0, 1, 0), LIM = { yaw: 0.6, pitch: 0.26, x: 1.15, zMin: 0.25, zMax: 3.0 };
+  const walk = { x: 0, z: 0, yaw: 0, pitch: 0, tyaw: 0, tpitch: 0, vx: 0, vz: 0, moved: false, reset: false };
+  const keysDown = new Set(), joy = { x: 0, y: 0 };
+  function wideView() {
+    const b = baseView();
+    const pos = b.pos.clone().add(V(walk.x, 0, walk.z));
+    const dir = b.look.clone().sub(b.pos).applyAxisAngle(UP, walk.yaw);
+    const right = V(0, 0, 0).crossVectors(dir, UP).normalize();
+    dir.applyAxisAngle(right, walk.pitch);
+    return { pos, look: pos.clone().add(dir), fov: b.fov };
+  }
+  function stepWalk(dt) {
+    if (focusKey || tween || !running) return;
+    const b = baseView();
+    let fx = joy.x, fz = joy.y;
+    if (keysDown.has('w') || keysDown.has('arrowup')) fz -= 1;
+    if (keysDown.has('s') || keysDown.has('arrowdown')) fz += 1;
+    if (keysDown.has('a') || keysDown.has('arrowleft')) fx -= 1;
+    if (keysDown.has('d') || keysDown.has('arrowright')) fx += 1;
+    const len = Math.hypot(fx, fz); if (len > 1) { fx /= len; fz /= len; }
+    if (len > 0.05) { walk.reset = false; markMoved(); }
+    const sp = 1.2, c = Math.cos(walk.yaw), sn = Math.sin(walk.yaw), k = Math.min(1, dt * 7);
+    walk.vx += ((fz * sn + fx * c) * sp - walk.vx) * k;
+    walk.vz += ((fz * c - fx * sn) * sp - walk.vz) * k;
+    walk.x += walk.vx * dt; walk.z += walk.vz * dt;
+    if (walk.reset) { const r = Math.min(1, dt * 4); walk.x -= walk.x * r; walk.z -= walk.z * r; walk.tyaw -= walk.tyaw * r; walk.tpitch -= walk.tpitch * r; if (Math.abs(walk.x) + Math.abs(walk.z) + Math.abs(walk.tyaw) < 0.003) { walk.reset = false; walk.moved = false; tools.classList.remove('moved'); } }
+    walk.x = THREE.MathUtils.clamp(walk.x, -LIM.x, LIM.x);
+    walk.z = THREE.MathUtils.clamp(walk.z, LIM.zMin - b.pos.z, LIM.zMax - b.pos.z);
+    walk.tyaw = THREE.MathUtils.clamp(walk.tyaw, -LIM.yaw, LIM.yaw); walk.tpitch = THREE.MathUtils.clamp(walk.tpitch, -LIM.pitch, LIM.pitch);
+    const r = Math.min(1, dt * 9);
+    walk.yaw += (walk.tyaw - walk.yaw) * r; walk.pitch += (walk.tpitch - walk.pitch) * r;
+    setRig(wideView());
+    // ribice prate onoga ko hoda po sobi
+    if (Math.hypot(walk.vx, walk.vz) > 0.08) room.poke(V(THREE.MathUtils.clamp(camera.position.x * 0.7, -1, 1), 1.4, -3));
+  }
+  function markMoved() { if (!walk.moved) { walk.moved = true; tools.classList.add('moved'); hideHint(); } }
   function closeView(key) {
     const [gk, off, dir, dist0] = CLOSE[key];
     const p = portrait();
@@ -158,11 +197,11 @@ export async function createRoom(o) {
   }
   const lookV = V(0, 0, 0);
   function applyCamera(t) {
-    const idle = performance.now() - par.last > 4000;
+    const idle = performance.now() - par.last > 4000 && !walk.moved;
     const tx = idle ? Math.sin(t * 0.21) * 0.45 : par.tx, ty = idle ? Math.sin(t * 0.13) * 0.3 : par.ty;
     const k = reduced ? 0 : 1;
     par.x += (tx - par.x) * 0.05; par.y += (ty - par.y) * 0.05;
-    const amt = focusKey ? 0.025 : 0.16;
+    const amt = focusKey ? 0.025 : walk.moved ? 0.04 : 0.12;
     camera.position.set(rig.pos.x + par.x * amt * k, rig.pos.y - par.y * amt * 0.5 * k, rig.pos.z);
     lookV.copy(rig.look);
     camera.lookAt(lookV);
@@ -178,7 +217,9 @@ export async function createRoom(o) {
     const aqIntro = Math.min(1, introP * 2.2), intro = Math.max(0, Math.min(1, (introP - 0.3) / 0.7));
     room.setLighting({ day: phase.day, dusk: phase.dusk, lit, intro, aqIntro });
     post.uniforms.uFade.value = Math.min(1, introP * 4);
-    post.uniforms.uExposure.value = 1.0 + (lit ? 0.1 : 0);
+    post.uniforms.uExposure.value = (portrait() ? 0.92 : 1.0) + (lit ? 0.1 : 0);
+    // na uskom ekranu sjaj je blaži, da soba ne izgleda kao u magli
+    post.uniforms.uBloom.value = portrait() ? 0.5 : 0.9;
   }
   function clockTick() {
     const mt = mostarTime(); room.setClock(mt.h, mt.m); phase = dayPhase(mt); lighting();
@@ -225,11 +266,17 @@ export async function createRoom(o) {
   const SIDES = ['r', 'l', 't', 'b'];
   const overlap = (a, b) => a[0] < b[2] && a[2] > b[0] && a[1] < b[3] && a[3] > b[1];
   function placeLabels() {
-    const always = W < 760, placed = [];
+    const now = performance.now(), all = now < showAllUntil, placed = [];
+    const always = true;
+    // ime se vidi kad je predmet na sredini pogleda (najviše dva), pod mišem, u fokusu ili kad se traže sva imena
+    const R = Math.min(W, H) * 0.26;
+    const near = HOTS.map(([k]) => hotBtns[k]).filter((b) => b._vis).map((b) => [b, Math.hypot(b._x - W / 2, b._y - H * 0.52)]).filter(([, d]) => d < R).sort((a, b) => a[1] - b[1]).slice(0, 2).map(([b]) => b);
+    for (const [key] of HOTS) { const b = hotBtns[key]; const want = all || near.includes(b) || b.classList.contains('is-hover') || b === document.activeElement; b.classList.toggle('lbl', want); b._want = want; }
     if (always) for (const [key] of HOTS) { const b = hotBtns[key]; if (b._vis) placed.push([b._x - 9, b._y - 9, b._x + 9, b._y + 9]); }
     // prvo predmeti uz rub ekrana (imaju najmanje mjesta), pa oni u sredini
     const order0 = HOTS.map(([k]) => hotBtns[k]).filter((b) => b._vis).sort((a, b) => (b.dataset.key === 'monitor') - (a.dataset.key === 'monitor') || Math.abs(b._x - W / 2) - Math.abs(a._x - W / 2));
     for (const b of order0) {
+      if (!b._want) continue;
       const tEl = b.querySelector('.hot-t');
       if (!b._lw) b._lw = tEl.offsetWidth || 90;
       const w = b._lw, h = 30, x = b._x, y = b._y;
@@ -279,7 +326,21 @@ export async function createRoom(o) {
     return h ? { key: h.object.userData.key, point: h.point } : null;
   }
   let down = null;
+  const ptrs = new Map();
+  let pinch = 0;
   canvas.addEventListener('pointermove', (e) => {
+    // prevlačenje okreće pogled, dva prsta (štipanje) idu naprijed i nazad
+    if (ptrs.has(e.pointerId) && running && !focusKey) {
+      const pr = ptrs.get(e.pointerId), dx = e.clientX - pr.x, dy = e.clientY - pr.y;
+      pr.x = e.clientX; pr.y = e.clientY;
+      if (ptrs.size === 1 && down && Math.hypot(e.clientX - down.x, e.clientY - down.y) > 6) {
+        walk.tyaw += dx * (o.coarse ? 0.006 : 0.0042); walk.tpitch += dy * (o.coarse ? 0.004 : 0.003); walk.reset = false; markMoved();
+      } else if (ptrs.size === 2) {
+        const [a, b] = [...ptrs.values()], d = Math.hypot(a.x - b.x, a.y - b.y);
+        if (pinch) { const bz = baseView().pos.z; walk.z = THREE.MathUtils.clamp(walk.z - (d - pinch) * 0.006, LIM.zMin - bz, LIM.zMax - bz); walk.reset = false; markMoved(); }
+        pinch = d;
+      }
+    }
     if (!running || focusKey) { nameTip.classList.remove('on'); return; }
     const h = pick(e.clientX, e.clientY);
     if (h && h.key === 'aquarium') room.poke(h.point);
@@ -294,8 +355,32 @@ export async function createRoom(o) {
     } else nameTip.classList.remove('on');
   });
   canvas.addEventListener('pointerleave', () => { nameTip.classList.remove('on'); if (!focusKey) setHover(null); });
-  canvas.addEventListener('pointerdown', (e) => { down = { x: e.clientX, y: e.clientY, t: performance.now() }; });
+  canvas.addEventListener('pointerdown', (e) => {
+    ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY }); pinch = 0;
+    if (ptrs.size === 1) down = { x: e.clientX, y: e.clientY, t: performance.now() }; else down = null;
+    try { canvas.setPointerCapture(e.pointerId); } catch (err) { /* nije bitno */ }
+    canvas.classList.add('grab');
+  });
+  const lift = (e) => { ptrs.delete(e.pointerId); pinch = 0; if (!ptrs.size) canvas.classList.remove('grab'); };
+  canvas.addEventListener('pointercancel', lift);
+  canvas.addEventListener('wheel', (e) => {
+    if (!running || focusKey) return;
+    e.preventDefault();
+    const bz = baseView().pos.z; walk.z = THREE.MathUtils.clamp(walk.z + Math.sign(e.deltaY) * Math.min(0.25, Math.abs(e.deltaY) * 0.0016), LIM.zMin - bz, LIM.zMax - bz);
+    walk.reset = false; markMoved();
+  }, { passive: false });
+  // tipke za hodanje (desktop): WASD i strelice
+  const WALK_KEYS = new Set(['w', 'a', 's', 'd', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright']);
+  addEventListener('keydown', (e) => {
+    const k = (e.key || '').toLowerCase();
+    if (!WALK_KEYS.has(k) || focusKey || !running || e.metaKey || e.ctrlKey || e.altKey) return;
+    if (e.target && e.target.closest && e.target.closest('input, textarea, .panel')) return;
+    e.preventDefault(); keysDown.add(k);
+  });
+  addEventListener('keyup', (e) => keysDown.delete((e.key || '').toLowerCase()));
+  addEventListener('blur', () => keysDown.clear());
   canvas.addEventListener('pointerup', (e) => {
+    lift(e);
     if (!down || !running) return;
     const moved = Math.hypot(e.clientX - down.x, e.clientY - down.y); down = null;
     if (moved > 10) return;
@@ -310,6 +395,36 @@ export async function createRoom(o) {
   const sub = { project: null, year: null, term: { lines: TT().boot.slice(), hist: [] } };
   const hint = document.getElementById('room-hint');
   function hideHint() { hint.classList.add('gone'); }
+
+  /* ---------- alati u uglu: vrati pogled, prikaži imena; krug za kretanje na mobitelu ---------- */
+  const roomEl = document.getElementById('room');
+  const tools = document.createElement('div'); tools.className = 'room-tools';
+  tools.innerHTML = '<button type="button" class="rt-reset" data-r="reset"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v4h4"/></svg></button><button type="button" class="rt-names" data-r="names">?</button>';
+  roomEl.appendChild(tools);
+  let showAllUntil = 0;
+  tools.querySelector('[data-r="reset"]').addEventListener('click', () => { walk.reset = true; keysDown.clear(); });
+  tools.querySelector('[data-r="names"]').addEventListener('click', () => { showAllUntil = performance.now() + 3500; });
+  const joyEl = document.createElement('div'); joyEl.className = 'joy'; joyEl.setAttribute('aria-hidden', 'true');
+  joyEl.innerHTML = '<i class="joy-knob"></i>';
+  if (o.coarse) roomEl.appendChild(joyEl);
+  const knob = joyEl.firstChild; let joyId = null, joyC = null;
+  const JR = 44;
+  joyEl.addEventListener('pointerdown', (e) => { if (focusKey) return; joyId = e.pointerId; const r = joyEl.getBoundingClientRect(); joyC = { x: r.left + r.width / 2, y: r.top + r.height / 2 }; try { joyEl.setPointerCapture(e.pointerId); } catch (err) { /* nije bitno */ } joyEl.classList.add('on'); moveJoy(e); e.preventDefault(); });
+  function moveJoy(e) {
+    if (e.pointerId !== joyId) return;
+    let dx = e.clientX - joyC.x, dy = e.clientY - joyC.y; const d = Math.hypot(dx, dy);
+    if (d > JR) { dx *= JR / d; dy *= JR / d; }
+    knob.style.transform = 'translate(' + dx + 'px,' + dy + 'px)';
+    const k = d < 6 ? 0 : 1; joy.x = dx / JR * k; joy.y = dy / JR * k;
+  }
+  joyEl.addEventListener('pointermove', moveJoy);
+  const joyEnd = (e) => { if (e.pointerId !== joyId) return; joyId = null; joy.x = joy.y = 0; knob.style.transform = ''; joyEl.classList.remove('on'); };
+  joyEl.addEventListener('pointerup', joyEnd); joyEl.addEventListener('pointercancel', joyEnd);
+  function labelTools() {
+    const r = tools.querySelector('[data-r="reset"]'), n = tools.querySelector('[data-r="names"]');
+    r.setAttribute('aria-label', L().reset); r.title = L().reset;
+    n.setAttribute('aria-label', L().showNames); n.title = L().showNames;
+  }
 
   function activate(key, btn) {
     if (key === 'drive') key = 'floppies';
@@ -575,6 +690,7 @@ export async function createRoom(o) {
   /* ---------- otvaranje i zatvaranje: 3D efekti ---------- */
   function onOpen(key) {
     if (key === 'monitor') { if (sub.project) crt.open(sub.project); else crt.menu(); }
+    lastInput = performance.now();
     if (key === 'phone') { stopRing(); handsetUp = 1; }
     if (key === 'floppies') flyState.t0 = -1;
     hots.hidden = true;
@@ -635,7 +751,8 @@ export async function createRoom(o) {
   });
 
   /* ---------- petlja ---------- */
-  let running = false, paused = true, raf = 0, last = performance.now();
+  let running = false, paused = true, raf = 0, last = performance.now(), shadowTick = 0, lastInput = performance.now();
+  ['pointerdown', 'keydown', 'wheel'].forEach((ev) => addEventListener(ev, () => { lastInput = performance.now(); if (crt.state === 'saver' && !focusKey) crt.menu(); }, { passive: true }));
   const clock0 = performance.now();
   function frame(now) {
     raf = requestAnimationFrame(frame);
@@ -644,7 +761,11 @@ export async function createRoom(o) {
     const t = (now - clock0) / 1000, dt = Math.min(0.05, dtMs / 1000);
     if (introP < 1 && introT0) { introP = Math.min(1, (now - introT0) / (reduced ? 300 : 2800)); lighting(); }
     stepTween(now);
+    stepWalk(dt);
     applyCamera(t);
+    // mapa sjena: samo kad se nešto pomjeri (raspored, slušalica), inače svakih 20 kadrova
+    if (renderer.shadowMap.enabled && (room.flags.shadowDirty || ++shadowTick % 20 === 0)) { renderer.shadowMap.needsUpdate = true; room.flags.shadowDirty = false; }
+    if (!focusKey && crt.state === 'menu' && now - lastInput > 15000) crt.saver();
     for (const f of room.anim) f(t, dt);
     crt.update(t);
     if (!hots.hidden) placeHots();
@@ -659,7 +780,7 @@ export async function createRoom(o) {
   addEventListener('resize', () => resize());
 
   // prvi kadar iza boot ekrana: shaderi se kompajliraju dok korisnik čita
-  resize(); setRig(wideView()); labelHots();
+  resize(); setRig(wideView()); labelHots(); labelTools();
   hint.textContent = o.coarse ? L().hintM : L().hintD;
   applyCamera(0);
   lighting();
@@ -676,10 +797,11 @@ export async function createRoom(o) {
       listenOrientation(gesture);
       scheduleRing();
       setTimeout(hideHint, 9000);
+      showAllUntil = performance.now() + (reduced ? 0 : 6500);
     },
     pause(p) { setPaused(p || !running); },
     setLang(l) {
-      lang = l; crt.setLang(l); labelHots();
+      lang = l; crt.setLang(l); labelHots(); labelTools();
       hint.textContent = o.coarse ? L().hintM : L().hintD;
       if (crt.state === 'term') crt.term(sub.term.lines, '');
       rerender();
