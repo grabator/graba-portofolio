@@ -130,9 +130,10 @@ export function buildRoom(opts) {
   /* snopovi mjesečine kroz prozor (prozirni klinovi, aditivno) */
   const shaftMat = new THREE.ShaderMaterial({
     transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide, fog: false,
-    uniforms: { uStrength: { value: 0.16 }, uColor: { value: new THREE.Color(0.45, 0.58, 1.0) } },
+    uniforms: { uStrength: { value: 0.16 }, uColor: { value: new THREE.Color(0.45, 0.58, 1.0) }, uTime: { value: 0 }, uRain: { value: 0 } },
     vertexShader: 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix*modelViewMatrix*vec4(position,1.0); }',
-    fragmentShader: 'uniform float uStrength; uniform vec3 uColor; varying vec2 vUv; void main(){ float a = pow(vUv.y,1.6)*smoothstep(0.0,0.25,vUv.x)*smoothstep(1.0,0.75,vUv.x)*uStrength; gl_FragColor = vec4(uColor*a, a); }'
+    // kad pada kiša, kroz snop svjetla klize tanke kapi (sjena kiše sa krovnog prozora)
+    fragmentShader: 'uniform float uStrength; uniform vec3 uColor; uniform float uTime; uniform float uRain; varying vec2 vUv; void main(){ float a = pow(vUv.y,1.6)*smoothstep(0.0,0.25,vUv.x)*smoothstep(1.0,0.75,vUv.x)*uStrength; float col = floor(vUv.x*90.0); float s = fract(vUv.y*2.2 + uTime*(0.9+fract(col*0.618)*0.6) + fract(col*0.37)*7.0); float streak = smoothstep(0.0,0.02,s)*smoothstep(0.12,0.02,s)*step(0.58,fract(col*0.731)); a *= 1.0 + uRain*(streak*1.7 - 0.12); gl_FragColor = vec4(uColor*a, a); }'
   });
   for (let i = 0; i < 4; i++) {
     const g = new THREE.PlaneGeometry(1.2 + i * 0.3, H + 0.2, 1, 1);
@@ -439,7 +440,7 @@ export function buildRoom(opts) {
 
   /* ---------- svaki kadar ---------- */
   anim.push((t) => {
-    rainMat.uniforms.uTime.value = t; bubMat.uniforms.uTime.value = t; steamMat.uniforms.uTime.value = t; dustMat.uniforms.uTime.value = t;
+    rainMat.uniforms.uTime.value = t; shaftMat.uniforms.uTime.value = t; bubMat.uniforms.uTime.value = t; steamMat.uniforms.uTime.value = t; dustMat.uniforms.uTime.value = t;
     // akvarijum lagano "diše", monitor treperi
     aqLight.intensity = env.aq * (1 + Math.sin(t * 1.7) * 0.04);
     crtLight.intensity = 0.55 * (0.92 + Math.random() * 0.08);
@@ -470,7 +471,7 @@ export function buildRoom(opts) {
     minH.rotation.z = -m / 60 * TAU;
     hourH.rotation.z = -((h % 12) + m / 60) / 12 * TAU;
   }
-  function setRain(on) { rain.visible = on; rainMat.uniforms.uAmount.value = on ? 1 : 0; }
+  function setRain(on) { rain.visible = on; rainMat.uniforms.uAmount.value = on ? 1 : 0; shaftMat.uniforms.uRain.value = on ? 1 : 0; }
   function poke(point) {
     // kucanje po staklu: ribe se rasprše; inače prate tačku
     const t = performance.now() / 1000;

@@ -65,7 +65,7 @@ window.PF = {
     foot: 'Designed and built by Ahmed Grabus.',
     credit: 'Room inspired by',
     role: 'Software engineer',
-    hero: 'Software engineer from Bosnia and Herzegovina. I build fast, beautiful websites and full-stack products.',
+    hero: 'Based in Bosnia and Herzegovina. I build fast, beautiful websites and full-stack products.',
     room: {
       loading: 'Loading projects...', press: 'PRESS ANY KEY TO START', tap: 'TAP TO START', nogl: 'This room needs WebGL. Opening the classic view.',
       hintD: 'Click anything in the room', hintM: 'Tap anything in the room',
@@ -133,7 +133,7 @@ window.PF = {
     foot: 'Dizajnirao i napravio Ahmed Grabus.',
     credit: 'Soba inspirisana radom',
     role: 'Softverski inženjer',
-    hero: 'Softverski inženjer iz Bosne i Hercegovine. Pravim brze i lijepe web stranice i full-stack proizvode.',
+    hero: 'Iz Bosne i Hercegovine. Pravim brze i lijepe web stranice i full-stack proizvode.',
     room: {
       loading: 'Učitavam projekte...', press: 'PRITISNI BILO KOJU TIPKU', tap: 'DODIRNI ZA START', nogl: 'Ova soba traži WebGL. Otvaram klasičnu verziju.',
       hintD: 'Klikni bilo šta u sobi', hintM: 'Dodirni bilo šta u sobi',
