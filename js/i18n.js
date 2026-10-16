@@ -22,7 +22,7 @@ window.PF = {
       fact: { en: '19 Premier League assists in the 2015/16 season, one short of the record.', bs: '19 asistencija u Premier ligi u sezoni 2015/16, jedna manje od rekorda.' }
     },
     eze: {
-      name: 'Eberechi Eze', num: '10', color: '#c8162a', status: { en: 'Active · as of 2025', bs: 'Aktivan · stanje 2025.' },
+      name: 'Eberechi Eze', num: '10', color: '#c8162a', status: { en: 'Active · as of October 2026', bs: 'Aktivan · stanje oktobar 2026.' },
       born: { en: '29 June 1998, London, England', bs: '29. juni 1998, London, Engleska' },
       pos: { en: 'Attacking midfielder', bs: 'Ofanzivni vezni' },
       clubs: [['2016–2020', 'Queens Park Rangers'], ['2018', 'Wycombe Wanderers (loan)'], ['2020–2025', 'Crystal Palace'], ['2025–', 'Arsenal']],
@@ -31,10 +31,10 @@ window.PF = {
       fact: { en: 'Scored the only goal of the 2025 FA Cup final for Crystal Palace against Manchester City. Made his England debut against Bosnia and Herzegovina.', bs: 'Dao jedini gol u finalu FA kupa 2025. za Crystal Palace protiv Manchester Cityja. Za Englesku debitovao protiv Bosne i Hercegovine.' }
     },
     dzeko: {
-      name: 'Edin Džeko', num: '11', color: '#1d3a94', status: { en: 'Active · as of 2025', bs: 'Aktivan · stanje 2025.' },
+      name: 'Edin Džeko', num: '11', color: '#1d3a94', status: { en: 'Active · as of October 2026', bs: 'Aktivan · stanje oktobar 2026.' },
       born: { en: '17 March 1986, Sarajevo, Bosnia and Herzegovina', bs: '17. mart 1986, Sarajevo, Bosna i Hercegovina' },
       pos: { en: 'Striker', bs: 'Napadač' },
-      clubs: [['2003–2005', 'Željezničar'], ['2005–2007', 'Teplice'], ['2007–2011', 'Wolfsburg'], ['2011–2015', 'Manchester City'], ['2015–2021', 'Roma'], ['2021–2023', 'Inter'], ['2023–2025', 'Fenerbahçe'], ['2025–', 'Fiorentina']],
+      clubs: [['2003–2005', 'Željezničar'], ['2005–2007', 'Teplice'], ['2007–2011', 'Wolfsburg'], ['2011–2015', 'Manchester City'], ['2015–2021', 'Roma'], ['2021–2023', 'Inter'], ['2023–2025', 'Fenerbahçe'], ['2025–2026', 'Fiorentina'], ['2026–', 'Schalke 04']],
       nat: { en: 'Bosnia and Herzegovina · captain, all-time top scorer and most capped player, World Cup 2014', bs: 'Bosna i Hercegovina · kapiten, najbolji strijelac i rekorder po broju nastupa, Svjetsko prvenstvo 2014' },
       trophies: { en: ['Bundesliga 2009', 'Premier League 2012, 2014', 'League Cup 2014', 'Coppa Italia 2022, 2023', 'Supercoppa Italiana 2021, 2022'], bs: ['Bundesliga 2009', 'Premier liga 2012, 2014', 'Liga kup 2014', 'Kup Italije 2022, 2023', 'Superkup Italije 2021, 2022'] },
       fact: { en: 'Top scorer of the Bundesliga (2009/10) and of Serie A (2016/17, 29 goals).', bs: 'Najbolji strijelac Bundeslige (2009/10) i Serie A (2016/17, 29 golova).' }
