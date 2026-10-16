@@ -7,10 +7,10 @@ import * as THREE from 'three';
 
 const quadVS = 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = vec4(position.xy, 0.0, 1.0); }';
 
-export function createPost(renderer) {
+export function createPost(renderer, o = {}) {
   const size = new THREE.Vector2();
   const opts = { type: THREE.HalfFloatType, depthBuffer: true };
-  const sceneRT = new THREE.WebGLRenderTarget(1, 1, { ...opts, samples: 4 });
+  const sceneRT = new THREE.WebGLRenderTarget(1, 1, { ...opts, samples: o.samples || 4 });
   const halfOpts = { type: THREE.HalfFloatType, depthBuffer: false };
   const rtA = new THREE.WebGLRenderTarget(1, 1, halfOpts);
   const rtB = new THREE.WebGLRenderTarget(1, 1, halfOpts);

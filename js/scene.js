@@ -424,46 +424,76 @@ export function buildRoom(opts) {
   items.lamp.bulb = bulbM;
 
   /* ---------- zidni predmeti ---------- */
-  // plakat "SKOČI." (lijevo od akvarijuma)
-  // dvije slike lijevo i desno od akvarijuma (apstraktni printovi u bojama sobe)
-  function artTex(kind) {
-    return canvas(384, 480, (g, w, h) => {
-      g.fillStyle = '#e9e6dd'; g.fillRect(0, 0, w, h);
-      const ix = 34, iy = 34, iw = w - 68, ih = h - 68;
-      g.fillStyle = '#0d1230'; g.fillRect(ix, iy, iw, ih);
-      g.save(); g.beginPath(); g.rect(ix, iy, iw, ih); g.clip();
-      if (kind === 'orbit') {
-        g.fillStyle = '#c8162a'; g.beginPath(); g.arc(ix + iw * 0.62, iy + ih * 0.38, iw * 0.3, 0, TAU); g.fill();
-        g.strokeStyle = '#3fe3f0'; g.lineWidth = 2;
-        for (let r = 30; r < 260; r += 22) { g.globalAlpha = 1 - r / 280; g.beginPath(); g.arc(ix + iw * 0.3, iy + ih * 0.72, r, 0, TAU); g.stroke(); }
-        g.globalAlpha = 1; g.fillStyle = '#e9e6dd'; g.fillRect(ix + 26, iy + ih * 0.5, iw - 52, 3);
-      } else {
-        const r = rng(9);
-        const seeds = Array.from({ length: 5 }, () => [ix + r() * iw, iy + r() * ih, 40 + r() * 90]);
-        g.lineWidth = 1.6;
-        for (let k = 0; k < 26; k++) {
-          g.strokeStyle = k % 6 === 0 ? 'rgba(63,227,240,0.95)' : 'rgba(63,227,240,0.4)';
-          g.beginPath();
-          for (let x = ix; x <= ix + iw; x += 4) {
-            let y = iy + 10 + k * (ih / 25);
-            for (const [sx, sy, sr] of seeds) { const d = Math.hypot(x - sx, y - sy); y -= 26 * Math.exp(-(d * d) / (2 * sr * sr)); }
-            if (x === ix) g.moveTo(x, y); else g.lineTo(x, y);
-          }
-          g.stroke();
+  // dva neona pored sata: lijevo lopta (fudbalska strana sobe), desno nargila (strana sa policom)
+  function neonTex(kind, col) {
+    return canvas(512, 512, (g, w, h) => {
+      g.clearRect(0, 0, w, h);
+      g.lineCap = 'round'; g.lineJoin = 'round';
+      const path = new Path2D();
+      if (kind === 'ball') {
+        const cx = 256, cy = 256, R = 180, r = 62;
+        path.arc(cx, cy, R, 0, TAU);
+        const pent = (k, rr, a0) => [cx + Math.cos(a0 + k / 5 * TAU) * rr, cy + Math.sin(a0 + k / 5 * TAU) * rr];
+        const a0 = -Math.PI / 2;
+        let [x, y] = pent(0, r, a0); path.moveTo(x, y);
+        for (let k = 1; k <= 5; k++) { [x, y] = pent(k % 5, r, a0); path.lineTo(x, y); }
+        for (let k = 0; k < 5; k++) {
+          const [ax, ay] = pent(k, r, a0), [bx, by] = pent(k, 118, a0);
+          path.moveTo(ax, ay); path.lineTo(bx, by);
+          const [c1x, c1y] = pent(k, 118, a0 - 0.32), [c2x, c2y] = pent(k, 118, a0 + 0.32);
+          path.moveTo(c1x, c1y); path.lineTo(bx, by); path.lineTo(c2x, c2y);
+          const [e1x, e1y] = pent(k, R, a0 - 0.42), [e2x, e2y] = pent(k, R, a0 + 0.42);
+          path.moveTo(c1x, c1y); path.lineTo(e1x, e1y); path.moveTo(c2x, c2y); path.lineTo(e2x, e2y);
         }
-        g.fillStyle = '#c8162a'; g.beginPath(); g.arc(ix + iw * 0.7, iy + ih * 0.3, 6, 0, TAU); g.fill();
+      } else {
+        // nargila: posuda, tanjir, cijev, staklo i crijevo, iznad dva pramena dima
+        path.moveTo(206, 150); path.lineTo(306, 150); path.lineTo(288, 198); path.lineTo(224, 198); path.closePath();
+        path.moveTo(170, 214); path.quadraticCurveTo(256, 244, 342, 214);
+        path.moveTo(256, 226); path.lineTo(256, 306);
+        path.moveTo(240, 306); path.lineTo(272, 306);
+        path.moveTo(244, 306); path.lineTo(244, 326); path.bezierCurveTo(150, 344, 156, 470, 256, 470); path.bezierCurveTo(356, 470, 362, 344, 268, 326); path.lineTo(268, 306);
+        path.moveTo(186, 410); path.quadraticCurveTo(256, 430, 326, 410);
+        path.moveTo(258, 262); path.bezierCurveTo(350, 262, 410, 320, 396, 410); path.lineTo(388, 452);
+        for (const x of [236, 276]) { path.moveTo(x, 132); path.bezierCurveTo(x + 22, 112, x - 22, 92, x + 4, 60); }
       }
-      g.restore();
+      g.strokeStyle = col; g.lineWidth = 26; g.globalAlpha = 0.18; g.shadowColor = col; g.shadowBlur = 40; g.stroke(path);
+      g.globalAlpha = 1; g.lineWidth = 11; g.shadowBlur = 18; g.stroke(path);
+      g.shadowBlur = 0; g.strokeStyle = 'rgba(255,255,255,0.85)'; g.lineWidth = 4; g.stroke(path);
     });
   }
-  function framedArt(kind) {
-    const gr = new THREE.Group(); gr.position.z = BACK + 0.025; scene.add(gr);
-    const fr = new THREE.Mesh(new THREE.BoxGeometry(0.72, 0.9, 0.035), mat(0x0a0b12, 0.4, 0.3)); gr.add(fr);
-    const tx = artTex(kind);
-    const pic = new THREE.Mesh(new THREE.PlaneGeometry(0.66, 0.84), new THREE.MeshStandardMaterial({ map: tx, roughness: 0.8, emissiveMap: tx, emissive: 0xffffff, emissiveIntensity: 0.22 })); pic.position.z = 0.019; gr.add(pic);
+  let neonL, neonR;
+  {
+  const neonFlick = [];
+  function neon(kind, col, x) {
+    const gr = new THREE.Group(); gr.position.set(x, 2.4, BACK + 0.05); scene.add(gr);
+    const plate = new THREE.Mesh(new THREE.PlaneGeometry(0.66, 0.66), new THREE.MeshStandardMaterial({ color: 0x0a0d1f, roughness: 0.15, metalness: 0.2, transparent: true, opacity: 0.35, depthWrite: false })); plate.position.z = -0.012; gr.add(plate);
+    const m = new THREE.MeshBasicMaterial({ map: neonTex(kind, col), transparent: true, toneMapped: false, depthWrite: false, color: new THREE.Color(1.7, 1.7, 1.7) });
+    const tube = new THREE.Mesh(new THREE.PlaneGeometry(0.62, 0.62), m); gr.add(tube);
+    const scrM = mat(0x9aa0ad, 0.3, 0.9);
+    for (const [sx, sy] of [[-0.29, 0.29], [0.29, 0.29], [-0.29, -0.29], [0.29, -0.29]]) { const s = new THREE.Mesh(new THREE.CylinderGeometry(0.008, 0.008, 0.04, 8), scrM); s.rotation.x = Math.PI / 2; s.position.set(sx, sy, -0.03); gr.add(s); }
+    neonFlick.push(m);
     return gr;
   }
-  const artL = framedArt('orbit'), artR = framedArt('topo');
+  neonL = neon('ball', '#3fe3f0', -0.85); neonR = neon('hookah', '#f2a33c', 0.85);
+  // neon povremeno trepne (kao pravi)
+  anim.push((t) => {
+    neonFlick.forEach((m, i) => {
+      const k = Math.sin(t * 0.37 + i * 2.1) > 0.995 ? 0.35 + Math.random() * 0.5 : 1;
+      const v = 1.7 * k * (0.96 + 0.04 * Math.sin(t * 3 + i));
+      m.color.setScalar(v);
+    });
+  });
+  // dvije svjetlosne LED trake na zadnjem zidu (lijevo hladna, desno topla), sa odsjajem na zidu
+  const washTex = canvas(64, 256, (g, w, h) => { const gr = g.createLinearGradient(0, 0, w, 0); gr.addColorStop(0, 'rgba(255,255,255,0)'); gr.addColorStop(0.5, 'rgba(255,255,255,0.55)'); gr.addColorStop(1, 'rgba(255,255,255,0)'); g.fillStyle = gr; g.fillRect(0, 0, w, h); const v = g.createLinearGradient(0, 0, 0, h); v.addColorStop(0, 'rgba(0,0,0,1)'); v.addColorStop(0.12, 'rgba(0,0,0,0)'); v.addColorStop(0.88, 'rgba(0,0,0,0)'); v.addColorStop(1, 'rgba(0,0,0,1)'); g.globalCompositeOperation = 'destination-out'; g.fillStyle = v; g.fillRect(0, 0, w, h); });
+  const ledBars = [];
+  for (const [x, col] of [[-1.5, [0.45, 1.9, 2.1]], [1.5, [2.3, 1.15, 0.35]]]) {
+    const prof = new THREE.Mesh(new THREE.BoxGeometry(0.045, 2.5, 0.03), mat(0x1a1d28, 0.35, 0.8)); prof.position.set(x, 1.6, BACK + 0.016); scene.add(prof);
+    const strip = new THREE.Mesh(new THREE.PlaneGeometry(0.022, 2.44), new THREE.MeshBasicMaterial({ color: new THREE.Color(...col), toneMapped: false })); strip.position.set(x, 1.6, BACK + 0.032); scene.add(strip);
+    const wash = new THREE.Mesh(new THREE.PlaneGeometry(0.75, 2.9), new THREE.MeshBasicMaterial({ map: washTex, color: new THREE.Color(col[0] * 0.09, col[1] * 0.09, col[2] * 0.09), transparent: true, blending: THREE.AdditiveBlending, depthWrite: false })); wash.position.set(x, 1.6, BACK + 0.008); scene.add(wash);
+    ledBars.push(strip.material);
+  }
+  anim.push((t) => { ledBars.forEach((m, i) => { const b = 0.85 + 0.15 * Math.sin(t * 0.8 + i * Math.PI); m.color.setRGB(...(i ? [2.3 * b, 1.15 * b, 0.35 * b] : [0.45 * b, 1.9 * b, 2.1 * b])); }); });
+  }
   // dresovi u ramovima na bočnim zidovima (leđa dresa, prezime i broj, bez grbova):
   // lijevo Özil 10 i Eze 10 (Arsenal), desno Džeko 11 (BiH) i Ibrahimović 10 (PSG)
   function jerseyTex(name, num, k) {
@@ -494,7 +524,7 @@ export function buildRoom(opts) {
     const shirtM = new THREE.MeshStandardMaterial({ map: tex, roughness: 0.8, emissiveMap: tex, emissive: 0xffffff, emissiveIntensity: 0.4 });
     const shirt = new THREE.Mesh(new THREE.PlaneGeometry(0.86, 1.0), shirtM); shirt.position.z = 0.032; fr.add(shirt);
     const glass = new THREE.Mesh(new THREE.PlaneGeometry(0.9, 1.04), new THREE.MeshPhysicalMaterial({ color: 0xbfd6ff, transparent: true, opacity: 0.07, roughness: 0.05, depthWrite: false }));
-    glass.position.z = 0.036; fr.add(glass);
+    glass.position.z = 0.036; if (!opts.mobile) fr.add(glass);
     const plate = new THREE.Mesh(new THREE.BoxGeometry(0.26, 0.04, 0.01), mat(0x8c7a52, 0.4, 0.6)); plate.position.set(0, -0.6, 0.03); fr.add(plate);
     const hit = new THREE.Mesh(new THREE.BoxGeometry(1.0, 1.15, 0.12), new THREE.MeshBasicMaterial({ visible: false })); fr.add(hit);
     items[key] = { group: fr, hit, mats: [box.material, shirtM], anchor: fr.position.clone() };
@@ -627,19 +657,21 @@ export function buildRoom(opts) {
 
   // zidni sat (mostarsko vrijeme)
   const clock = new THREE.Group(); clock.position.set(2.1, 2.1, BACK + 0.03); scene.add(clock);
-  const face = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.2, 0.03, 40), [mat(0x101326, 0.5), new THREE.MeshStandardMaterial({ map: opts.clockTexture, roughness: 0.5, emissiveMap: opts.clockTexture, emissive: 0xffffff, emissiveIntensity: 0.05 }), mat(0x101326, 0.5)]);
+  const face = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.2, 0.03, 40), [mat(0x101326, 0.5), new THREE.MeshStandardMaterial({ map: opts.clockTexture, roughness: 0.5, emissiveMap: opts.clockTexture, emissive: 0xffffff, emissiveIntensity: 0.9 }), mat(0x101326, 0.5)]);
   face.rotation.x = Math.PI / 2; clock.add(face);
-  const hourH = new THREE.Mesh(new THREE.BoxGeometry(0.012, 0.1, 0.006), mat(0x0d0f1c, 0.4)); hourH.geometry.translate(0, 0.045, 0); hourH.position.z = 0.02; clock.add(hourH);
+  const handM = new THREE.MeshBasicMaterial({ color: new THREE.Color(1.5, 1.6, 1.7), toneMapped: false });
+  const ringC = new THREE.Mesh(new THREE.TorusGeometry(0.206, 0.006, 8, 64), new THREE.MeshBasicMaterial({ color: new THREE.Color(0.5, 2.0, 2.2), toneMapped: false })); ringC.position.z = 0.016; clock.add(ringC);
+  const hourH = new THREE.Mesh(new THREE.BoxGeometry(0.012, 0.1, 0.006), handM); hourH.geometry.translate(0, 0.045, 0); hourH.position.z = 0.02; clock.add(hourH);
   // temperatura u Mostaru na brojčaniku sata
   function setTemp(txt) {
     const tx = opts.clockTexture, c = tx.userData.canvas, g = tx.userData.ctx; if (!c) return;
-    g.fillStyle = '#e8eaf1'; g.fillRect(c.width / 2 - 82, c.height / 2 + 30, 164, 34);
-    g.fillStyle = '#1a1e33'; g.font = '500 22px "Inter Tight", sans-serif'; g.textAlign = 'center'; g.textBaseline = 'alphabetic';
+    g.fillStyle = '#121730'; g.fillRect(c.width / 2 - 82, c.height / 2 + 30, 164, 34);
+    g.fillStyle = '#f2a33c'; g.font = '500 22px "Inter Tight", sans-serif'; g.textAlign = 'center'; g.textBaseline = 'alphabetic';
     g.fillText(txt, c.width / 2, c.height / 2 + 56); tx.needsUpdate = true;
   }
-  const minH = new THREE.Mesh(new THREE.BoxGeometry(0.008, 0.15, 0.006), mat(0x0d0f1c, 0.4)); minH.geometry.translate(0, 0.07, 0); minH.position.z = 0.024; clock.add(minH);
+  const minH = new THREE.Mesh(new THREE.BoxGeometry(0.008, 0.15, 0.006), handM); minH.geometry.translate(0, 0.07, 0); minH.position.z = 0.024; clock.add(minH);
 
-  /* ---------- kutak za fudbal (lijevi ugao) i polica sa duhanima za nargilu (desni ugao) ---------- */
+  /* ---------- kutak za fudbal i taktička tabla (lijevo), polica MyShishapedia (desno) ---------- */
   // mini gol i lopta: klik na loptu je šut u gol
   const goal = new THREE.Group(); goal.position.set(-2.95, 0, -2.35); goal.rotation.y = Math.PI / 4; scene.add(goal);
   const postM = mat(0xe9ebf2, 0.4);
@@ -667,28 +699,151 @@ export function buildRoom(opts) {
     else if (k < 3.6) { const e = (k - 2.6); ball.position.lerpVectors(goalIn, ballHome, e); ball.position.y = 0.11; ball.rotation.x += dt * 10; }
     else { ball.position.copy(ballHome); kick.t0 = -1; net.scale.z = 1; }
   });
-  // polica sa duhanima (veza sa MyShishapedijom): klik otvara projekat na monitoru
-  const shelf = new THREE.Group(); shelf.position.set(2.85, 1.15, BACK + 0.14); scene.add(shelf);
-  const board = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.03, 0.24), mat(0x161829, 0.6, 0.1)); shelf.add(board);
-  const flav = [['MINT', '#3fe3f0'], ['GRAPE', '#7a3fd0'], ['PEACH', '#ff9a6b'], ['LEMON', '#f2d64b'], ['ICE', '#bfe9ff'], ['MIX', '#e0303d']];
-  flav.forEach(([name, col], i) => {
-    const lt = canvas(128, 64, (g, w, h) => { g.fillStyle = '#12141d'; g.fillRect(0, 0, w, h); g.fillStyle = col; g.fillRect(0, 10, w, 30); g.fillStyle = '#12141d'; g.font = '600 20px "Inter Tight", sans-serif'; g.textAlign = 'center'; g.fillText(name, w / 2, 32); });
-    const tin = new THREE.Mesh(new THREE.CylinderGeometry(0.048, 0.048, 0.085, 24), [new THREE.MeshStandardMaterial({ map: lt, roughness: 0.4, metalness: 0.4, emissiveMap: lt, emissive: 0xffffff, emissiveIntensity: 0.25 }), mat(0x9aa0ad, 0.3, 0.9), mat(0x9aa0ad, 0.3, 0.9)]);
-    tin.position.set(-0.36 + i * 0.145, 0.058, 0.02); tin.rotation.y = 0.4 + i; shelf.add(tin);
+  {
+  // polica MyShishapedia (desno na zadnjem zidu): pravi logo, tri police i 20 okusa iz baze.
+  // Sve konzerve su jedna geometrija i jedna tekstura (brže na mobitelu). Klik otvara projekat na monitoru.
+  const shelf = new THREE.Group(); shelf.position.set(2.3, 0, BACK + 0.02); scene.add(shelf);
+  const SW = 1.04, SY0 = 1.04, SY1 = 2.04;
+  const panelM = new THREE.MeshStandardMaterial({ map: canvas(256, 512, (g, w, h) => {
+    g.fillStyle = '#16100c'; g.fillRect(0, 0, w, h);
+    for (let x = 0; x < w; x += 2) { g.fillStyle = 'rgba(' + (60 + (x * 37) % 30) + ',40,26,' + (0.18 + ((x * 13) % 7) / 40) + ')'; g.fillRect(x, 0, 1, h); }
+  }), roughness: 0.75 });
+  const panel = new THREE.Mesh(new THREE.BoxGeometry(SW, SY1 - SY0, 0.03), panelM); panel.position.set(0, (SY0 + SY1) / 2, 0.015); shelf.add(panel);
+  // topli odsjaj iza ploče
+  const halo = new THREE.Mesh(new THREE.PlaneGeometry(SW + 0.5, SY1 - SY0 + 0.5), new THREE.MeshBasicMaterial({ map: canvas(128, 128, (g, w, h) => { const r = g.createRadialGradient(64, 64, 20, 64, 64, 64); r.addColorStop(0, 'rgba(242,163,60,0.5)'); r.addColorStop(1, 'rgba(242,163,60,0)'); g.fillStyle = r; g.fillRect(0, 0, w, h); }), transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, opacity: 0.5 }));
+  halo.position.set(0, (SY0 + SY1) / 2, -0.005); shelf.add(halo);
+  const logoM = new THREE.MeshBasicMaterial({ transparent: true, toneMapped: false, color: new THREE.Color(1.25, 1.25, 1.25), depthWrite: false, opacity: 0 });
+  new THREE.TextureLoader().load('assets/myshishapedia.png', (tx) => { tx.colorSpace = THREE.SRGBColorSpace; tx.anisotropy = 4; logoM.map = tx; logoM.opacity = 1; logoM.needsUpdate = true; });
+  const logo = new THREE.Mesh(new THREE.PlaneGeometry(0.94, 0.155), logoM); logo.position.set(0, SY1 - 0.11, 0.034); shelf.add(logo);
+  const FLAV = [
+    ['Swiss Bonbon', '#f4efe6', '#c8162a'], ['Ice Bonbon', '#bfe9ff', '#14315c'], ['Baku Nights', '#2a1b4d', '#f2c66d'], ['Coconut Shake', '#f2ebe0', '#6b4a2f'], ['Love 66', '#d81e5b', '#ffffff'], ['Dubai', '#c9a25a', '#1b1408'], ['Lady Killer', '#8e1a3a', '#ffd6e0'],
+    ['Blue Ice', '#1f6fd1', '#e9f4ff'], ['Peppermint Shake', '#2fbf8f', '#0b2b20'], ['Berlin Nights', '#1a1d2e', '#c7d0ff'], ['Angel Lips', '#f6b8c8', '#5a1730'], ['Double Apple', '#2d8a3a', '#f4f0d0'], ['Grape Mint', '#5b2a86', '#c8ffe8'], ['Kashmir Peach', '#ff9a6b', '#3b1406'],
+    ['Code 69', '#0e0f14', '#3fe3f0'], ['Supernova', '#11163a', '#ffe36b'], ['Pinkman', '#ff4fa3', '#1b0612'], ['Hawaii', '#ffcf3a', '#1d4d2a'], ['Blue Mist', '#7fb5ff', '#0d1f45'], ['Cherry Mint', '#b3122e', '#d8fff4']
+  ];
+  const COLS = 4, CW = 512, CH = 128, ROWS = Math.ceil((FLAV.length + 1) / COLS);
+  const atlas = canvas(COLS * CW, ROWS * CH, (g) => {
+    FLAV.forEach(([name, bg, ink], i) => {
+      const x = (i % COLS) * CW, y = Math.floor(i / COLS) * CH;
+      g.fillStyle = bg; g.fillRect(x, y, CW, CH);
+      const sh = g.createLinearGradient(x, 0, x + CW, 0); sh.addColorStop(0, 'rgba(0,0,0,0.45)'); sh.addColorStop(0.5, 'rgba(255,255,255,0.12)'); sh.addColorStop(1, 'rgba(0,0,0,0.45)');
+      g.fillStyle = sh; g.fillRect(x, y, CW, CH);
+      g.fillStyle = 'rgba(205,210,220,0.9)'; g.fillRect(x, y, CW, 12); g.fillRect(x, y + CH - 12, CW, 12);
+      g.fillStyle = ink; g.textAlign = 'center'; g.textBaseline = 'middle';
+      let fs = 34; g.font = '700 ' + fs + 'px "Inter Tight", sans-serif';
+      while (g.measureText(name).width > 196 && fs > 18) { fs -= 2; g.font = '700 ' + fs + 'px "Inter Tight", sans-serif'; }
+      g.fillText(name, x + CW / 2, y + CH / 2 + 2);
+      g.globalAlpha = 0.6; g.fillRect(x + CW / 2 - 40, y + CH / 2 + 26, 80, 3); g.globalAlpha = 1;
+    });
+    // zadnja ćelija: metalni poklopac
+    const i = FLAV.length, x = (i % COLS) * CW, y = Math.floor(i / COLS) * CH;
+    const m = g.createLinearGradient(x, y, x + CW, y + CH); m.addColorStop(0, '#d9dde6'); m.addColorStop(0.5, '#8f96a6'); m.addColorStop(1, '#c9ced8'); g.fillStyle = m; g.fillRect(x, y, CW, CH);
   });
-  const sign = new THREE.Mesh(new THREE.PlaneGeometry(0.62, 0.12), new THREE.MeshBasicMaterial({ map: canvas(512, 100, (g, w, h) => { g.fillStyle = '#05060f'; g.fillRect(0, 0, w, h); g.font = '600 56px "Inter Tight", sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.shadowColor = '#3fe3f0'; g.shadowBlur = 18; g.fillStyle = '#9ff6fb'; g.fillText('myshishapedia', w / 2, h / 2 + 2); }), toneMapped: false, transparent: true, color: new THREE.Color(1.5, 1.5, 1.5) }));
-  sign.position.set(0, 0.36, -0.1); shelf.add(sign);
-  const shelfHit = new THREE.Mesh(new THREE.BoxGeometry(0.95, 0.55, 0.3), new THREE.MeshBasicMaterial({ visible: false })); shelfHit.position.y = 0.17; shelf.add(shelfHit);
-  items.tins = { group: shelf, hit: shelfHit, mats: [board.material], anchor: shelf.position.clone() };
+  atlas.anisotropy = 8;
+  const cell = (i) => [(i % COLS) / COLS, 1 - (Math.floor(i / COLS) + 1) / ROWS];
+  const tinGeos = [];
+  const PER = [7, 7, 6], ROWY = [SY0 + 0.07, SY0 + 0.36, SY0 + 0.65], TR = 0.058, TH = 0.1;
+  const shelfM = mat(0x5a3d26, 0.55, 0.05), shLedM = new THREE.MeshBasicMaterial({ color: new THREE.Color(2.4, 1.3, 0.4), toneMapped: false });
+  let fi = 0;
+  ROWY.forEach((y, r) => {
+    const b = new THREE.Mesh(new THREE.BoxGeometry(SW - 0.04, 0.024, 0.2), shelfM); b.position.set(0, y - 0.012, 0.11); b.castShadow = shadows; shelf.add(b);
+    const led = new THREE.Mesh(new THREE.BoxGeometry(SW - 0.1, 0.006, 0.012), shLedM); led.position.set(0, y - 0.027, 0.19); shelf.add(led);
+    const n = PER[r], step = 0.14;
+    for (let k = 0; k < n; k++) {
+      const geo = new THREE.CylinderGeometry(TR, TR, TH, 28, 1, false, Math.PI);
+      const uv = geo.attributes.uv, [u0, v0] = cell(fi), [cu, cv] = cell(FLAV.length);
+      for (let j = 0; j < uv.count; j++) {
+        if (j < 29 * 2) uv.setXY(j, u0 + uv.getX(j) / COLS, v0 + uv.getY(j) / ROWS);
+        else uv.setXY(j, cu + (0.1 + uv.getX(j) * 0.8) / COLS, cv + (0.1 + uv.getY(j) * 0.8) / ROWS);
+      }
+      geo.translate(-step * (n - 1) / 2 + k * step, y + TH / 2, 0.1 + (k % 2 ? 0.012 : -0.008));
+      tinGeos.push(geo.toNonIndexed()); fi++;
+    }
+  });
+  // jedna geometrija za sve konzerve
+  const tinGeo = new THREE.BufferGeometry();
+  for (const a of ['position', 'normal', 'uv']) {
+    const parts = tinGeos.map((gg) => gg.attributes[a].array), len = parts.reduce((s, p) => s + p.length, 0), out = new Float32Array(len);
+    let o = 0; parts.forEach((p) => { out.set(p, o); o += p.length; });
+    tinGeo.setAttribute(a, new THREE.BufferAttribute(out, a === 'uv' ? 2 : 3));
+  }
+  tinGeos.forEach((gg) => gg.dispose());
+  const tinM = new THREE.MeshStandardMaterial({ map: atlas, roughness: 0.35, metalness: 0.35, emissiveMap: atlas, emissive: 0xffffff, emissiveIntensity: 0.45 });
+  const tins = new THREE.Mesh(tinGeo, tinM); tins.castShadow = shadows; shelf.add(tins);
+  const shelfHit = new THREE.Mesh(new THREE.BoxGeometry(SW + 0.06, SY1 - SY0 + 0.06, 0.3), new THREE.MeshBasicMaterial({ visible: false })); shelfHit.position.set(0, (SY0 + SY1) / 2, 0.12); shelf.add(shelfHit);
+  items.tins = { group: shelf, hit: shelfHit, mats: [panelM, tinM], anchor: V3(shelf.position.x, SY1, shelf.position.z) };
+
+  }
+  {
+  // taktička tabla kao u svlačionici (lijevo na zadnjem zidu): teren sa magnetima i plan za SquadJury i FPL
+  const board = new THREE.Group(); board.position.set(-2.3, 1.64, BACK + 0.03); scene.add(board);
+  const BW = 1.22, BH = 0.84;
+  const frame = new THREE.Mesh(new THREE.BoxGeometry(BW + 0.04, BH + 0.04, 0.03), mat(0xb7bcc8, 0.3, 0.85)); board.add(frame);
+  const hand = '"Marker Felt", "Chalkboard SE", "Comic Sans MS", "Inter Tight", sans-serif';
+  const PX = 40, PY = 70, PW = 600, PH = 540; // teren na tabli (pikseli)
+  const boardTex = canvas(1024, 704, (g, w, h) => {
+    g.fillStyle = '#12151d'; g.fillRect(0, 0, w, h);
+    const gl = g.createLinearGradient(0, 0, w, h); gl.addColorStop(0, 'rgba(255,255,255,0.06)'); gl.addColorStop(0.5, 'rgba(255,255,255,0)'); gl.addColorStop(1, 'rgba(255,255,255,0.03)'); g.fillStyle = gl; g.fillRect(0, 0, w, h);
+    g.fillStyle = '#e8eaf1'; g.font = '700 34px "Inter Tight", sans-serif'; g.textBaseline = 'alphabetic'; g.fillText('MATCH PLAN', PX, 50);
+    g.fillStyle = '#ff6a75'; g.fillRect(PX + 230, 34, 10, 10);
+    // teren
+    const tf = g.createLinearGradient(PX, 0, PX + PW, 0);
+    for (let s = 0; s < 8; s++) { tf.addColorStop(s / 8, s % 2 ? '#1d5a34' : '#22663b'); tf.addColorStop((s + 1) / 8 - 0.001, s % 2 ? '#1d5a34' : '#22663b'); }
+    g.fillStyle = tf; g.fillRect(PX, PY, PW, PH);
+    g.strokeStyle = 'rgba(255,255,255,0.85)'; g.lineWidth = 3;
+    g.strokeRect(PX + 10, PY + 10, PW - 20, PH - 20);
+    g.beginPath(); g.moveTo(PX + PW / 2, PY + 10); g.lineTo(PX + PW / 2, PY + PH - 10); g.stroke();
+    g.beginPath(); g.arc(PX + PW / 2, PY + PH / 2, 52, 0, TAU); g.stroke();
+    g.strokeRect(PX + 10, PY + PH / 2 - 95, 80, 190); g.strokeRect(PX + PW - 90, PY + PH / 2 - 95, 80, 190);
+    g.strokeRect(PX + 10, PY + PH / 2 - 42, 28, 84); g.strokeRect(PX + PW - 38, PY + PH / 2 - 42, 28, 84);
+    // strelice markerom
+    g.lineCap = 'round'; g.lineWidth = 5;
+    const arrow = (pts, col) => {
+      g.strokeStyle = col; g.setLineDash([14, 10]); g.beginPath(); g.moveTo(pts[0], pts[1]); g.quadraticCurveTo(pts[2], pts[3], pts[4], pts[5]); g.stroke(); g.setLineDash([]);
+      const a = Math.atan2(pts[5] - pts[3], pts[4] - pts[2]); g.beginPath(); g.moveTo(pts[4], pts[5]); g.lineTo(pts[4] - 18 * Math.cos(a - 0.5), pts[5] - 18 * Math.sin(a - 0.5)); g.moveTo(pts[4], pts[5]); g.lineTo(pts[4] - 18 * Math.cos(a + 0.5), pts[5] - 18 * Math.sin(a + 0.5)); g.stroke();
+    };
+    arrow([PX + 370, PY + 90, PX + 470, PY + 60, PX + 540, PY + 150], '#ffd84a');
+    arrow([PX + 300, PY + 300, PX + 420, PY + 360, PX + 520, PY + 250], '#ffd84a');
+    arrow([PX + 330, PY + 210, PX + 430, PY + 200, PX + 500, PY + 215], '#ffffff');
+    // bilješke desno
+    const NX = 680;
+    g.fillStyle = '#3fe3f0'; g.font = '700 40px "Inter Tight", sans-serif'; g.fillText('SquadJury', NX, PY + 40);
+    g.fillStyle = '#e8eaf1'; g.font = '30px ' + hand;
+    ['ocijeni tim 1-10', 'duel H2H ✓', 'privatne lige'].forEach((s, i) => g.fillText(s, NX, PY + 96 + i * 46));
+    g.strokeStyle = 'rgba(232,234,241,0.35)'; g.lineWidth = 2; g.beginPath(); g.moveTo(NX, PY + 252); g.lineTo(w - 40, PY + 252); g.stroke();
+    g.fillStyle = '#c86bff'; g.font = '700 40px "Inter Tight", sans-serif'; g.fillText('FPL', NX, PY + 316);
+    g.fillStyle = '#e8eaf1'; g.font = '30px ' + hand;
+    ['kapiten (C)', 'transferi: 1 FT', 'wildcard?', 'deadline!'].forEach((s, i) => g.fillText(s, NX, PY + 372 + i * 46));
+    g.strokeStyle = '#ff6a75'; g.lineWidth = 4; g.beginPath(); g.ellipse(NX + 66, PY + 500, 84, 26, -0.04, 0, TAU); g.stroke();
+    g.fillStyle = 'rgba(232,234,241,0.55)'; g.font = '600 22px "Inter Tight", sans-serif'; g.fillText('4-3-3 · PRESING · BRZA TRANZICIJA', PX, PY + PH + 46);
+  });
+  const boardM = new THREE.MeshStandardMaterial({ map: boardTex, roughness: 0.25, metalness: 0.05, emissiveMap: boardTex, emissive: 0xffffff, emissiveIntensity: 0.38 });
+  const face2 = new THREE.Mesh(new THREE.PlaneGeometry(BW, BH), boardM); face2.position.z = 0.016; board.add(face2);
+  // magneti 4-3-3 (jedan InstancedMesh, jedan poziv crtanja)
+  const F433 = [[0.06, 0.5], [0.22, 0.15], [0.2, 0.38], [0.2, 0.62], [0.22, 0.85], [0.4, 0.28], [0.37, 0.5], [0.4, 0.72], [0.62, 0.18], [0.66, 0.5], [0.62, 0.82]];
+  const OPP = [[0.8, 0.35], [0.8, 0.65], [0.9, 0.5]];
+  const magGeo = new THREE.CylinderGeometry(0.022, 0.022, 0.012, 16); magGeo.rotateX(Math.PI / 2);
+  const mags = new THREE.InstancedMesh(magGeo, new THREE.MeshBasicMaterial(), F433.length + OPP.length);
+  const mm = new THREE.Matrix4(), cRed = new THREE.Color(0.75, 0.1, 0.13), cBlue = new THREE.Color(0.15, 0.35, 0.9), cGk = new THREE.Color(0.9, 0.75, 0.2);
+  [...F433, ...OPP].forEach(([fx, fy], i) => {
+    const px = PX + fx * PW, py = PY + fy * PH;
+    mm.makeTranslation((px / 1024 - 0.5) * BW, (0.5 - py / 704) * BH, 0.024); mags.setMatrixAt(i, mm);
+    mags.setColorAt(i, i === 0 ? cGk : i < F433.length ? cRed : cBlue);
+  });
+  board.add(mags);
+  const tray = new THREE.Mesh(new THREE.BoxGeometry(BW * 0.7, 0.02, 0.05), mat(0xb7bcc8, 0.3, 0.85)); tray.position.set(0, -BH / 2 - 0.03, 0.03); board.add(tray);
+  [[-0.2, 0xe0303d], [-0.12, 0x3a7bff], [-0.04, 0x1a1d28]].forEach(([x, c]) => { const mk = new THREE.Mesh(new THREE.CylinderGeometry(0.009, 0.009, 0.12, 8), mat(c, 0.4)); mk.rotation.z = Math.PI / 2; mk.position.set(x * 2 + 0.25, -BH / 2 - 0.01, 0.035); board.add(mk); });
+  const boardHit = new THREE.Mesh(new THREE.BoxGeometry(BW + 0.06, BH + 0.1, 0.1), new THREE.MeshBasicMaterial({ visible: false })); board.add(boardHit);
+  items.board = { group: board, hit: boardHit, mats: [boardM], anchor: board.position.clone() };
+  }
 
   /* ---------- raspored: širok ekran ili uspravan mobitel ---------- */
   // stolni predmeti: [x, z, okret]; zidni: [x, y, veličina]
   const LAYOUT = {
-    wide: { monitor: [0.22, deskZ - 0.18, 0], keyboard: [0.22, deskZ + 0.27, 0], drive: [-0.32, deskZ - 0.2, 0], floppies: [-0.78, deskZ + 0.22, 0], phone: [-0.62, deskZ - 0.12, 0.35], answering: [-0.93, deskZ - 0.3, 0.25], coffee: [0.82, deskZ + 0.22, 0], cassette: [0.98, deskZ - 0.3, -0.3], lamp: [1.08, deskZ - 0.05, 0], artL: [-1.95, 1.5, 1], artR: [1.95, 1.5, 1], clock: [0, 2.4, 1] },
+    wide: { monitor: [0.22, deskZ - 0.18, 0], keyboard: [0.22, deskZ + 0.27, 0], drive: [-0.32, deskZ - 0.2, 0], floppies: [-0.78, deskZ + 0.22, 0], phone: [-0.62, deskZ - 0.12, 0.35], answering: [-0.93, deskZ - 0.3, 0.25], coffee: [0.82, deskZ + 0.22, 0], cassette: [0.98, deskZ - 0.3, -0.3], lamp: [1.08, deskZ - 0.05, 0], neonL: [-0.85, 2.4, 1], neonR: [0.85, 2.4, 1], clock: [0, 2.4, 1] },
     // na uskom ekranu sitni predmeti su malo veći (četvrti broj), da se prepoznaju
-    tall: { monitor: [0, deskZ - 0.2, 0, 1.08], keyboard: [0, deskZ + 0.26, 0], drive: [-0.45, deskZ - 0.38, 0.12], floppies: [-0.64, deskZ + 0.36, 0.2, 1.2], phone: [-0.52, deskZ + 0.06, 0.3, 1.3], answering: [-0.74, deskZ - 0.38, 0.3, 1.2], coffee: [0.5, deskZ + 0.3, 0, 1.45], cassette: [0.5, deskZ - 0.36, -0.25, 1.2], lamp: [0.76, deskZ - 0.04, 0, 1.1], artL: [-0.8, 2.36, 0.52], artR: [0.8, 2.36, 0.52], clock: [0, 2.4, 0.62] }
+    tall: { monitor: [0, deskZ - 0.2, 0, 1.08], keyboard: [0, deskZ + 0.26, 0], drive: [-0.45, deskZ - 0.38, 0.12], floppies: [-0.64, deskZ + 0.36, 0.2, 1.2], phone: [-0.52, deskZ + 0.06, 0.3, 1.3], answering: [-0.74, deskZ - 0.38, 0.3, 1.2], coffee: [0.5, deskZ + 0.3, 0, 1.45], cassette: [0.5, deskZ - 0.36, -0.25, 1.2], lamp: [0.76, deskZ - 0.04, 0, 1.1], neonL: [-0.66, 2.4, 0.62], neonR: [0.66, 2.4, 0.62], clock: [0, 2.4, 0.62] }
   };
-  const groups = { monitor: crt, keyboard: kb, drive: dd, floppies: floppyBox, phone: ph, answering: am, coffee: cf, cassette: cs, lamp: lp, artL, artR, clock };
+  const groups = { monitor: crt, keyboard: kb, drive: dd, floppies: floppyBox, phone: ph, answering: am, coffee: cf, cassette: cs, lamp: lp, neonL, neonR, clock };
   let layoutName = '';
   function setLayout(name) {
     if (name === layoutName) return;
@@ -696,7 +851,7 @@ export function buildRoom(opts) {
     const L = LAYOUT[name];
     for (const k in L) {
       const g = groups[k], [a, b, c, sc = 1] = L[k];
-      if (k === 'artL' || k === 'artR' || k === 'clock') { g.position.set(a, b, g.position.z); g.scale.setScalar(c); }
+      if (k === 'neonL' || k === 'neonR' || k === 'clock') { g.position.set(a, b, g.position.z); g.scale.setScalar(c); }
       else { g.position.set(a, deskY, b); g.rotation.y = c; g.scale.setScalar(sc); }
     }
     crtLight.position.set(crt.position.x + 0.03, deskY + 0.28, crt.position.z + 0.23);

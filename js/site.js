@@ -84,4 +84,25 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'ArrowRight') { e.preventDefault(); setProject(state.p + 1); }
   if (e.key === 'ArrowLeft') { e.preventDefault(); setProject(state.p - 1); }
 });
-addEventListener('hashchange', () => { const h = location.hash.slice(1); if (TABS.includes(h)) setTab(h, false); });
+// iskra (samo miš): svjetlo prati kursor, slika projekta se lagano nagne
+const fine = matchMedia('(hover: hover) and (pointer: fine)'), calm = matchMedia('(prefers-reduced-motion: reduce)');
+let sparkRaf = 0, sparkE = null;
+document.addEventListener('pointermove', (e) => {
+  if (!root || !fine.matches || e.pointerType !== 'mouse') return;
+  sparkE = e;
+  if (sparkRaf) return;
+  sparkRaf = requestAnimationFrame(() => {
+    sparkRaf = 0; const ev = sparkE;
+    const st = root.querySelector('.s-stage'); if (!st) return;
+    const r = st.getBoundingClientRect();
+    st.style.setProperty('--mx', (ev.clientX - r.left) + 'px'); st.style.setProperty('--my', (ev.clientY - r.top) + 'px');
+    const shot = ev.target.closest && ev.target.closest('.s-proj.on .s-shot');
+    root.querySelectorAll('.s-shot.tilt').forEach((s) => { if (s !== shot) { s.classList.remove('tilt'); s.style.removeProperty('--rx'); s.style.removeProperty('--ry'); } });
+    if (!shot) return;
+    const b = shot.getBoundingClientRect(), x = (ev.clientX - b.left) / b.width, y = (ev.clientY - b.top) / b.height;
+    shot.classList.add('tilt');
+    shot.style.setProperty('--gx', (x * 100).toFixed(1) + '%'); shot.style.setProperty('--gy', (y * 100).toFixed(1) + '%');
+    if (!calm.matches) { shot.style.setProperty('--rx', ((0.5 - y) * 5).toFixed(2) + 'deg'); shot.style.setProperty('--ry', ((x - 0.5) * 7).toFixed(2) + 'deg'); }
+  });
+}, { passive: true });
+addEventListener('hashchange',() => { const h = location.hash.slice(1); if (TABS.includes(h)) setTab(h, false); });

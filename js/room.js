@@ -39,7 +39,8 @@ const HOTS = [
   ['schweini', 'schweini', V(0.3, 0.42, 0.05), 'l'],
   ['felix', 'felix', V(0.3, 0.42, 0.05), 'l'],
   ['ball', 'ball', V(0, 0.2, 0), 'r'],
-  ['tins', 'tins', V(0.3, 0.45, 0), 'l'],
+  ['board', 'board', V(0.45, 0.3, 0.05), 'r'],
+  ['tins', 'tins', V(-0.45, 2.3, 0.1), 'l'],
   ['door', 'door', V(0, 0.15, -0.08), 'r'],
   ['chairL', 'chairL', V(0, 0.86, 0), 'r'],
   ['chairR', 'chairR', V(0, 0.86, 0), 'l']
@@ -79,14 +80,14 @@ export async function createRoom(o) {
   const tallNow = () => (canvas.clientWidth || innerWidth) / (canvas.clientHeight || innerHeight) < 0.85;
   const room = buildRoom({ shadows: shadowsWanted, mobile: mobileish, layout: tallNow() ? 'tall' : 'wide', crtTexture: crt.texture, ...makeTextures() });
   const { scene, items } = room;
-  const post = createPost(renderer);
+  const post = createPost(renderer, { samples: mobileish ? 2 : 4 });
   const camera = new THREE.PerspectiveCamera(46, 1, 0.05, 40);
   progress(0.8);
 
   canvas.addEventListener('webglcontextlost', (e) => { e.preventDefault(); running = false; o.onLost(); });
 
   /* ---------- veličina i kvalitet ---------- */
-  let W = 1, H = 1, dpr = Math.max(1, Math.min(window.devicePixelRatio || 1, mobileish ? 1.5 : 2));
+  let W = 1, H = 1, dpr = Math.max(1, Math.min(window.devicePixelRatio || 1, mobileish ? 1.35 : 2));
   const portrait = () => W / H < 0.85;
   function resize() {
     W = canvas.clientWidth || innerWidth; H = canvas.clientHeight || innerHeight;
@@ -481,6 +482,7 @@ export async function createRoom(o) {
     if (key === 'cassette') { o.toggleSound(); return; }
     if (key === 'ball') { if (room.shoot()) { sound.splash(); setTimeout(() => { toast(L().goal); sound.dial(3); }, 700); } return; }
     if (key === 'tins') { if (focusKey) return; sub.project = 'myshishapedia'; activate('monitor', btn); return; }
+    if (key === 'board') { if (focusKey) return; sub.project = 'squadjury'; activate('monitor', btn); return; }
     if (key === 'door') { toast(L().leaving); sound.lamp(); setTimeout(() => o.exit(), 250); return; }
     if (focusKey) return;
     opener = btn || null;

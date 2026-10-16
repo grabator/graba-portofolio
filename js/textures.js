@@ -51,17 +51,19 @@ function poster() {
 }
 
 function clock() {
+  // tamni brojčanik sa svijetlim crticama (uz neone pored sata)
   return tex(256, 256, (g, w) => {
-    g.fillStyle = '#d9dce6'; g.fillRect(0, 0, w, w);
-    g.fillStyle = '#e8eaf1'; g.beginPath(); g.arc(w / 2, w / 2, w / 2 - 8, 0, Math.PI * 2); g.fill();
-    g.strokeStyle = '#1a1e33';
+    g.fillStyle = '#0b0e1f'; g.fillRect(0, 0, w, w);
+    const r = g.createRadialGradient(w / 2, w / 2, 10, w / 2, w / 2, w / 2); r.addColorStop(0, '#151a33'); r.addColorStop(1, '#0b0e1f');
+    g.fillStyle = r; g.beginPath(); g.arc(w / 2, w / 2, w / 2 - 8, 0, Math.PI * 2); g.fill();
     for (let i = 0; i < 60; i++) {
       const a = i / 60 * Math.PI * 2, r1 = w / 2 - 16, r2 = r1 - (i % 5 ? 6 : 18);
+      g.strokeStyle = i % 5 ? 'rgba(160,190,230,0.45)' : '#bff6fb';
       g.lineWidth = i % 5 ? 2 : 6;
       g.beginPath(); g.moveTo(w / 2 + Math.sin(a) * r1, w / 2 - Math.cos(a) * r1); g.lineTo(w / 2 + Math.sin(a) * r2, w / 2 - Math.cos(a) * r2); g.stroke();
     }
-    g.fillStyle = '#1a1e33'; g.font = '500 20px "Inter Tight", sans-serif'; g.textAlign = 'center'; g.fillText('MOSTAR', w / 2, w / 2 + 52);
-    g.fillStyle = '#c2141f'; g.beginPath(); g.arc(w / 2, w / 2, 6, 0, Math.PI * 2); g.fill();
+    g.fillStyle = '#9ff6fb'; g.font = '500 20px "Inter Tight", sans-serif'; g.textAlign = 'center'; g.fillText('MOSTAR', w / 2, w / 2 + 52);
+    g.fillStyle = '#ff4f5e'; g.beginPath(); g.arc(w / 2, w / 2, 6, 0, Math.PI * 2); g.fill();
   });
 }
 
