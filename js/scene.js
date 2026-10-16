@@ -104,6 +104,9 @@ export function buildRoom(opts) {
     for (const [y, h] of [[0.55, 0.7], [1.45, 0.8]]) { const pnl = new THREE.Mesh(new THREE.BoxGeometry(0.7, h, 0.012), mat(0x1c2142, 0.55)); pnl.position.set((DX0 + DX1) / 2, y, FZ - 0.008); scene.add(pnl); }
     const fM = mat(0x0b0d1c, 0.5, 0.2);
     [[DX0 - 0.04, DH / 2, 0.08, DH + 0.08], [DX1 + 0.04, DH / 2, 0.08, DH + 0.08], [(DX0 + DX1) / 2, DH + 0.04, DX1 - DX0 + 0.16, 0.08]].forEach(([x, y, w, h]) => { const f = new THREE.Mesh(new THREE.BoxGeometry(w, h, 0.08), fM); f.position.set(x, y, FZ - 0.01); scene.add(f); });
+    // vrata su i izlaz iz sobe (nazad na običnu verziju)
+    const doorHit = new THREE.Mesh(new THREE.BoxGeometry(DX1 - DX0 + 0.2, DH + 0.1, 0.3), new THREE.MeshBasicMaterial({ visible: false })); door.add(doorHit);
+    items.door = { group: door, hit: doorHit, mats: [doorM], anchor: door.position.clone() };
     const knobM = mat(0xb9bec9, 0.25, 0.9); const kn = new THREE.Mesh(new THREE.SphereGeometry(0.03, 12, 8), knobM); kn.position.set(DX0 + 0.12, 1.0, FZ - 0.04); scene.add(kn);
     const gap = new THREE.Mesh(new THREE.PlaneGeometry(DX1 - DX0 - 0.06, 0.012), new THREE.MeshBasicMaterial({ color: new THREE.Color(1.6, 2.2, 2.6), toneMapped: false })); gap.rotation.y = Math.PI; gap.position.set((DX0 + DX1) / 2, 0.007, FZ - 0.03); scene.add(gap);
     const spill = new THREE.Mesh(new THREE.PlaneGeometry(DX1 - DX0 + 0.3, 0.5), new THREE.MeshBasicMaterial({ color: 0x7fe9f6, transparent: true, opacity: 0.045, depthWrite: false, blending: THREE.AdditiveBlending })); spill.rotation.x = -Math.PI / 2; spill.position.set((DX0 + DX1) / 2, 0.004, FZ - 0.25); scene.add(spill);
@@ -422,10 +425,45 @@ export function buildRoom(opts) {
 
   /* ---------- zidni predmeti ---------- */
   // plakat "SKOČI." (lijevo od akvarijuma)
-  const poster = new THREE.Group(); poster.position.set(-2.25, 1.72, BACK + 0.02); scene.add(poster);
-  const pFrame = new THREE.Mesh(new THREE.BoxGeometry(0.82, 1.14, 0.03), mat(0x8c7a52, 0.5, 0.4)); poster.add(pFrame);
-  const pImg = new THREE.Mesh(new THREE.PlaneGeometry(0.76, 1.08), new THREE.MeshStandardMaterial({ map: opts.posterTexture, roughness: 0.75, emissiveMap: opts.posterTexture, emissive: 0xffffff, emissiveIntensity: 0.28 })); pImg.position.z = 0.017; poster.add(pImg);
-  reg('poster', poster, [0.85, 1.18, 0.08], new THREE.Vector3(0, 0, 0.03), new THREE.Vector3(-2.25, 2.35, BACK + 0.1));
+  // dvije slike lijevo i desno od akvarijuma (apstraktni printovi u bojama sobe)
+  function artTex(kind) {
+    return canvas(384, 480, (g, w, h) => {
+      g.fillStyle = '#e9e6dd'; g.fillRect(0, 0, w, h);
+      const ix = 34, iy = 34, iw = w - 68, ih = h - 68;
+      g.fillStyle = '#0d1230'; g.fillRect(ix, iy, iw, ih);
+      g.save(); g.beginPath(); g.rect(ix, iy, iw, ih); g.clip();
+      if (kind === 'orbit') {
+        g.fillStyle = '#c8162a'; g.beginPath(); g.arc(ix + iw * 0.62, iy + ih * 0.38, iw * 0.3, 0, TAU); g.fill();
+        g.strokeStyle = '#3fe3f0'; g.lineWidth = 2;
+        for (let r = 30; r < 260; r += 22) { g.globalAlpha = 1 - r / 280; g.beginPath(); g.arc(ix + iw * 0.3, iy + ih * 0.72, r, 0, TAU); g.stroke(); }
+        g.globalAlpha = 1; g.fillStyle = '#e9e6dd'; g.fillRect(ix + 26, iy + ih * 0.5, iw - 52, 3);
+      } else {
+        const r = rng(9);
+        const seeds = Array.from({ length: 5 }, () => [ix + r() * iw, iy + r() * ih, 40 + r() * 90]);
+        g.lineWidth = 1.6;
+        for (let k = 0; k < 26; k++) {
+          g.strokeStyle = k % 6 === 0 ? 'rgba(63,227,240,0.95)' : 'rgba(63,227,240,0.4)';
+          g.beginPath();
+          for (let x = ix; x <= ix + iw; x += 4) {
+            let y = iy + 10 + k * (ih / 25);
+            for (const [sx, sy, sr] of seeds) { const d = Math.hypot(x - sx, y - sy); y -= 26 * Math.exp(-(d * d) / (2 * sr * sr)); }
+            if (x === ix) g.moveTo(x, y); else g.lineTo(x, y);
+          }
+          g.stroke();
+        }
+        g.fillStyle = '#c8162a'; g.beginPath(); g.arc(ix + iw * 0.7, iy + ih * 0.3, 6, 0, TAU); g.fill();
+      }
+      g.restore();
+    });
+  }
+  function framedArt(kind) {
+    const gr = new THREE.Group(); gr.position.z = BACK + 0.025; scene.add(gr);
+    const fr = new THREE.Mesh(new THREE.BoxGeometry(0.72, 0.9, 0.035), mat(0x0a0b12, 0.4, 0.3)); gr.add(fr);
+    const tx = artTex(kind);
+    const pic = new THREE.Mesh(new THREE.PlaneGeometry(0.66, 0.84), new THREE.MeshStandardMaterial({ map: tx, roughness: 0.8, emissiveMap: tx, emissive: 0xffffff, emissiveIntensity: 0.22 })); pic.position.z = 0.019; gr.add(pic);
+    return gr;
+  }
+  const artL = framedArt('orbit'), artR = framedArt('topo');
   // dresovi u ramovima na bočnim zidovima (leđa dresa, prezime i broj, bez grbova):
   // lijevo Özil 10 i Eze 10 (Arsenal), desno Džeko 11 (BiH) i Ibrahimović 10 (PSG)
   function jerseyTex(name, num, k) {
@@ -462,10 +500,12 @@ export function buildRoom(opts) {
     items[key] = { group: fr, hit, mats: [box.material, shirtM], anchor: fr.position.clone() };
   }
   const ARS = { body: '#c8162a', sleeve: '#f2f2f2', ink: '#ffffff', trim: '#f2f2f2' };
-  framedJersey('ozil', jerseyTex('ÖZIL', '10', ARS), -W / 2 + 0.04, -1.55, Math.PI / 2);
-  framedJersey('eze', jerseyTex('EZE', '10', ARS), -W / 2 + 0.04, -0.3, Math.PI / 2);
-  framedJersey('dzeko', jerseyTex('DŽEKO', '11', { body: '#1d3a94', sleeve: '#1d3a94', ink: '#ffffff', trim: '#f2c230' }), W / 2 - 0.04, -1.55, -Math.PI / 2);
-  framedJersey('ibra', jerseyTex('IBRAHIMOVIĆ', '10', { body: '#13204a', sleeve: '#13204a', ink: '#ffffff', trim: '#e7e9ef', band: '#d01f2e', edge: '#f2f2f2' }), W / 2 - 0.04, -0.3, -Math.PI / 2);
+  framedJersey('ozil', jerseyTex('ÖZIL', '10', ARS), -W / 2 + 0.04, -1.3, Math.PI / 2);
+  framedJersey('eze', jerseyTex('EZE', '10', ARS), -W / 2 + 0.04, -0.1, Math.PI / 2);
+  framedJersey('odegaard', jerseyTex('ØDEGAARD', '8', ARS), -W / 2 + 0.04, 1.1, Math.PI / 2);
+  framedJersey('dzeko', jerseyTex('DŽEKO', '11', { body: '#1d3a94', sleeve: '#1d3a94', ink: '#ffffff', trim: '#f2c230' }), W / 2 - 0.04, -1.3, -Math.PI / 2);
+  framedJersey('ibra', jerseyTex('IBRAHIMOVIĆ', '10', { body: '#13204a', sleeve: '#13204a', ink: '#ffffff', trim: '#e7e9ef', band: '#d01f2e', edge: '#f2f2f2' }), W / 2 - 0.04, -0.1, -Math.PI / 2);
+  framedJersey('schweini', jerseyTex('SCHWEINSTEIGER', '31', { body: '#d3122f', sleeve: '#d3122f', ink: '#ffffff', trim: '#ffffff' }), W / 2 - 0.04, 1.1, -Math.PI / 2);
 
   // nargile pored obje stolice: sjedne se i povuče (žar zasvijetli, dim krene)
   const hookahs = {};
@@ -484,7 +524,8 @@ export function buildRoom(opts) {
     const coalM = new THREE.MeshBasicMaterial({ color: new THREE.Color(1.2, 0.25, 0.08), toneMapped: false });
     for (const [cx, cz] of [[-0.02, 0.012], [0.022, -0.008], [0, -0.025]]) { const c = new THREE.Mesh(new THREE.BoxGeometry(0.024, 0.016, 0.024), coalM); c.position.set(cx, 0.757, cz); c.rotation.y = cx * 20; hg.add(c); }
     const hosePts = [V3(0.02, 0.3, 0), V3(0.12 * -side, 0.26, 0.1), V3(0.2 * -side, 0.1, 0.22), V3(0.05 * -side, 0.03, 0.32), V3(-0.2 * side, 0.2, 0.28), V3(-0.33 * side, 0.5, 0.06)];
-    const hose = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(hosePts), 40, 0.012, 8), mat(0x15161d, 0.5)); hg.add(hose);
+    const hoseM = mat(0x15161d, 0.5);
+    const hose = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(hosePts), 40, 0.012, 8), hoseM); hg.add(hose);
     const tip = new THREE.Mesh(new THREE.CylinderGeometry(0.01, 0.014, 0.12, 10), metalM); tip.position.copy(hosePts[5]).add(V3(0, 0.05, 0)); hg.add(tip);
     const glow = new THREE.PointLight(0xff5a2a, 0.15, 1.4, 2); glow.position.y = 0.8; hg.add(glow);
     hg.traverse((o) => { if (o.isMesh) { o.castShadow = shadows; } });
@@ -501,7 +542,15 @@ export function buildRoom(opts) {
     const chit = new THREE.Mesh(new THREE.BoxGeometry(0.8, 1.0, 1.2), new THREE.MeshBasicMaterial({ visible: false })); chit.position.set(0, 0.5, 0.35); hg.add(chit);
     const mats = []; [chair, hg].forEach((gr) => gr.traverse((o) => { if (o.isMesh && o !== chit && o.material && o.material.isMeshStandardMaterial && !mats.includes(o.material)) mats.push(o.material); }));
     items[key] = { group: hg, hit: chit, mats, anchor: hg.position.clone(), chair };
-    hookahs[key] = { coalM, glow, smokeM, puff: 0 };
+    // mjehurići u vodi dok se vuče
+    const bn = 24, bgeo = new THREE.BufferGeometry(), bpos = new Float32Array(bn * 3), bseed = new Float32Array(bn);
+    const r1 = rng(side < 0 ? 41 : 43); for (let i = 0; i < bn; i++) { bpos[i * 3] = (r1() - 0.5) * 0.06; bpos[i * 3 + 1] = 0.02; bpos[i * 3 + 2] = (r1() - 0.5) * 0.06; bseed[i] = r1(); }
+    bgeo.setAttribute('position', new THREE.BufferAttribute(bpos, 3)); bgeo.setAttribute('seed', new THREE.BufferAttribute(bseed, 1));
+    const bubM = new THREE.ShaderMaterial({ transparent: true, depthWrite: false, fog: false, uniforms: { uTime: { value: 0 }, uPull: { value: 0 } },
+      vertexShader: 'attribute float seed; uniform float uTime; uniform float uPull; varying float vA; void main(){ vec3 p = position; float t = fract(uTime*(1.5+seed*2.0)+seed); p.y += t*0.08; p.x += sin(t*20.0+seed*9.0)*0.008; vA = uPull*(1.0-t); vec4 mv = modelViewMatrix*vec4(p,1.0); gl_Position = projectionMatrix*mv; gl_PointSize = (3.0+seed*4.0)*(1.0/-mv.z)*4.0; }',
+      fragmentShader: 'varying float vA; void main(){ float d = length(gl_PointCoord-0.5); float a = (smoothstep(0.5,0.35,d)-smoothstep(0.3,0.1,d)*0.5)*vA; gl_FragColor = vec4(0.85,0.97,1.0,a); }' });
+    const bubs = new THREE.Points(bgeo, bubM); bubs.frustumCulled = false; hg.add(bubs);
+    hookahs[key] = { coalM, glow, smokeM, bubM, puff: 0, pull: 0, hg, hose, tip, hoseM, port: V3(0.02, 0.3, 0), custom: null, mouth: null };
   }
   hookah('chairL', chairs.chairL, -1);
   hookah('chairR', chairs.chairR, 1);
@@ -510,27 +559,109 @@ export function buildRoom(opts) {
       const h = hookahs[k];
       h.puff = Math.max(0, h.puff - dt * 0.35);
       h.smokeM.uniforms.uTime.value = t; h.smokeM.uniforms.uPuff.value = h.puff;
-      const f = 0.8 + Math.sin(t * 3 + (k === 'chairL' ? 0 : 2)) * 0.1 + h.puff * 2.2;
-      h.coalM.color.setRGB(1.3 * f, 0.26 * f, 0.08 * f); h.glow.intensity = 0.12 + h.puff * 1.2;
+      h.bubM.uniforms.uTime.value = t; h.bubM.uniforms.uPull.value = h.pull;
+      const f = 0.8 + Math.sin(t * 3 + (k === 'chairL' ? 0 : 2)) * 0.1 + h.puff * 1.2 + h.pull * 2.4;
+      h.coalM.color.setRGB(1.3 * f, 0.26 * f, 0.08 * f); h.glow.intensity = 0.12 + h.puff * 0.6 + h.pull * 1.6;
     }
   });
   function puff(key) { if (hookahs[key]) hookahs[key].puff = 1; }
+  // crijevo prema onome ko sjedi: od nargile do usta (tačka ispred kamere)
+  function aimHose(key, target) {
+    const h = hookahs[key]; if (!h) return null;
+    if (h.custom) { scene.remove(h.custom); h.custom.geometry.dispose(); h.custom = null; }
+    if (h.mouth) { scene.remove(h.mouth); h.mouth = null; }
+    h.hose.visible = h.tip.visible = !target;
+    if (!target) return null;
+    const a = h.hg.localToWorld(h.port.clone());
+    const mid1 = a.clone().lerp(target, 0.35); mid1.y = Math.min(a.y, target.y) - 0.25;
+    const mid2 = a.clone().lerp(target, 0.75); mid2.y = target.y - 0.12;
+    const curve = new THREE.CatmullRomCurve3([a, mid1, mid2, target]);
+    h.custom = new THREE.Mesh(new THREE.TubeGeometry(curve, 50, 0.014, 8), h.hoseM); scene.add(h.custom);
+    const m = new THREE.Group(); m.position.copy(target); scene.add(m);
+    const tan = curve.getTangent(1); m.quaternion.setFromUnitVectors(V3(0, 1, 0), tan);
+    const metal = mat(0xb9bec9, 0.25, 0.9);
+    const p1 = new THREE.Mesh(new THREE.CylinderGeometry(0.011, 0.016, 0.1, 12), metal); p1.position.y = 0.05; m.add(p1);
+    const p2 = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 0.012, 14), mat(0x15161d, 0.4)); m.add(p2);
+    const hit = new THREE.Mesh(new THREE.SphereGeometry(0.09, 8, 6), new THREE.MeshBasicMaterial({ visible: false })); hit.position.y = 0.03; m.add(hit);
+    h.mouth = m;
+    return hit;
+  }
+  function pull(key, v) { if (hookahs[key]) hookahs[key].pull = v; }
+  // izdah: dim izlazi iz "usta" prema naprijed i širi se
+  const exN = 70, exGeo = new THREE.BufferGeometry(), exPos = new Float32Array(exN * 3), exA = new Float32Array(exN);
+  exGeo.setAttribute('position', new THREE.BufferAttribute(exPos, 3)); exGeo.setAttribute('alpha', new THREE.BufferAttribute(exA, 1));
+  const exM = new THREE.ShaderMaterial({ transparent: true, depthWrite: false, fog: false, uniforms: {},
+    vertexShader: 'attribute float alpha; varying float vA; void main(){ vA = alpha; vec4 mv = modelViewMatrix*vec4(position,1.0); gl_Position = projectionMatrix*mv; gl_PointSize = (90.0 + (1.0-alpha)*320.0)*(1.0/max(0.2,-mv.z)); }',
+    fragmentShader: 'varying float vA; void main(){ float d = length(gl_PointCoord-0.5); float a = smoothstep(0.5,0.0,d)*vA*0.16; gl_FragColor = vec4(0.86,0.9,1.0,a); }' });
+  const exPts = new THREE.Points(exGeo, exM); exPts.frustumCulled = false; scene.add(exPts);
+  const ex = Array.from({ length: exN }, () => ({ p: V3(0, -9, 0), v: V3(0, 0, 0), life: 0, max: 1 }));
+  let exNext = 0;
+  function exhale(origin, dir, strength) {
+    const r = Math.random;
+    const n = Math.round(18 + strength * 40);
+    for (let i = 0; i < n; i++) {
+      const e = ex[exNext]; exNext = (exNext + 1) % exN;
+      e.p.copy(origin).add(V3((r() - 0.5) * 0.04, (r() - 0.5) * 0.04, (r() - 0.5) * 0.04));
+      e.v.copy(dir).multiplyScalar(0.5 + strength * 0.9 + r() * 0.4).add(V3((r() - 0.5) * 0.25, 0.06 + r() * 0.12, (r() - 0.5) * 0.25));
+      e.life = e.max = 2.2 + r() * 1.6 + strength;
+      e.delay = i * 0.012;
+    }
+  }
+  anim.push((t, dt) => {
+    for (let i = 0; i < exN; i++) {
+      const e = ex[i];
+      if (e.life <= 0) { exA[i] = 0; continue; }
+      if (e.delay > 0) { e.delay -= dt; exA[i] = 0; continue; }
+      e.life -= dt; e.v.multiplyScalar(Math.pow(0.35, dt)); e.v.y += dt * 0.05;
+      e.p.addScaledVector(e.v, dt);
+      exPos[i * 3] = e.p.x; exPos[i * 3 + 1] = e.p.y; exPos[i * 3 + 2] = e.p.z;
+      const k = e.life / e.max; exA[i] = Math.min(1, (1 - k) * 6) * k;
+    }
+    exGeo.attributes.position.needsUpdate = true; exGeo.attributes.alpha.needsUpdate = true;
+  });
 
   // zidni sat (mostarsko vrijeme)
   const clock = new THREE.Group(); clock.position.set(2.1, 2.1, BACK + 0.03); scene.add(clock);
-  const face = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.2, 0.03, 40), [mat(0x101326, 0.5), new THREE.MeshStandardMaterial({ map: opts.clockTexture, roughness: 0.5, emissiveMap: opts.clockTexture, emissive: 0xffffff, emissiveIntensity: 0.12 }), mat(0x101326, 0.5)]);
+  const face = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.2, 0.03, 40), [mat(0x101326, 0.5), new THREE.MeshStandardMaterial({ map: opts.clockTexture, roughness: 0.5, emissiveMap: opts.clockTexture, emissive: 0xffffff, emissiveIntensity: 0.05 }), mat(0x101326, 0.5)]);
   face.rotation.x = Math.PI / 2; clock.add(face);
   const hourH = new THREE.Mesh(new THREE.BoxGeometry(0.012, 0.1, 0.006), mat(0x0d0f1c, 0.4)); hourH.geometry.translate(0, 0.045, 0); hourH.position.z = 0.02; clock.add(hourH);
   const minH = new THREE.Mesh(new THREE.BoxGeometry(0.008, 0.15, 0.006), mat(0x0d0f1c, 0.4)); minH.geometry.translate(0, 0.07, 0); minH.position.z = 0.024; clock.add(minH);
 
+  /* ---------- još malo života: biljka u lijevom uglu i polica sa knjigama u desnom ---------- */
+  {
+    const pot = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.15, 0.4, 24), mat(0x1c1f33, 0.6)); pot.position.set(-3.05, 0.2, -2.45); pot.castShadow = shadows; scene.add(pot);
+    const soil = new THREE.Mesh(new THREE.CircleGeometry(0.19, 20), mat(0x120a08, 1)); soil.rotation.x = -Math.PI / 2; soil.position.set(-3.05, 0.39, -2.45); scene.add(soil);
+    const leaf = new THREE.Shape(); leaf.moveTo(0, 0); leaf.quadraticCurveTo(0.07, 0.45, 0, 0.95); leaf.quadraticCurveTo(-0.07, 0.45, 0, 0);
+    const leafG = new THREE.ShapeGeometry(leaf, 6);
+    const lm = new THREE.MeshStandardMaterial({ color: 0x1f5b3c, roughness: 0.6, side: THREE.DoubleSide, emissive: 0x0b2a1d, emissiveIntensity: 0.5 });
+    const pr2 = rng(77);
+    for (let i = 0; i < 11; i++) { const l = new THREE.Mesh(leafG, lm); const a = i / 11 * TAU + pr2(); l.position.set(-3.05 + Math.cos(a) * 0.05, 0.38, -2.45 + Math.sin(a) * 0.05); l.rotation.set(Math.sin(a) * 0.25, a, Math.cos(a) * 0.25); l.scale.setScalar(0.8 + pr2() * 0.6); scene.add(l); }
+    const sh = new THREE.Group(); sh.position.set(3.25, 0, -2.3); sh.rotation.y = -Math.PI / 2; scene.add(sh);
+    const wood = mat(0x161829, 0.6, 0.1);
+    for (const x of [-0.45, 0.45]) { const sd = new THREE.Mesh(new THREE.BoxGeometry(0.03, 1.8, 0.3), wood); sd.position.set(x, 0.9, 0); sh.add(sd); }
+    const cols = [0x1d3a94, 0xc8162a, 0xd9d4c6, 0x1f8fa6, 0x2b2f4a, 0xb8b2a2, 0x13204a];
+    const pr3 = rng(55);
+    [0.02, 0.45, 0.9, 1.35, 1.78].forEach((y, si) => {
+      const shelf = new THREE.Mesh(new THREE.BoxGeometry(0.92, 0.03, 0.3), wood); shelf.position.set(0, y, 0); sh.add(shelf);
+      if (si === 4) return;
+      let x = -0.42;
+      while (x < 0.38) {
+        const bw = 0.03 + pr3() * 0.035, bh = 0.26 + pr3() * 0.12;
+        const bk = new THREE.Mesh(new THREE.BoxGeometry(bw, bh, 0.2), mat(cols[(pr3() * cols.length) | 0], 0.7));
+        bk.position.set(x + bw / 2, y + 0.015 + bh / 2, 0.02); if (pr3() < 0.12) bk.rotation.z = 0.18; sh.add(bk); x += bw + 0.004;
+        if (pr3() < 0.08) x += 0.08;
+      }
+    });
+  }
+
   /* ---------- raspored: širok ekran ili uspravan mobitel ---------- */
   // stolni predmeti: [x, z, okret]; zidni: [x, y, veličina]
   const LAYOUT = {
-    wide: { monitor: [0.22, deskZ - 0.18, 0], keyboard: [0.22, deskZ + 0.27, 0], drive: [-0.32, deskZ - 0.2, 0], floppies: [-0.78, deskZ + 0.22, 0], phone: [-0.62, deskZ - 0.12, 0.35], answering: [-0.93, deskZ - 0.3, 0.25], coffee: [0.82, deskZ + 0.22, 0], cassette: [0.98, deskZ - 0.3, -0.3], lamp: [1.08, deskZ - 0.05, 0], poster: [-2.25, 1.72, 1], clock: [2.1, 2.1, 1] },
+    wide: { monitor: [0.22, deskZ - 0.18, 0], keyboard: [0.22, deskZ + 0.27, 0], drive: [-0.32, deskZ - 0.2, 0], floppies: [-0.78, deskZ + 0.22, 0], phone: [-0.62, deskZ - 0.12, 0.35], answering: [-0.93, deskZ - 0.3, 0.25], coffee: [0.82, deskZ + 0.22, 0], cassette: [0.98, deskZ - 0.3, -0.3], lamp: [1.08, deskZ - 0.05, 0], artL: [-1.95, 1.5, 1], artR: [1.95, 1.5, 1], clock: [0, 2.4, 1] },
     // na uskom ekranu sitni predmeti su malo veći (četvrti broj), da se prepoznaju
-    tall: { monitor: [0, deskZ - 0.2, 0, 1.08], keyboard: [0, deskZ + 0.26, 0], drive: [-0.45, deskZ - 0.38, 0.12], floppies: [-0.64, deskZ + 0.36, 0.2, 1.2], phone: [-0.52, deskZ + 0.06, 0.3, 1.3], answering: [-0.74, deskZ - 0.38, 0.3, 1.2], coffee: [0.5, deskZ + 0.3, 0, 1.45], cassette: [0.5, deskZ - 0.36, -0.25, 1.2], lamp: [0.76, deskZ - 0.04, 0, 1.1], poster: [-0.7, 2.3, 0.6], clock: [0.75, 2.38, 0.7] }
+    tall: { monitor: [0, deskZ - 0.2, 0, 1.08], keyboard: [0, deskZ + 0.26, 0], drive: [-0.45, deskZ - 0.38, 0.12], floppies: [-0.64, deskZ + 0.36, 0.2, 1.2], phone: [-0.52, deskZ + 0.06, 0.3, 1.3], answering: [-0.74, deskZ - 0.38, 0.3, 1.2], coffee: [0.5, deskZ + 0.3, 0, 1.45], cassette: [0.5, deskZ - 0.36, -0.25, 1.2], lamp: [0.76, deskZ - 0.04, 0, 1.1], artL: [-0.8, 2.36, 0.52], artR: [0.8, 2.36, 0.52], clock: [0, 2.4, 0.62] }
   };
-  const groups = { monitor: crt, keyboard: kb, drive: dd, floppies: floppyBox, phone: ph, answering: am, coffee: cf, cassette: cs, lamp: lp, poster, clock };
+  const groups = { monitor: crt, keyboard: kb, drive: dd, floppies: floppyBox, phone: ph, answering: am, coffee: cf, cassette: cs, lamp: lp, artL, artR, clock };
   let layoutName = '';
   function setLayout(name) {
     if (name === layoutName) return;
@@ -538,7 +669,7 @@ export function buildRoom(opts) {
     const L = LAYOUT[name];
     for (const k in L) {
       const g = groups[k], [a, b, c, sc = 1] = L[k];
-      if (k === 'poster' || k === 'clock') { g.position.set(a, b, g.position.z); g.scale.setScalar(c); }
+      if (k === 'artL' || k === 'artR' || k === 'clock') { g.position.set(a, b, g.position.z); g.scale.setScalar(c); }
       else { g.position.set(a, deskY, b); g.rotation.y = c; g.scale.setScalar(sc); }
     }
     crtLight.position.set(crt.position.x + 0.03, deskY + 0.28, crt.position.z + 0.23);
@@ -607,7 +738,7 @@ export function buildRoom(opts) {
   }
   function scatter() { fishGoal.scatter = performance.now() / 1000 + 1.2; }
 
-  return { scene, items, groups, setLayout, puff, flags: api, anim, setLighting, setClock, setRain, poke, scatter, dustMat, shadows, lights: { moon, aqLight, lampLight }, deskY, deskZ, aqRect: { ...AQ, z: BACK } };
+  return { scene, items, groups, setLayout, puff, pull, aimHose, exhale, flags: api, anim, setLighting, setClock, setRain, poke, scatter, dustMat, shadows, lights: { moon, aqLight, lampLight }, deskY, deskZ, aqRect: { ...AQ, z: BACK } };
 }
 
 /* spoji dvije geometrije (tijelo ribe i rep) bez dodatnih biblioteka */

@@ -30,11 +30,13 @@ const HOTS = [
   ['cassette', 'cassette', V(0, 0.19, 0), 'r'],
   ['lamp', 'lamp', V(-0.18, 0.48, -0.07), 'r'],
   ['aquarium', null, V(0.75, 1.72, -3.0), 'r'],
-  ['poster', 'poster', V(0.25, 0.45, 0.03), 'r'],
   ['ozil', 'ozil', V(0.3, 0.42, 0.05), 'r'],
   ['eze', 'eze', V(0.3, 0.42, 0.05), 'r'],
+  ['odegaard', 'odegaard', V(0.3, 0.42, 0.05), 'r'],
   ['dzeko', 'dzeko', V(0.3, 0.42, 0.05), 'l'],
   ['ibra', 'ibra', V(0.3, 0.42, 0.05), 'l'],
+  ['schweini', 'schweini', V(0.3, 0.42, 0.05), 'l'],
+  ['door', 'door', V(0, 0.15, -0.08), 'r'],
   ['chairL', 'chairL', V(0, 0.86, 0), 'r'],
   ['chairR', 'chairR', V(0, 0.86, 0), 'l']
 ];
@@ -46,11 +48,10 @@ const CLOSE = {
   answering: ['answering', V(0.01, 0.04, 0), V(0.2, 0.7, 1), 0.78],
   coffee: ['coffee', V(-0.02, 0.08, -0.03), V(-0.15, 0.5, 1), 0.78],
   floppies: [null, null, V(0.1, 0.75, 1), 1.15],
-  keyboard: ['keyboard', V(0, 0.06, -0.05), V(0, 0.9, 1), 0.8],
-  poster: ['poster', V(0, 0, 0), V(0.3, -0.02, 1), 1.65]
+  keyboard: ['keyboard', V(0, 0.06, -0.05), V(0, 0.9, 1), 0.8]
 };
 const ACTIONS = new Set(['aquarium', 'lamp', 'cassette']);
-const JERSEYS = ['ozil', 'eze', 'dzeko', 'ibra'];
+const JERSEYS = ['ozil', 'eze', 'odegaard', 'dzeko', 'ibra', 'schweini'];
 const CHAIRS = ['chairL', 'chairR'];
 
 export async function createRoom(o) {
@@ -180,16 +181,16 @@ export async function createRoom(o) {
       // sjedne se na stolicu: pogled preko stola na akvarijum, nargila pored
       const ch = room.items[key].chair.position, side = key === 'chairL' ? -1 : 1;
       const pos = V(ch.x + side * 0.05, 1.18, ch.z + 0.45);
-      return { pos, look: V(ch.x * 0.6, 0.72, -2.2), fov: p ? 78 : 60 };
+      return { pos, look: V(ch.x * 0.6, 0.8, -2.2), fov: p ? 78 : 60 };
     }
     const [gk, off, dir, dist0] = CLOSE[key];
     let look, dist = dist0;
-    if (gk) { const g = room.groups[gk]; look = g.localToWorld(off.clone()); if (key === 'poster') dist *= g.scale.x; }
+    if (gk) { const g = room.groups[gk]; look = g.localToWorld(off.clone()); }
     else look = room.groups.floppies.position.clone().add(room.groups.drive.position).multiplyScalar(0.5).add(V(0, 0.06, 0));
     return { pos: look.clone().add(dir.clone().normalize().multiplyScalar(dist * (p ? 1.45 : 1))), look, fov: p ? 62 : 46 };
   }
   function panelOffset(key = focusKey) {
-    if (CHAIRS.includes(key)) return W >= 760 ? new THREE.Vector2(Math.min(460, W * 0.4) / 4, 0) : new THREE.Vector2(0, H * 0.17);
+    if (CHAIRS.includes(key)) return new THREE.Vector2();
     if (W >= 760) return new THREE.Vector2(Math.min(460, W * 0.4) / 2 + 8, 0);
     return new THREE.Vector2(0, H * 0.27);
   }
@@ -467,12 +468,13 @@ export async function createRoom(o) {
     if (key === 'aquarium') { room.scatter(); sound.splash(); toast(L().fish); return; }
     if (key === 'lamp') { lit = !lit; try { localStorage.setItem('graba-lamp', lit ? '1' : '0'); } catch (e) { /* nema */ } lighting(); sound.lamp(); toast(lit ? L().lampOn : L().lampOff); labelHots(); return; }
     if (key === 'cassette') { o.toggleSound(); return; }
+    if (key === 'door') { toast(L().leaving); sound.lamp(); setTimeout(() => o.exit(), 250); return; }
     if (focusKey) return;
     opener = btn || null;
     focusKey = key; busy = true; setHover(null); nameTip.classList.remove('on');
     html.classList.add('is-focus');
     onOpen(key);
-    moveTo(closeView(key), panelOffset(key), reduced ? 0 : 1200).then(() => { busy = false; showPanel(key); });
+    moveTo(closeView(key), panelOffset(key), reduced ? 0 : 1200).then(() => { busy = false; if (CHAIRS.includes(key)) sitDown(key); else showPanel(key); });
   }
   function showPanel(key) {
     render(key);
@@ -573,7 +575,7 @@ export async function createRoom(o) {
       h += '<div class="p-player" style="--pc:' + P.color + '"><p class="p-num" aria-hidden="true">' + P.num + '</p>'
         + '<p class="p-k">' + esc(P.status[L2]) + '</p><h2 id="panel-h">' + esc(P.name) + '</h2>'
         + '<dl class="p-pinfo"><div><dt>' + esc(l.posT) + '</dt><dd>' + esc(P.pos[L2]) + '</dd></div><div><dt>' + esc(l.bornT) + '</dt><dd>' + esc(P.born[L2]) + '</dd></div></dl></div>'
-        + '<h3 class="p-sub">' + esc(l.career) + '</h3><ol class="p-career">' + P.clubs.map(([y, c]) => '<li><span>' + esc(y) + '</span><b>' + esc(c) + '</b></li>').join('') + '</ol>'
+        + '<h3 class="p-sub">' + esc(l.career) + '</h3>' + careerTable(P, l)
         + '<h3 class="p-sub">' + esc(l.national) + '</h3><p class="p-nat">' + esc(P.nat[L2]) + '</p>'
         + '<h3 class="p-sub">' + esc(l.trophiesT) + '</h3><ul class="p-trophies">' + P.trophies[L2].map((x) => '<li>' + esc(x) + '</li>').join('') + '</ul>'
         + '<p class="p-fact"><b>' + esc(l.factT) + '</b> ' + esc(P.fact[L2]) + '</p>';
@@ -606,6 +608,75 @@ export async function createRoom(o) {
     setTimeout(() => { exhale.classList.remove('on'); void exhale.offsetWidth; exhale.classList.add('on'); }, 900);
   }
   function rerender() { if (focusKey && !panel.hidden) { const a = document.activeElement && document.activeElement.id; render(focusKey); afterRender(focusKey, true); if (a) { const el = document.getElementById(a); if (el) el.focus({ preventScroll: true }); } } }
+
+  // karijera po klubovima: godine, klub, utakmice, golovi (i asistencije kad su poznate)
+  function careerTable(P, l) {
+    const hasA = P.clubs.some((c) => c[4] != null), num = (v) => (v == null ? '·' : v);
+    const tot = [2, 3, 4].map((i) => P.clubs.every((c) => c[i] != null) ? P.clubs.reduce((a, c) => a + c[i], 0) : null);
+    const head = '<tr><th scope="col">' + esc(l.career) + '</th><th scope="col">' + esc(l.appsT) + '</th><th scope="col">' + esc(l.goalsT) + '</th>' + (hasA ? '<th scope="col">' + esc(l.assistsT) + '</th>' : '') + '</tr>';
+    const rows = P.clubs.map(([y, c, ap, g, as]) => '<tr><th scope="row"><span>' + esc(y) + '</span><b>' + esc(c) + '</b></th><td>' + num(ap) + '</td><td>' + num(g) + '</td>' + (hasA ? '<td>' + num(as) + '</td>' : '') + '</tr>').join('');
+    const foot = tot[0] != null ? '<tr class="p-tot"><th scope="row"><b>' + esc(l.totalT) + '</b></th><td>' + tot[0] + '</td><td>' + tot[1] + '</td>' + (hasA ? '<td>' + (tot[2] == null ? '·' : tot[2]) + '</td>' : '') + '</tr>' : '';
+    return '<div class="p-tablewrap"><table class="p-stats"><thead>' + head + '</thead><tbody>' + rows + foot + '</tbody></table></div><p class="p-scope">' + esc(P.scope ? P.scope[lang] : '') + '</p>';
+  }
+
+  /* ---------- sjedenje uz nargilu: crijevo prema tebi, drži da povučeš, pusti za dim ---------- */
+  const sitUI = document.createElement('div'); sitUI.className = 'sit-ui'; sitUI.hidden = true;
+  sitUI.innerHTML = '<p class="sit-hint"></p><button type="button" class="sit-stand"></button><button type="button" class="sit-hose"><i aria-hidden="true"></i><span></span></button>';
+  document.getElementById('room').appendChild(sitUI);
+  const hoseBtn = sitUI.querySelector('.sit-hose');
+  let sitKey = null, hoseHit = null, pulling = 0, gurgleT = 0;
+  function labelSit() {
+    sitUI.querySelector('.sit-hint').textContent = L().sitP;
+    sitUI.querySelector('.sit-stand').textContent = L().standUp;
+    hoseBtn.querySelector('span').textContent = L().holdHose;
+    hoseBtn.setAttribute('aria-label', L().puff);
+  }
+  function sitDown(key) {
+    sitKey = key;
+    const fwd = rig.look.clone().sub(rig.pos).normalize(), right = V(0, 0, 0).crossVectors(fwd, UP).normalize();
+    const target = rig.pos.clone().addScaledVector(fwd, 0.34).addScaledVector(right, 0.04).addScaledVector(UP, -0.17);
+    hoseHit = room.aimHose(key, target);
+    labelSit(); sitUI.hidden = false; html.classList.add('is-sitting');
+    sitUI.querySelector('.sit-stand').focus({ preventScroll: true });
+  }
+  function standUp() {
+    if (!sitKey) return;
+    endPull(true); room.aimHose(sitKey, null); sitKey = null; hoseHit = null;
+    sitUI.hidden = true; html.classList.remove('is-sitting');
+  }
+  function startPull() { if (!sitKey || pulling) return; pulling = performance.now(); hoseBtn.classList.add('on'); }
+  function endPull(silent) {
+    if (!pulling) return;
+    const v = Math.min(1, (performance.now() - pulling) / 2600); pulling = 0; hoseBtn.classList.remove('on');
+    room.pull(sitKey, 0);
+    if (silent || v < 0.08) return;
+    // izdah: dim izlazi ispred kamere i ide naprijed
+    const fwd = rig.look.clone().sub(rig.pos).normalize();
+    room.exhale(rig.pos.clone().addScaledVector(fwd, 0.18).addScaledVector(UP, -0.06), fwd, v);
+    room.puff(sitKey);
+    exhale.style.setProperty('--s', (0.4 + v * 0.6).toFixed(2));
+    exhale.classList.remove('on'); void exhale.offsetWidth; exhale.classList.add('on');
+  }
+  function stepPull(now) {
+    if (!pulling || !sitKey) return;
+    const v = Math.min(1, (now - pulling) / 2600);
+    room.pull(sitKey, v);
+    hoseBtn.style.setProperty('--p', v.toFixed(3));
+    if (now - gurgleT > 160) { gurgleT = now; sound.gurgle(v); }
+  }
+  hoseBtn.addEventListener('pointerdown', (e) => { e.preventDefault(); try { hoseBtn.setPointerCapture(e.pointerId); } catch (err) { /* nije bitno */ } startPull(); });
+  hoseBtn.addEventListener('pointerup', () => endPull());
+  hoseBtn.addEventListener('pointercancel', () => endPull());
+  hoseBtn.addEventListener('keydown', (e) => { if ((e.key === ' ' || e.key === 'Enter') && !e.repeat) { e.preventDefault(); startPull(); } });
+  hoseBtn.addEventListener('keyup', (e) => { if (e.key === ' ' || e.key === 'Enter') endPull(); });
+  sitUI.querySelector('.sit-stand').addEventListener('click', () => back());
+  // dugme "Drži" stoji tačno na usniku crijeva
+  const mv = V(0, 0, 0);
+  function placeHose() {
+    if (!sitKey || !hoseHit) return;
+    hoseHit.getWorldPosition(mv); mv.project(camera);
+    hoseBtn.style.transform = 'translate(' + ((mv.x + 1) / 2 * W).toFixed(1) + 'px,' + ((1 - mv.y) / 2 * H).toFixed(1) + 'px)';
+  }
 
   /* ---------- monitor: programi i terminal ---------- */
   function bindMonitor() {
@@ -748,7 +819,6 @@ export async function createRoom(o) {
     if (key === 'monitor') { if (sub.project) crt.open(sub.project); else crt.menu(); }
     lastInput = performance.now();
     if (key === 'phone') { stopRing(); handsetUp = 1; }
-    if (CHAIRS.includes(key)) setTimeout(() => room.puff(key), 1300);
     panel.classList.toggle('compact', CHAIRS.includes(key));
     if (key === 'floppies') flyState.t0 = -1;
     hots.hidden = true;
@@ -756,6 +826,7 @@ export async function createRoom(o) {
   function onClose(key) {
     clearInterval(dialTimer); clearInterval(typeTimer);
     if (key === 'phone') handsetUp = 0;
+    if (CHAIRS.includes(key)) standUp();
     if (key === 'monitor' || key === 'floppies') { crt.menu(); }
     if (key === 'floppies') flyState.t0 = -1;
     hots.hidden = false;
@@ -827,6 +898,7 @@ export async function createRoom(o) {
     for (const f of room.anim) f(t, dt);
     crt.update(t);
     if (!hots.hidden) placeHots();
+    stepPull(now); placeHose();
     post.render(scene, camera, t);
     quality(dtMs);
   }
@@ -859,7 +931,7 @@ export async function createRoom(o) {
     },
     pause(p) { setPaused(p || !running); },
     setLang(l) {
-      lang = l; crt.setLang(l); labelHots(); labelTools();
+      lang = l; crt.setLang(l); labelHots(); labelTools(); labelSit();
       hint.textContent = o.coarse ? L().hintM : L().hintD;
       if (crt.state === 'term') crt.term(sub.term.lines, '');
       rerender();

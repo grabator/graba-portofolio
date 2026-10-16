@@ -16,7 +16,8 @@ window.PF = {
       name: 'Mesut Özil', num: '10', color: '#c8162a', status: { en: 'Retired in 2023', bs: 'Penzionisan 2023.' },
       born: { en: '15 October 1988, Gelsenkirchen, Germany', bs: '15. oktobar 1988, Gelsenkirchen, Njemačka' },
       pos: { en: 'Attacking midfielder', bs: 'Ofanzivni vezni' },
-      clubs: [['2006–2008', 'Schalke 04'], ['2008–2010', 'Werder Bremen'], ['2010–2013', 'Real Madrid'], ['2013–2021', 'Arsenal'], ['2021–2022', 'Fenerbahçe'], ['2022–2023', 'İstanbul Başakşehir']],
+      clubs: [['2006–2008', 'Schalke 04', 39, 1, 5], ['2008–2010', 'Werder Bremen', 108, 16, 46], ['2010–2013', 'Real Madrid', 159, 27, 75], ['2013–2021', 'Arsenal', 254, 44, 72], ['2021–2022', 'Fenerbahçe', 37, 9, 3], ['2022–2023', 'İstanbul Başakşehir', 7, 0, 0]],
+      scope: { en: 'All competitions · source: footballdatabase.eu', bs: 'Sva takmičenja · izvor: footballdatabase.eu' },
       nat: { en: 'Germany · 92 caps, 23 goals', bs: 'Njemačka · 92 utakmice, 23 gola' },
       trophies: { en: ['World Cup 2014', 'La Liga 2012', 'Copa del Rey 2011', 'DFB-Pokal 2009', 'FA Cup 2014, 2015, 2017'], bs: ['Svjetsko prvenstvo 2014', 'La Liga 2012', 'Kup kralja 2011', 'Kup Njemačke 2009', 'FA kup 2014, 2015, 2017'] },
       fact: { en: '19 Premier League assists in the 2015/16 season, one short of the record.', bs: '19 asistencija u Premier ligi u sezoni 2015/16, jedna manje od rekorda.' }
@@ -25,8 +26,9 @@ window.PF = {
       name: 'Eberechi Eze', num: '10', color: '#c8162a', status: { en: 'Active · as of October 2026', bs: 'Aktivan · stanje oktobar 2026.' },
       born: { en: '29 June 1998, London, England', bs: '29. juni 1998, London, Engleska' },
       pos: { en: 'Attacking midfielder', bs: 'Ofanzivni vezni' },
-      clubs: [['2016–2020', 'Queens Park Rangers'], ['2018', 'Wycombe Wanderers (loan)'], ['2020–2025', 'Crystal Palace'], ['2025–', 'Arsenal']],
-      nat: { en: 'England · debut in 2024, Euro 2024 squad', bs: 'Engleska · debi 2024, na Euru 2024' },
+      clubs: [['2016–2020', 'Queens Park Rangers', 111, 20], ['2018', 'Wycombe Wanderers (loan)', 22, 5], ['2020–2025', 'Crystal Palace', 169, 40], ['2025–', 'Arsenal']],
+      scope: { en: 'All competitions · source: FotMob · current club not counted, the numbers change every week', bs: 'Sva takmičenja · izvor: FotMob · trenutni klub nije upisan, brojevi se mijenjaju svake sedmice' },
+      nat: { en: 'England · 16 caps, 3 goals · debut in 2024, Euro 2024 squad', bs: 'Engleska · 16 utakmica, 3 gola · debi 2024, na Euru 2024' },
       trophies: { en: ['FA Cup 2025'], bs: ['FA kup 2025'] },
       fact: { en: 'Scored the only goal of the 2025 FA Cup final for Crystal Palace against Manchester City. Made his England debut against Bosnia and Herzegovina.', bs: 'Dao jedini gol u finalu FA kupa 2025. za Crystal Palace protiv Manchester Cityja. Za Englesku debitovao protiv Bosne i Hercegovine.' }
     },
@@ -34,8 +36,9 @@ window.PF = {
       name: 'Edin Džeko', num: '11', color: '#1d3a94', status: { en: 'Active · as of October 2026', bs: 'Aktivan · stanje oktobar 2026.' },
       born: { en: '17 March 1986, Sarajevo, Bosnia and Herzegovina', bs: '17. mart 1986, Sarajevo, Bosna i Hercegovina' },
       pos: { en: 'Striker', bs: 'Napadač' },
-      clubs: [['2003–2005', 'Željezničar'], ['2005–2007', 'Teplice'], ['2007–2011', 'Wolfsburg'], ['2011–2015', 'Manchester City'], ['2015–2021', 'Roma'], ['2021–2023', 'Inter'], ['2023–2025', 'Fenerbahçe'], ['2025–2026', 'Fiorentina'], ['2026–', 'Schalke 04']],
-      nat: { en: 'Bosnia and Herzegovina · captain, all-time top scorer and most capped player, World Cup 2014', bs: 'Bosna i Hercegovina · kapiten, najbolji strijelac i rekorder po broju nastupa, Svjetsko prvenstvo 2014' },
+      clubs: [['2003–2005', 'Željezničar'], ['2005–2007', 'Teplice'], ['2007–2011', 'Wolfsburg', 142, 85], ['2011–2015', 'Manchester City', 189, 72], ['2015–2021', 'Roma', 260, 119], ['2021–2023', 'Inter', 101, 31], ['2023–2025', 'Fenerbahçe', 99, 46], ['2025–2026', 'Fiorentina', 18, 2], ['2026–', 'Schalke 04']],
+      scope: { en: 'All competitions · sources: club pages and stats databases (2026) · early clubs and current club not counted', bs: 'Sva takmičenja · izvori: stranice klubova i statističke baze (2026) · prvi klubovi i trenutni klub nisu upisani' },
+      nat: { en: 'Bosnia and Herzegovina · 150 caps, 73 goals (July 2026) · captain, all-time top scorer and most capped player, World Cups 2014 and 2026', bs: 'Bosna i Hercegovina · 150 utakmica, 73 gola (juli 2026) · kapiten, najbolji strijelac i rekorder po broju nastupa, svjetska prvenstva 2014. i 2026.' },
       trophies: { en: ['Bundesliga 2009', 'Premier League 2012, 2014', 'League Cup 2014', 'Coppa Italia 2022, 2023', 'Supercoppa Italiana 2021, 2022'], bs: ['Bundesliga 2009', 'Premier liga 2012, 2014', 'Liga kup 2014', 'Kup Italije 2022, 2023', 'Superkup Italije 2021, 2022'] },
       fact: { en: 'Top scorer of the Bundesliga (2009/10) and of Serie A (2016/17, 29 goals).', bs: 'Najbolji strijelac Bundeslige (2009/10) i Serie A (2016/17, 29 golova).' }
     },
@@ -43,10 +46,31 @@ window.PF = {
       name: 'Zlatan Ibrahimović', num: '10', color: '#13204a', status: { en: 'Retired in 2023', bs: 'Penzionisan 2023.' },
       born: { en: '3 October 1981, Malmö, Sweden', bs: '3. oktobar 1981, Malmö, Švedska' },
       pos: { en: 'Striker', bs: 'Napadač' },
-      clubs: [['1999–2001', 'Malmö FF'], ['2001–2004', 'Ajax'], ['2004–2006', 'Juventus'], ['2006–2009', 'Inter'], ['2009–2011', 'Barcelona'], ['2010–2012', 'Milan'], ['2012–2016', 'Paris Saint-Germain'], ['2016–2018', 'Manchester United'], ['2018–2019', 'LA Galaxy'], ['2020–2023', 'Milan']],
+      clubs: [['1999–2001', 'Malmö FF', 40, 16], ['2001–2004', 'Ajax', 74, 35], ['2004–2006', 'Juventus', 70, 23], ['2006–2009', 'Inter', 88, 57], ['2009–2011', 'Barcelona', 29, 16], ['2010–2012', 'Milan', 61, 42], ['2012–2016', 'Paris Saint-Germain', 122, 113], ['2016–2018', 'Manchester United', 33, 17], ['2018–2019', 'LA Galaxy', 56, 52], ['2020–2023', 'Milan', 64, 34]],
+      scope: { en: 'League matches only · source: Wikipedia', bs: 'Samo prvenstvene utakmice · izvor: Wikipedia' },
       nat: { en: 'Sweden · 122 caps, 62 goals, all-time top scorer', bs: 'Švedska · 122 utakmice, 62 gola, najbolji strijelac u historiji' },
       trophies: { en: ['Ligue 1 2013, 2014, 2015, 2016', 'Serie A 2007, 2008, 2009, 2011, 2022', 'La Liga 2010', 'Eredivisie 2002, 2004', 'Europa League 2017'], bs: ['Ligue 1 2013, 2014, 2015, 2016', 'Serie A 2007, 2008, 2009, 2011, 2022', 'La Liga 2010', 'Eredivisie 2002, 2004', 'Liga Evrope 2017'] },
-      fact: { en: '156 goals in 180 games for PSG. His father is from Bijeljina.', bs: '156 golova u 180 utakmica za PSG. Otac mu je iz Bijeljine.' }
+      fact: { en: '156 goals in 180 games for PSG in all competitions. His father is from Bijeljina.', bs: '156 golova u 180 utakmica za PSG u svim takmičenjima. Otac mu je iz Bijeljine.' }
+    },
+    schweini: {
+      name: 'Bastian Schweinsteiger', num: '31', color: '#d3122f', status: { en: 'Retired in 2019', bs: 'Penzionisan 2019.' },
+      born: { en: '1 August 1984, Kolbermoor, Germany', bs: '1. august 1984, Kolbermoor, Njemačka' },
+      pos: { en: 'Central midfielder', bs: 'Centralni vezni' },
+      clubs: [['2002–2015', 'Bayern München', 500, 68], ['2015–2017', 'Manchester United', 18, 1], ['2017–2019', 'Chicago Fire', 85, 8]],
+      scope: { en: 'All competitions · source: Wikipedia', bs: 'Sva takmičenja · izvor: Wikipedia' },
+      nat: { en: 'Germany · 121 caps, 24 goals · captain 2014–2016', bs: 'Njemačka · 121 utakmica, 24 gola · kapiten 2014–2016' },
+      trophies: { en: ['World Cup 2014', 'Champions League 2013', 'Club World Cup 2013', 'Bundesliga 8×', 'DFB-Pokal 7×', 'FA Cup 2016'], bs: ['Svjetsko prvenstvo 2014', 'Liga prvaka 2013', 'Svjetsko klupsko prvenstvo 2013', 'Bundesliga 8×', 'Kup Njemačke 7×', 'FA kup 2016'] },
+      fact: { en: 'Exactly 500 matches for Bayern, the club he joined as a boy.', bs: 'Tačno 500 utakmica za Bayern, klub u koji je došao kao dječak.' }
+    },
+    odegaard: {
+      name: 'Martin Ødegaard', num: '8', color: '#c8162a', status: { en: 'Active · as of October 2026', bs: 'Aktivan · stanje oktobar 2026.' },
+      born: { en: '17 December 1998, Drammen, Norway', bs: '17. decembar 1998, Drammen, Norveška' },
+      pos: { en: 'Attacking midfielder', bs: 'Ofanzivni vezni' },
+      clubs: [['2014–2015', 'Strømsgodset'], ['2015–2021', 'Real Madrid'], ['2017–2018', 'Heerenveen (loan)', 43, 3, 5], ['2018–2019', 'Vitesse (loan)'], ['2019–2020', 'Real Sociedad (loan)'], ['2021–', 'Arsenal', 242, 46, 44]],
+      scope: { en: 'All competitions · source: footballdatabase.eu (October 2026) · only clubs with confirmed numbers are counted', bs: 'Sva takmičenja · izvor: footballdatabase.eu (oktobar 2026) · upisani su samo klubovi sa potvrđenim brojevima' },
+      nat: { en: 'Norway · captain · debut in 2014 at 15, the youngest Norway player ever', bs: 'Norveška · kapiten · debitovao 2014. sa 15 godina, najmlađi reprezentativac Norveške ikad' },
+      trophies: { en: ['Community Shield 2023'], bs: ['Community Shield 2023'] },
+      fact: { en: 'Arsenal captain since 2022.', bs: 'Kapiten Arsenala od 2022.' }
     }
   },
   work: [
@@ -109,17 +133,18 @@ window.PF = {
       skip: 'Skip to content',
       tabs: { work: 'Work', services: 'Services', about: 'About', contact: 'Contact' },
       avail: 'Available for new projects', place: 'Bosnia and Herzegovina', navLabel: 'Sections',
-      roomT: 'Step into my room', roomP: '3 AM, aquarium, old computer', prev: 'Previous project', next: 'Next project'
+      roomT: 'Step into my room', prev: 'Previous project', next: 'Next project'
     },
     room: {
       loading: 'Loading projects...', press: 'PRESS ANY KEY TO START', tap: 'TAP TO START', nogl: 'This room needs WebGL. Opening the classic view.',
       hintD: 'Click anything · drag to look · WASD to walk', hintM: 'Tap anything · drag to look · stick to walk',
       reset: 'Back to the start view', showNames: 'Show all names',
       career: 'Career', national: 'National team', trophiesT: 'Trophies', bornT: 'Born', posT: 'Position', factT: 'Did you know',
-      sitH: 'Pull up a chair', sitP: 'Sit down, take a pull and watch the fish.', puff: 'Take a pull', standUp: 'Stand up',
+      sitH: 'Pull up a chair', sitP: 'Hold the hose to take a pull, let go to blow the smoke.', puff: 'Take a pull', standUp: 'Stand up', holdHose: 'Hold',
+      appsT: 'Apps', goalsT: 'Goals', assistsT: 'Assists', totalT: 'Total', leaving: 'Leaving the room...',
       back: 'Back', classic: 'Classic view', room: 'Enter the room', soundOn: 'Sound on', soundOff: 'Sound off', lang: 'Language',
-      names: { ozil: 'Özil · 10', eze: 'Eze · 10', dzeko: 'Džeko · 11', ibra: 'Ibrahimović · 10', chairL: 'Hookah', chairR: 'Hookah', monitor: 'Projects', phone: 'Contact', answering: 'About me', coffee: 'Grab a coffee', notes: 'Services', floppies: 'Timeline', poster: 'Skoči.', aquarium: 'Aquarium', lamp: 'Desk lamp', cassette: 'Sound', keyboard: 'Tech stack' },
-      objs: { ozil: 'Framed jersey', eze: 'Framed jersey', dzeko: 'Framed jersey', ibra: 'Framed jersey', chairL: 'Chair and hookah', chairR: 'Chair and hookah', monitor: 'Old computer', phone: 'Red phone', answering: 'Answering machine', coffee: 'Džezva and fildžan', notes: 'Sticky notes', floppies: 'Floppy disks', poster: 'Poster', aquarium: 'Aquarium', lamp: 'Desk lamp', cassette: 'Cassette player', keyboard: 'Keyboard' },
+      names: { ozil: 'Özil · 10', eze: 'Eze · 10', odegaard: 'Ødegaard · 8', dzeko: 'Džeko · 11', ibra: 'Ibrahimović · 10', schweini: 'Schweinsteiger · 31', door: 'Exit', chairL: 'Hookah', chairR: 'Hookah', monitor: 'Projects', phone: 'Contact', answering: 'About me', coffee: 'Grab a coffee', notes: 'Services', floppies: 'Timeline', poster: 'Skoči.', aquarium: 'Aquarium', lamp: 'Desk lamp', cassette: 'Sound', keyboard: 'Tech stack' },
+      objs: { ozil: 'Framed jersey', eze: 'Framed jersey', odegaard: 'Framed jersey', dzeko: 'Framed jersey', ibra: 'Framed jersey', schweini: 'Framed jersey', door: 'Back to the classic view', chairL: 'Chair and hookah', chairR: 'Chair and hookah', monitor: 'Old computer', phone: 'Red phone', answering: 'Answering machine', coffee: 'Džezva and fildžan', notes: 'Sticky notes', floppies: 'Floppy disks', poster: 'Poster', aquarium: 'Aquarium', lamp: 'Desk lamp', cassette: 'Cassette player', keyboard: 'Keyboard' },
       lampOn: 'Lights on', lampOff: 'Lights off', fish: 'The fish scattered. They will be back.',
       programs: 'Programs', run: 'Run live', source: 'Source', all: 'All programs', loadingExe: 'LOADING', noLive: 'Source only',
       termHint: 'Type help and press Enter', termLabel: 'Terminal command',
@@ -186,17 +211,18 @@ window.PF = {
       skip: 'Preskoči na sadržaj',
       tabs: { work: 'Radovi', services: 'Usluge', about: 'O meni', contact: 'Kontakt' },
       avail: 'Dostupan za nove projekte', place: 'Bosna i Hercegovina', navLabel: 'Dijelovi stranice',
-      roomT: 'Uđi u moju sobu', roomP: '3 ujutro, akvarijum, stari računar', prev: 'Prethodni projekat', next: 'Sljedeći projekat'
+      roomT: 'Uđi u moju sobu', prev: 'Prethodni projekat', next: 'Sljedeći projekat'
     },
     room: {
       loading: 'Učitavam projekte...', press: 'PRITISNI BILO KOJU TIPKU', tap: 'DODIRNI ZA START', nogl: 'Ova soba traži WebGL. Otvaram klasičnu verziju.',
       hintD: 'Klikni bilo šta · prevuci za pogled · WASD za hod', hintM: 'Dodirni bilo šta · prevuci za pogled · krug za hod',
       reset: 'Vrati početni pogled', showNames: 'Prikaži sva imena',
       career: 'Karijera', national: 'Reprezentacija', trophiesT: 'Trofeji', bornT: 'Rođen', posT: 'Pozicija', factT: 'Zanimljivo',
-      sitH: 'Sjedni malo', sitP: 'Sjedni, povuci i gledaj ribice.', puff: 'Povuci', standUp: 'Ustani',
+      sitH: 'Sjedni malo', sitP: 'Drži crijevo da povučeš, pusti da izbaciš dim.', puff: 'Povuci', standUp: 'Ustani', holdHose: 'Drži',
+      appsT: 'Ut.', goalsT: 'Gol.', assistsT: 'Ast.', totalT: 'Ukupno', leaving: 'Izlazim iz sobe...',
       back: 'Nazad', classic: 'Klasična verzija', room: 'Uđi u sobu', soundOn: 'Zvuk uključen', soundOff: 'Zvuk isključen', lang: 'Jezik',
-      names: { ozil: 'Özil · 10', eze: 'Eze · 10', dzeko: 'Džeko · 11', ibra: 'Ibrahimović · 10', chairL: 'Nargila', chairR: 'Nargila', monitor: 'Projekti', phone: 'Kontakt', answering: 'O meni', coffee: 'Idemo na kafu', notes: 'Usluge', floppies: 'Vremenska linija', poster: 'Skoči.', aquarium: 'Akvarijum', lamp: 'Stona lampa', cassette: 'Zvuk', keyboard: 'Tehnologije' },
-      objs: { ozil: 'Uramljen dres', eze: 'Uramljen dres', dzeko: 'Uramljen dres', ibra: 'Uramljen dres', chairL: 'Stolica i nargila', chairR: 'Stolica i nargila', monitor: 'Stari računar', phone: 'Crveni telefon', answering: 'Telefonska sekretarica', coffee: 'Džezva i fildžan', notes: 'Ceduljice', floppies: 'Diskete', poster: 'Plakat', aquarium: 'Akvarijum', lamp: 'Stona lampa', cassette: 'Kasetofon', keyboard: 'Tastatura' },
+      names: { ozil: 'Özil · 10', eze: 'Eze · 10', odegaard: 'Ødegaard · 8', dzeko: 'Džeko · 11', ibra: 'Ibrahimović · 10', schweini: 'Schweinsteiger · 31', door: 'Izlaz', chairL: 'Nargila', chairR: 'Nargila', monitor: 'Projekti', phone: 'Kontakt', answering: 'O meni', coffee: 'Idemo na kafu', notes: 'Usluge', floppies: 'Vremenska linija', poster: 'Skoči.', aquarium: 'Akvarijum', lamp: 'Stona lampa', cassette: 'Zvuk', keyboard: 'Tehnologije' },
+      objs: { ozil: 'Uramljen dres', eze: 'Uramljen dres', odegaard: 'Uramljen dres', dzeko: 'Uramljen dres', ibra: 'Uramljen dres', schweini: 'Uramljen dres', door: 'Nazad na običnu verziju', chairL: 'Stolica i nargila', chairR: 'Stolica i nargila', monitor: 'Stari računar', phone: 'Crveni telefon', answering: 'Telefonska sekretarica', coffee: 'Džezva i fildžan', notes: 'Ceduljice', floppies: 'Diskete', poster: 'Plakat', aquarium: 'Akvarijum', lamp: 'Stona lampa', cassette: 'Kasetofon', keyboard: 'Tastatura' },
       lampOn: 'Svjetlo upaljeno', lampOff: 'Svjetlo ugašeno', fish: 'Ribice su se razbježale. Vratit će se.',
       programs: 'Programi', run: 'Otvori uživo', source: 'Kod', all: 'Svi programi', loadingExe: 'UČITAVAM', noLive: 'Samo kod',
       termHint: 'Upiši help i pritisni Enter', termLabel: 'Komanda za terminal',

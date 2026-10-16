@@ -127,7 +127,7 @@ function ensureRoom() {
       progress(0.25);
       const mod = await import('./room.js');
       progress(0.55);
-      const room = await mod.createRoom({ PF, lang: state.lang, sound, toast, progress, coarse, reduced, setLang, toggleSound, onLost: noRoom });
+      const room = await mod.createRoom({ PF, lang: state.lang, sound, toast, progress, coarse, reduced, setLang, toggleSound, onLost: noRoom, exit: () => showClassic(true) });
       state.room = room;
       return room;
     })();

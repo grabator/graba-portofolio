@@ -71,6 +71,8 @@ export const sound = {
   dial(n) { for (let i = 0; i < n; i++) click(0.05, i * 0.07, 1800); },
   floppy() { for (let i = 0; i < 9; i++) click(0.07, i * 0.09 + (i > 4 ? 0.2 : 0), 900 + (i % 3) * 300); },
   key() { click(0.04, 0, 3200); },
+  // klokotanje vode u nargili dok se vuče
+  gurgle(v = 0.5) { for (let i = 0; i < 3; i++) tone(90 + Math.random() * 90 + v * 40, 0.06, 0.025 + v * 0.02, 'sine', i * 0.05); },
   splash() { click(0.08, 0, 600); click(0.05, 0.05, 1200); },
   lamp() { click(0.09, 0, 1500); }
 };

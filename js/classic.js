@@ -59,7 +59,7 @@ export function classicHTML(PF, lang) {
     + '<h1 class="s-name">Ahmed<br>Grabus</h1>'
     + '<p class="s-role">' + esc(T.role) + ' · ' + esc(S.place) + '</p>'
     + '<p class="s-intro">' + esc(T.hero) + '</p>'
-    + '<button type="button" class="s-room" data-room><span class="s-room-img" aria-hidden="true"></span><span><b>' + esc(S.roomT) + '</b><small>' + esc(S.roomP) + '</small></span><i aria-hidden="true">→</i></button>'
+    + '<button type="button" class="s-room" data-room><b>' + esc(S.roomT) + '</b><i aria-hidden="true">→</i></button>'
     + '<nav class="s-nav" aria-label="' + esc(S.navLabel) + '">' + nav + '</nav>'
     + '<p class="s-foot"><span class="s-time" data-time>Mostar</span><span>© 2026 Graba</span></p>'
     + '</aside>'

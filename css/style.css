@@ -206,7 +206,30 @@ img { max-width: 100%; display: block; }
 @media (min-width: 760px) { .panel.compact { bottom: auto; } }
 .exhale { position: absolute; inset: -10%; pointer-events: none; opacity: 0; background: radial-gradient(60% 45% at 50% 70%, rgba(220, 230, 255, 0.55), rgba(220, 230, 255, 0.18) 45%, transparent 75%); filter: blur(6px); }
 .exhale.on { animation: exhale 3.2s ease-out forwards; }
-@keyframes exhale { 0% { opacity: 0; transform: scale(0.7) translateY(12%); } 18% { opacity: 1; } 100% { opacity: 0; transform: scale(1.35) translateY(-14%); } }
+.exhale { --s: 1; }
+@keyframes exhale { 0% { opacity: 0; transform: scale(0.7) translateY(12%); } 18% { opacity: var(--s); } 100% { opacity: 0; transform: scale(1.35) translateY(-14%); } }
+
+/* statistika igrača */
+.p-tablewrap { overflow-x: auto; margin: 0 -4px; }
+.p-stats { width: 100%; border-collapse: collapse; font-size: 14px; }
+.p-stats th, .p-stats td { padding: 7px 4px; border-bottom: 1px solid var(--line); text-align: right; font-variant-numeric: tabular-nums; }
+.p-stats thead th { font: 17px/1 var(--mono); color: var(--muted); font-weight: 400; }
+.p-stats thead th:first-child, .p-stats tbody th { text-align: left; }
+.p-stats tbody th { font-weight: 400; }
+.p-stats tbody th span { display: block; font: 16px/1 var(--mono); color: var(--muted); }
+.p-stats tbody th b { font-weight: 500; }
+.p-stats td { font-weight: 500; }
+.p-stats .p-tot th, .p-stats .p-tot td { border-bottom: 0; color: var(--aqua); font-weight: 600; }
+.p-scope { margin: 8px 0 0; font-size: 12px; color: var(--muted); }
+/* sjedenje uz nargilu */
+.sit-ui { position: absolute; inset: 0; pointer-events: none; }
+.sit-hint { position: absolute; left: 50%; top: calc(var(--bar) + 10px); transform: translateX(-50%); margin: 0; max-width: calc(100% - 32px); text-align: center; font: 20px/1.2 var(--mono); color: var(--text); background: rgba(5, 6, 15, 0.7); border: 1px solid var(--line); padding: 8px 14px; border-radius: 12px; }
+.sit-stand { position: absolute; right: max(16px, env(safe-area-inset-right)); bottom: max(22px, env(safe-area-inset-bottom)); pointer-events: auto; min-height: 46px; padding: 0 20px; border-radius: 999px; border: 1px solid var(--line); background: rgba(5, 6, 15, 0.75); color: var(--text); font: 22px/1 var(--mono); cursor: pointer; }
+.sit-hose { --p: 0; position: absolute; left: 0; top: 0; width: 92px; height: 92px; margin: -46px 0 0 -46px; border-radius: 50%; border: 0; padding: 0; pointer-events: auto; cursor: pointer; touch-action: none; background: conic-gradient(var(--red) calc(var(--p) * 360deg), rgba(255, 255, 255, 0.12) 0); -webkit-mask: radial-gradient(circle, transparent 38px, #000 39px); mask: radial-gradient(circle, transparent 38px, #000 39px); }
+.sit-hose span { position: absolute; left: 50%; top: calc(100% + 6px); transform: translateX(-50%); font: 20px/1 var(--mono); color: var(--text); white-space: nowrap; background: rgba(5, 6, 15, 0.7); padding: 3px 8px; border-radius: 6px; }
+.sit-hose i { position: absolute; inset: 30px; border-radius: 50%; background: var(--aqua); box-shadow: 0 0 14px var(--aqua); animation: pulse 2s ease-out infinite; }
+.sit-hose.on i { background: var(--red); box-shadow: 0 0 20px var(--red); }
+.is-sitting .room-hint, .is-sitting .hovername { opacity: 0 !important; }
 
 /* ---------- poruka ---------- */
 .toast { position: fixed; left: 50%; bottom: max(24px, env(safe-area-inset-bottom)); z-index: 70; transform: translate(-50%, 20px); opacity: 0; pointer-events: none; background: rgba(5, 6, 15, 0.92); border: 1px solid var(--line); color: var(--text); font: 22px/1.2 var(--mono); padding: 10px 16px; border-radius: 10px; transition: opacity 0.25s, transform 0.25s; max-width: calc(100vw - 32px); text-align: center; }
@@ -358,12 +381,9 @@ html:not(.js) .s-thumbs, html:not(.js) .s-arrows, html:not(.js) .s-count { displ
   .s-avail { font-size: 12.5px; }
   .s-name { font-size: 46px; margin-top: 18px; }
   .s-intro { font-size: 15px; }
-  .can-room .s-room { display: flex; align-items: center; gap: 12px; width: 100%; margin: 6px 0 2px; padding: 10px 14px 10px 10px; border: 1px solid rgba(63, 227, 240, 0.35); border-radius: 16px; background: linear-gradient(100deg, rgba(63, 227, 240, 0.1), rgba(18, 20, 29, 0.8)); color: var(--s-text); text-align: left; cursor: pointer; }
-  .s-room-img { flex: 0 0 64px; height: 44px; border-radius: 10px; background: url(../assets/og.jpg) 55% 40% / 260% auto; box-shadow: 0 0 18px rgba(63, 227, 240, 0.3); }
-  .s-room span:nth-child(2) { display: flex; flex-direction: column; gap: 2px; flex: 1; }
-  .s-room b { font: 600 15px var(--sans); }
-  .s-room small { font-size: 12.5px; color: var(--s-muted); }
-  .s-room i { font-style: normal; color: var(--aqua); font-size: 18px; }
+  .can-room .s-room { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; margin: 8px 0 2px; padding: 0 18px; min-height: 54px; border: 1px solid rgba(63, 227, 240, 0.45); border-radius: 999px; background: linear-gradient(100deg, rgba(63, 227, 240, 0.16), rgba(18, 20, 29, 0.85)); color: var(--s-text); cursor: pointer; box-shadow: 0 0 24px rgba(63, 227, 240, 0.12); }
+  .s-room b { font: 600 16px var(--sans); }
+  .s-room i { font-style: normal; color: var(--aqua); font-size: 20px; }
   .s-nav { position: fixed; z-index: 41; left: 0; right: 0; bottom: 0; flex-direction: row; margin: 0; border-top: 1px solid var(--s-line); background: rgba(10, 11, 17, 0.92); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); padding: 6px 4px env(safe-area-inset-bottom); }
   html:not(.js) .s-nav { position: static; }
   .s-nav a { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px 0 8px; border: 0; min-height: 56px; }
@@ -414,7 +434,7 @@ html:not(.js) .s-thumbs, html:not(.js) .s-arrows, html:not(.js) .s-count { displ
   .p-num { font-size: 110px; }
   .hot { width: 56px; height: 56px; margin: -28px 0 0 -28px; }
   .hot-t { font-size: 20px; line-height: 1; padding: 4px 7px 5px; height: 30px; }
-  .room-hint { bottom: calc(150px + env(safe-area-inset-bottom)); font-size: 19px; }
+  .room-hint { bottom: calc(150px + env(safe-area-inset-bottom)); font-size: 18px; white-space: normal; width: calc(100% - 32px); text-align: center; line-height: 1.25; }
   .hot.side-l .hot-t { left: auto; right: calc(50% + 12px); }
   .hot.side-r .hot-t { left: calc(50% + 12px); }
   .p-facts { grid-template-columns: 1fr; }

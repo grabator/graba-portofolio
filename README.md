@@ -14,7 +14,9 @@ Portfolio je jedna tamna 3D soba u tri ujutro: rebrasti zidovi, krovni prozor kr
 | Džezva i fildžan | "Idemo na kafu" |
 | Ceduljice na monitoru | Usluge i način rada |
 | Diskete i disk-drajv | Vremenska linija po godinama |
-| Plakat "SKOČI." | O meni |
+| Dresovi na zidovima | Kartica igrača sa karijerom |
+| Stolica i nargila | Sjedneš i povučeš |
+| Vrata | Nazad na običnu verziju |
 | Akvarijum | Ribice prate miš ili prst, dodir ih rasprši |
 | Stona lampa | Pali i gasi svjetlo u sobi (pamti se) |
 | Kasetofon | Zvuk sobe (pamti se, ugašen po defaultu) |
@@ -26,7 +28,7 @@ Svjetlo kroz krovni prozor prati pravo doba dana u Mostaru (Europe/Sarajevo), a 
 
 **Glavna stranica je obična verzija** (i na desktopu i na mobitelu): četiri dijela, Radovi, Usluge, O meni i Kontakt, koji staju na jedan ekran, bez dugog listanja. Projekti se gledaju jedan po jedan: velika slika i opis, a mijenjaju se sličicama, strelicama ili tipkama ← →, na mobitelu prevlačenjem. Sav sadržaj je i u `index.html` kao pravi HTML, zbog Googlea.
 
-**3D soba postoji samo na mobitelu i tabletu** (uređaji na dodir). Ulazi se karticom "Uđi u moju sobu". Na desktopu se three.js nikad ne učitava. Na bočnim zidovima sobe su uramljeni dresovi: lijevo ÖZIL 10 i EZE 10 (Arsenal), desno DŽEKO 11 (BiH) i IBRAHIMOVIĆ 10 (PSG). Klik na dres otvara karticu igrača: klubovi kroz cijelu karijeru, reprezentacija, trofeji i jedna zanimljivost (podaci su u `PF.players` u `js/i18n.js`). Pored obje stolice je nargila: klik na stolicu te posjedne, a dugme "Povuci" zažari ugalj i pusti dim. Pogled se okreće u krug, a po sobi se hoda svuda (sto i zidovi se ne mogu proći); iza leđa su vrata.
+**3D soba postoji samo na mobitelu i tabletu** (uređaji na dodir). Ulazi se karticom "Uđi u moju sobu". Na desktopu se three.js nikad ne učitava. Na bočnim zidovima sobe su uramljeni dresovi: lijevo ÖZIL 10, EZE 10 i ØDEGAARD 8 (Arsenal), desno DŽEKO 11 (BiH), IBRAHIMOVIĆ 10 (PSG) i SCHWEINSTEIGER 31 (Bayern). Klik na dres otvara karticu igrača: svi klubovi kroz karijeru sa utakmicama i golovima (gdje su poznate i asistencijama), reprezentacija, trofeji i zanimljivost. Uz svaku tabelu piše obuhvat i izvor podataka (`PF.players` u `js/i18n.js`). Pored obje stolice je nargila: klik na stolicu te posjedne, crijevo dođe prema tebi, držiš usnik da povučeš (žar se zažari, voda klokoće), a kad pustiš, dim izađe naprijed. Iza leđa su vrata, a klik na njih vraća na običnu verziju. Na zadnjem zidu su sat (mostarsko vrijeme) i dvije apstraktne slike, u uglovima biljka i polica sa knjigama.
 
 Soba je inspirisana radom [Andrea Jorgensen · hideou.se](https://hideou.se). Sve u sobi je napravljeno u kodu, bez njenih rendera i bez preuzetih modela.
 
