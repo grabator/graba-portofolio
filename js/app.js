@@ -90,6 +90,7 @@
     startType();
     curSec = null; requestAnimationFrame(onScroll);
     cars();
+    if (window.CARSIJA) window.CARSIJA.render(lang);
   }
 
   /* ---------------- pisaća mašina ---------------- */

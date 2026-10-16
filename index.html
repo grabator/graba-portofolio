@@ -18,10 +18,12 @@
 <link rel="preload" href="assets/fonts/inter-tight-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/inter-tight-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/carsija.css">
 <script type="application/ld+json">
 { "@context": "https://schema.org", "@type": "Person", "name": "Ahmed Grabus", "alternateName": "Graba", "jobTitle": "Software Engineer", "address": { "@type": "PostalAddress", "addressCountry": "BA" }, "email": "mailto:grabafaceit@gmail.com", "telephone": "+387 60 349 4625", "url": "https://graba-portofolio.grabafaceit.workers.dev/", "sameAs": ["https://github.com/grabator", "https://myshishapedia.com", "https://squadjury.com"] }
 </script>
 <script src="js/i18n.js" defer></script>
+<script src="js/carsija.js" defer></script>
 <script src="js/app.js" defer></script>
 </head>
 <body>
@@ -72,13 +74,39 @@
     <p class="scrub-hint" aria-hidden="true"><span class="dot"></span><span data-t="scrub"></span></p>
   </section>
 
-  <section class="sec" id="work" aria-labelledby="work-h">
+  <section class="carsija" id="work" aria-labelledby="cs-h">
+    <div class="cs-stage">
+      <div class="cs-sky" aria-hidden="true"><i class="sky-day"></i><i class="sky-gold"></i><i class="sky-dusk"></i><i class="cs-sun"></i><i class="cs-stars"></i></div>
+      <div class="cs-far" aria-hidden="true"></div>
+      <div class="cs-mid" aria-hidden="true"></div>
+      <i class="cs-tint" aria-hidden="true"></i>
+      <div class="cs-street"></div>
+      <header class="cs-intro">
+        <p class="kicker" data-t="street.k"></p>
+        <h2 id="cs-h" class="split" data-t="street.h"></h2>
+        <p class="cs-lead" data-t="street.p"></p>
+        <p class="cs-walk"><i aria-hidden="true"></i><span data-t="street.walk"></span></p>
+      </header>
+      <div class="cs-bar" aria-hidden="true"><div class="cs-track"><i class="cs-fill"></i></div><p class="cs-now"></p></div>
+    </div>
+  </section>
+
+  <section class="sec work-sec" aria-labelledby="work-h">
     <div class="wrap">
-      <div class="head"><p class="kicker" data-t="workK"></p><h2 id="work-h" class="split" data-t="workH"></h2></div>
-      <ol class="work"></ol>
+      <details class="work-list">
+        <summary><span class="kicker" data-t="workK"></span><h2 id="work-h" class="split" data-t="workH"></h2><span class="wl-btn" data-t="street.list"></span></summary>
+        <ol class="work"></ol>
+      </details>
     </div>
     <div class="peek" aria-hidden="true"><div class="peek-in"></div></div>
   </section>
+
+  <div class="cs-sheet" id="cs-sheet" role="dialog" aria-modal="true" aria-labelledby="cs-sheet-t" hidden>
+    <div class="cs-card">
+      <button type="button" class="cs-x" data-cs-close><span data-t="street.close"></span><i aria-hidden="true">×</i></button>
+      <div class="cs-card-in"></div>
+    </div>
+  </div>
 
   <section class="sec sec-dark" id="services" aria-labelledby="serv-h">
     <div class="wrap">

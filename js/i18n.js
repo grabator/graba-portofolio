@@ -33,6 +33,13 @@ window.PF = {
     reach: 'Reach me:', copy: 'Copy email', copied: 'Email copied',
     scrub: 'Move your mouse, click him', tapBot: 'Tap him, he knows tricks',
     workK: 'Selected work', workH: 'Things I designed, built and *shipped.*',
+    street: {
+      k: 'Selected work · Mostar, Kujundžiluk', h: 'Take a walk through *my old town.*',
+      p: 'Every shop on this old street in Mostar is one of my projects. Scroll to walk, tap a shop to step inside.',
+      walk: 'Scroll to walk', open: 'Step inside', list: 'All projects as a list', close: 'Close',
+      end: 'You made it to the Old Bridge.', endP: 'Every project here started with a conversation. Let\'s start yours.', endCta: 'Get in touch', bridge: 'Open the Old Bridge project',
+      night: 'Evening falls over the Neretva'
+    },
     view: 'View', live: 'Live site', code: 'Source', liveTag: 'Live',
     items: {
       myshishapedia: ['MyShishapedia', 'Web app · Encyclopedia', 'A bilingual hookah flavor encyclopedia: ingredient breakdowns, flavor profiles, comparisons, a mixer and a quiz. A custom static site generator prerenders 190+ pages, with fuzzy search and shareable story cards.'],
@@ -87,6 +94,13 @@ window.PF = {
     reach: 'Pišite mi:', copy: 'Kopiraj email', copied: 'Email kopiran',
     scrub: 'Pomjeri miš, klikni ga', tapBot: 'Dodirni ga, zna trikove',
     workK: 'Izabrani radovi', workH: 'Stvari koje sam dizajnirao, napravio i *objavio.*',
+    street: {
+      k: 'Izabrani radovi · Mostar, Kujundžiluk', h: 'Prošetajte *mojom čaršijom.*',
+      p: 'Svaki dućan u ovoj staroj mostarskoj ulici je jedan moj projekat. Skrolajte da hodate, dodirnite dućan da uđete.',
+      walk: 'Skrolaj i hodaj', open: 'Uđi u dućan', list: 'Svi radovi kao lista', close: 'Zatvori',
+      end: 'Stigli ste do Starog mosta.', endP: 'Svaki projekat ovdje je počeo jednim razgovorom. Hajde da počnemo i vaš.', endCta: 'Javite se', bridge: 'Otvori projekat Old Bridge Mostar',
+      night: 'Veče se spušta nad Neretvu'
+    },
     view: 'Pogledaj', live: 'Otvori stranicu', code: 'Kod', liveTag: 'Uživo',
     items: {
       myshishapedia: ['MyShishapedia', 'Web aplikacija · Enciklopedija', 'Dvojezična enciklopedija okusa za nargile: sastojci, profili okusa, poređenja, mikser i kviz. Vlastiti generator unaprijed pravi 190+ stranica, uz pametnu pretragu i kartice za dijeljenje.'],
