@@ -6,6 +6,7 @@
 import * as THREE from 'three';
 
 const TAU = Math.PI * 2;
+const V3 = (x, y, z) => new THREE.Vector3(x, y, z);
 
 /* ---------- pomoćne funkcije za teksture ---------- */
 function canvas(w, h, draw) {
@@ -92,6 +93,24 @@ export function buildRoom(opts) {
     const m = wallMat(D * 3.2);
     const p = new THREE.Mesh(new THREE.PlaneGeometry(D, H), m);
     p.rotation.y = -side * Math.PI / 2; p.position.set(side * W / 2, H / 2, BACK + D / 2); p.receiveShadow = shadows; scene.add(p);
+  }
+  // prednji zid sa vratima (vidi se kad se okreneš): ispod vrata tanka traka svjetla iz hodnika
+  {
+    const FZ = BACK + D, DX0 = -0.5, DX1 = 0.5, DH = 2.1;
+    const fw = (x0, x1, y0, y1) => { const m = wallMat((x1 - x0) * 3.2); const pl = new THREE.Mesh(new THREE.PlaneGeometry(x1 - x0, y1 - y0), m); pl.rotation.y = Math.PI; pl.position.set((x0 + x1) / 2, (y0 + y1) / 2, FZ); pl.receiveShadow = shadows; scene.add(pl); };
+    fw(-W / 2, DX0, 0, H); fw(DX1, W / 2, 0, H); fw(DX0, DX1, DH, H);
+    const doorM = mat(0x161a33, 0.6, 0.1);
+    const door = new THREE.Mesh(new THREE.BoxGeometry(DX1 - DX0 - 0.04, DH - 0.02, 0.05), doorM); door.position.set((DX0 + DX1) / 2, DH / 2 + 0.01, FZ + 0.02); scene.add(door);
+    for (const [y, h] of [[0.55, 0.7], [1.45, 0.8]]) { const pnl = new THREE.Mesh(new THREE.BoxGeometry(0.7, h, 0.012), mat(0x1c2142, 0.55)); pnl.position.set((DX0 + DX1) / 2, y, FZ - 0.008); scene.add(pnl); }
+    const fM = mat(0x0b0d1c, 0.5, 0.2);
+    [[DX0 - 0.04, DH / 2, 0.08, DH + 0.08], [DX1 + 0.04, DH / 2, 0.08, DH + 0.08], [(DX0 + DX1) / 2, DH + 0.04, DX1 - DX0 + 0.16, 0.08]].forEach(([x, y, w, h]) => { const f = new THREE.Mesh(new THREE.BoxGeometry(w, h, 0.08), fM); f.position.set(x, y, FZ - 0.01); scene.add(f); });
+    const knobM = mat(0xb9bec9, 0.25, 0.9); const kn = new THREE.Mesh(new THREE.SphereGeometry(0.03, 12, 8), knobM); kn.position.set(DX0 + 0.12, 1.0, FZ - 0.04); scene.add(kn);
+    const gap = new THREE.Mesh(new THREE.PlaneGeometry(DX1 - DX0 - 0.06, 0.012), new THREE.MeshBasicMaterial({ color: new THREE.Color(1.6, 2.2, 2.6), toneMapped: false })); gap.rotation.y = Math.PI; gap.position.set((DX0 + DX1) / 2, 0.007, FZ - 0.03); scene.add(gap);
+    const spill = new THREE.Mesh(new THREE.PlaneGeometry(DX1 - DX0 + 0.3, 0.5), new THREE.MeshBasicMaterial({ color: 0x7fe9f6, transparent: true, opacity: 0.045, depthWrite: false, blending: THREE.AdditiveBlending })); spill.rotation.x = -Math.PI / 2; spill.position.set((DX0 + DX1) / 2, 0.004, FZ - 0.25); scene.add(spill);
+    const sw = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.12, 0.02), mat(0xd9dce6, 0.4)); sw.position.set(DX0 - 0.25, 1.2, FZ - 0.01); scene.add(sw);
+    // slabo hladno svjetlo iz hodnika, da se prednji dio sobe vidi kad se okreneš
+    const hall = new THREE.PointLight(0x5f7bff, 4.5, 6, 1.4); hall.position.set((DX0 + DX1) / 2, 1.6, FZ - 0.9); scene.add(hall);
+    const fill = new THREE.PointLight(0x2b3c8f, 1.6, 7, 1.4); fill.position.set(-1.8, 2.6, FZ - 2.0); scene.add(fill);
   }
   const carpet = carpetTexture(); carpet.wrapS = carpet.wrapT = THREE.RepeatWrapping; carpet.repeat.set(5, 5);
   const floor = new THREE.Mesh(new THREE.PlaneGeometry(W, D), mat(0xffffff, 1, 0, { map: carpet }));
@@ -252,6 +271,7 @@ export function buildRoom(opts) {
   const legM = mat(0x0c0e18, 0.5, 0.5);
   for (const x of [-0.95, 0.95]) { const l = new THREE.Mesh(new THREE.BoxGeometry(0.1, deskY - 0.18, 0.75), legM); l.position.set(x, (deskY - 0.18) / 2, deskZ); l.castShadow = shadows; scene.add(l); }
   const chairM = mat(0x0b0c14, 0.45, 0.3);
+  const chairs = {};
   for (const s of [-1, 1]) {
     const ch = new THREE.Group();
     const seat = new THREE.Mesh(new THREE.CylinderGeometry(0.24, 0.24, 0.05, 28), mat(0x241c22, 0.8)); seat.position.y = 0.47; ch.add(seat);
@@ -259,7 +279,7 @@ export function buildRoom(opts) {
     for (let k = 0; k < 4; k++) { const a = k / 4 * TAU + 0.4; const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 0.48, 6), chairM); leg.position.set(Math.cos(a) * 0.17, 0.235, Math.sin(a) * 0.17); leg.rotation.set(Math.sin(a) * 0.18, 0, -Math.cos(a) * 0.18); ch.add(leg); }
     for (const a of [Math.PI * 0.95, Math.PI * 1.6]) { const p = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 0.26, 6), chairM); p.position.set(Math.cos(a) * 0.25, 0.6, Math.sin(a) * 0.25); ch.add(p); }
     ch.position.set(s * 1.45, 0, deskZ + 0.45); ch.rotation.y = s * 0.7 + Math.PI; ch.traverse((o) => { if (o.isMesh) o.castShadow = shadows; });
-    scene.add(ch);
+    scene.add(ch); chairs[s < 0 ? 'chairL' : 'chairR'] = ch;
   }
 
   /* ---------- predmeti na stolu ---------- */
@@ -406,37 +426,95 @@ export function buildRoom(opts) {
   const pFrame = new THREE.Mesh(new THREE.BoxGeometry(0.82, 1.14, 0.03), mat(0x8c7a52, 0.5, 0.4)); poster.add(pFrame);
   const pImg = new THREE.Mesh(new THREE.PlaneGeometry(0.76, 1.08), new THREE.MeshStandardMaterial({ map: opts.posterTexture, roughness: 0.75, emissiveMap: opts.posterTexture, emissive: 0xffffff, emissiveIntensity: 0.28 })); pImg.position.z = 0.017; poster.add(pImg);
   reg('poster', poster, [0.85, 1.18, 0.08], new THREE.Vector3(0, 0, 0.03), new THREE.Vector3(-2.25, 2.35, BACK + 0.1));
-  // dresovi u ramovima na bočnim zidovima: lijevo Özil 10, desno Džeko 11 (leđa dresa, bez grbova)
-  function jerseyTex(name, num, body, sleeve, ink, trim) {
+  // dresovi u ramovima na bočnim zidovima (leđa dresa, prezime i broj, bez grbova):
+  // lijevo Özil 10 i Eze 10 (Arsenal), desno Džeko 11 (BiH) i Ibrahimović 10 (PSG)
+  function jerseyTex(name, num, k) {
     return canvas(512, 600, (g, w, h) => {
       g.fillStyle = '#0c0f26'; g.fillRect(0, 0, w, h);
       const shirt = new Path2D('M176 70 Q256 98 336 70 L430 112 L500 236 L424 276 L392 222 L392 560 Q256 580 120 560 L120 222 L88 276 L12 236 L82 112 Z');
-      g.save(); g.shadowColor = 'rgba(0,0,0,0.6)'; g.shadowBlur = 24; g.shadowOffsetY = 10; g.fillStyle = body; g.fill(shirt); g.restore();
+      g.save(); g.shadowColor = 'rgba(0,0,0,0.6)'; g.shadowBlur = 24; g.shadowOffsetY = 10; g.fillStyle = k.body; g.fill(shirt); g.restore();
       g.save(); g.clip(shirt);
-      g.fillStyle = sleeve; g.beginPath(); g.moveTo(82, 112); g.lineTo(176, 70); g.lineTo(150, 250); g.lineTo(88, 276); g.lineTo(0, 240); g.closePath(); g.fill();
+      if (k.band) { g.fillStyle = k.edge; g.fillRect(186, 0, 140, h); g.fillStyle = k.band; g.fillRect(200, 0, 112, h); }
+      g.fillStyle = k.sleeve; g.beginPath(); g.moveTo(82, 112); g.lineTo(176, 70); g.lineTo(150, 250); g.lineTo(88, 276); g.lineTo(0, 240); g.closePath(); g.fill();
       g.beginPath(); g.moveTo(430, 112); g.lineTo(336, 70); g.lineTo(362, 250); g.lineTo(424, 276); g.lineTo(512, 240); g.closePath(); g.fill();
-      g.fillStyle = trim; g.fillRect(0, 252, 512, 10); g.fillRect(116, 230, 8, 340); g.fillRect(388, 230, 8, 340);
+      g.fillStyle = k.trim; g.fillRect(0, 252, 512, 8);
+      if (!k.band) { g.fillRect(116, 230, 8, 340); g.fillRect(388, 230, 8, 340); }
       const sh = g.createLinearGradient(0, 0, w, 0); sh.addColorStop(0, 'rgba(0,0,0,0.25)'); sh.addColorStop(0.5, 'rgba(255,255,255,0.06)'); sh.addColorStop(1, 'rgba(0,0,0,0.25)');
       g.fillStyle = sh; g.fillRect(0, 0, w, h);
       g.restore();
-      g.strokeStyle = trim; g.lineWidth = 8; g.beginPath(); g.moveTo(176, 72); g.quadraticCurveTo(256, 104, 336, 72); g.stroke();
-      g.fillStyle = ink; g.textAlign = 'center'; g.textBaseline = 'alphabetic';
-      g.font = '600 50px "Inter Tight", sans-serif'; g.fillText(name, 256, 200);
+      g.strokeStyle = k.trim; g.lineWidth = 8; g.beginPath(); g.moveTo(176, 72); g.quadraticCurveTo(256, 104, 336, 72); g.stroke();
+      g.fillStyle = k.ink; g.textAlign = 'center'; g.textBaseline = 'alphabetic';
+      let fs = 50; g.font = '600 ' + fs + 'px "Inter Tight", sans-serif';
+      while (g.measureText(name).width > 250 && fs > 26) { fs -= 2; g.font = '600 ' + fs + 'px "Inter Tight", sans-serif'; }
+      g.fillText(name, 256, 200);
       g.font = '600 230px "Inter Tight", sans-serif'; g.fillText(num, 256, 430);
     });
   }
-  function framedJersey(tex, x, z, rotY) {
+  function framedJersey(key, tex, x, z, rotY) {
     const fr = new THREE.Group(); fr.position.set(x, 1.72, z); fr.rotation.y = rotY; scene.add(fr);
     const box = new THREE.Mesh(new THREE.BoxGeometry(0.98, 1.12, 0.06), mat(0x090a12, 0.4, 0.4)); fr.add(box);
-    const shirt = new THREE.Mesh(new THREE.PlaneGeometry(0.86, 1.0), new THREE.MeshStandardMaterial({ map: tex, roughness: 0.8, emissiveMap: tex, emissive: 0xffffff, emissiveIntensity: 0.38 }));
-    shirt.position.z = 0.032; fr.add(shirt);
+    const shirtM = new THREE.MeshStandardMaterial({ map: tex, roughness: 0.8, emissiveMap: tex, emissive: 0xffffff, emissiveIntensity: 0.4 });
+    const shirt = new THREE.Mesh(new THREE.PlaneGeometry(0.86, 1.0), shirtM); shirt.position.z = 0.032; fr.add(shirt);
     const glass = new THREE.Mesh(new THREE.PlaneGeometry(0.9, 1.04), new THREE.MeshPhysicalMaterial({ color: 0xbfd6ff, transparent: true, opacity: 0.07, roughness: 0.05, depthWrite: false }));
     glass.position.z = 0.036; fr.add(glass);
     const plate = new THREE.Mesh(new THREE.BoxGeometry(0.26, 0.04, 0.01), mat(0x8c7a52, 0.4, 0.6)); plate.position.set(0, -0.6, 0.03); fr.add(plate);
-    return fr;
+    const hit = new THREE.Mesh(new THREE.BoxGeometry(1.0, 1.15, 0.12), new THREE.MeshBasicMaterial({ visible: false })); fr.add(hit);
+    items[key] = { group: fr, hit, mats: [box.material, shirtM], anchor: fr.position.clone() };
   }
-  framedJersey(jerseyTex('ÖZIL', '10', '#c8162a', '#f2f2f2', '#ffffff', '#f2f2f2'), -W / 2 + 0.04, -1.0, Math.PI / 2);
-  framedJersey(jerseyTex('DŽEKO', '11', '#1d3a94', '#1d3a94', '#ffffff', '#f2c230'), W / 2 - 0.04, -1.0, -Math.PI / 2);
+  const ARS = { body: '#c8162a', sleeve: '#f2f2f2', ink: '#ffffff', trim: '#f2f2f2' };
+  framedJersey('ozil', jerseyTex('ÖZIL', '10', ARS), -W / 2 + 0.04, -1.55, Math.PI / 2);
+  framedJersey('eze', jerseyTex('EZE', '10', ARS), -W / 2 + 0.04, -0.3, Math.PI / 2);
+  framedJersey('dzeko', jerseyTex('DŽEKO', '11', { body: '#1d3a94', sleeve: '#1d3a94', ink: '#ffffff', trim: '#f2c230' }), W / 2 - 0.04, -1.55, -Math.PI / 2);
+  framedJersey('ibra', jerseyTex('IBRAHIMOVIĆ', '10', { body: '#13204a', sleeve: '#13204a', ink: '#ffffff', trim: '#e7e9ef', band: '#d01f2e', edge: '#f2f2f2' }), W / 2 - 0.04, -0.3, -Math.PI / 2);
+
+  // nargile pored obje stolice: sjedne se i povuče (žar zasvijetli, dim krene)
+  const hookahs = {};
+  function hookah(key, chair, side) {
+    const hg = new THREE.Group(); scene.add(hg);
+    hg.position.set(chair.position.x - side * 0.02, 0, chair.position.z - 0.5);
+    const glassM = new THREE.MeshStandardMaterial({ color: side < 0 ? 0x1f8fa6 : 0x8e1a2a, roughness: 0.15, metalness: 0.1, transparent: true, opacity: 0.72 });
+    const base = new THREE.Mesh(new THREE.LatheGeometry([[0, 0], [0.09, 0.005], [0.115, 0.06], [0.11, 0.13], [0.07, 0.2], [0.03, 0.25], [0.028, 0.27]].map(([x, y]) => new THREE.Vector2(x, y)), 32), glassM); hg.add(base);
+    const water = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.105, 0.09, 24), new THREE.MeshStandardMaterial({ color: 0x9fe8f0, transparent: true, opacity: 0.25, roughness: 0.1 })); water.position.y = 0.05; hg.add(water);
+    const metalM = mat(0x9aa0ad, 0.25, 0.9);
+    const stem = new THREE.Mesh(new THREE.CylinderGeometry(0.014, 0.018, 0.42, 12), metalM); stem.position.y = 0.48; hg.add(stem);
+    for (const y of [0.33, 0.46, 0.58]) { const r = new THREE.Mesh(new THREE.TorusGeometry(0.022, 0.006, 8, 18), metalM); r.rotation.x = Math.PI / 2; r.position.y = y; hg.add(r); }
+    const tray = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, 0.008, 28), metalM); tray.position.y = 0.66; hg.add(tray);
+    const bowl = new THREE.Mesh(new THREE.LatheGeometry([[0.012, 0], [0.03, 0.01], [0.05, 0.05], [0.055, 0.075]].map(([x, y]) => new THREE.Vector2(x, y)), 24), mat(0x6e2f22, 0.8)); bowl.position.y = 0.67; hg.add(bowl);
+    const hmd = new THREE.Mesh(new THREE.CylinderGeometry(0.058, 0.058, 0.004, 24), mat(0xd7dbe3, 0.3, 0.9)); hmd.position.y = 0.747; hg.add(hmd);
+    const coalM = new THREE.MeshBasicMaterial({ color: new THREE.Color(1.2, 0.25, 0.08), toneMapped: false });
+    for (const [cx, cz] of [[-0.02, 0.012], [0.022, -0.008], [0, -0.025]]) { const c = new THREE.Mesh(new THREE.BoxGeometry(0.024, 0.016, 0.024), coalM); c.position.set(cx, 0.757, cz); c.rotation.y = cx * 20; hg.add(c); }
+    const hosePts = [V3(0.02, 0.3, 0), V3(0.12 * -side, 0.26, 0.1), V3(0.2 * -side, 0.1, 0.22), V3(0.05 * -side, 0.03, 0.32), V3(-0.2 * side, 0.2, 0.28), V3(-0.33 * side, 0.5, 0.06)];
+    const hose = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(hosePts), 40, 0.012, 8), mat(0x15161d, 0.5)); hg.add(hose);
+    const tip = new THREE.Mesh(new THREE.CylinderGeometry(0.01, 0.014, 0.12, 10), metalM); tip.position.copy(hosePts[5]).add(V3(0, 0.05, 0)); hg.add(tip);
+    const glow = new THREE.PointLight(0xff5a2a, 0.15, 1.4, 2); glow.position.y = 0.8; hg.add(glow);
+    hg.traverse((o) => { if (o.isMesh) { o.castShadow = shadows; } });
+    // dim iz glave nargile (lagano stalno, jače kad se povuče)
+    const n = 40, geo = new THREE.BufferGeometry(), pos = new Float32Array(n * 3), seed = new Float32Array(n);
+    const r0 = rng(side < 0 ? 31 : 37); for (let i = 0; i < n; i++) { pos[i * 3 + 1] = 0.76; seed[i] = r0(); }
+    geo.setAttribute('position', new THREE.BufferAttribute(pos, 3)); geo.setAttribute('seed', new THREE.BufferAttribute(seed, 1));
+    const smokeM = new THREE.ShaderMaterial({
+      transparent: true, depthWrite: false, fog: false, uniforms: { uTime: { value: 0 }, uPuff: { value: 0 } },
+      vertexShader: 'attribute float seed; uniform float uTime; uniform float uPuff; varying float vA; void main(){ vec3 p = position; float sp = 0.12 + uPuff*0.25; float t = fract(uTime*sp + seed); p.y += t*(0.5 + uPuff*0.7); p.x += sin(t*5.0 + seed*12.0)*0.05*t*(1.0+uPuff*2.0); p.z += cos(t*4.0 + seed*9.0)*0.05*t*(1.0+uPuff*2.0); vA = smoothstep(0.0,0.15,t)*(1.0-t)*(0.25 + uPuff*0.9); vec4 mv = modelViewMatrix*vec4(p,1.0); gl_Position = projectionMatrix*mv; gl_PointSize = (30.0 + t*120.0*(1.0+uPuff))*(1.0/-mv.z); }',
+      fragmentShader: 'varying float vA; void main(){ float d = length(gl_PointCoord-0.5); float a = smoothstep(0.5,0.0,d)*vA*0.2; gl_FragColor = vec4(0.82,0.88,1.0,a); }'
+    });
+    const smoke = new THREE.Points(geo, smokeM); smoke.frustumCulled = false; hg.add(smoke);
+    const chit = new THREE.Mesh(new THREE.BoxGeometry(0.8, 1.0, 1.2), new THREE.MeshBasicMaterial({ visible: false })); chit.position.set(0, 0.5, 0.35); hg.add(chit);
+    const mats = []; [chair, hg].forEach((gr) => gr.traverse((o) => { if (o.isMesh && o !== chit && o.material && o.material.isMeshStandardMaterial && !mats.includes(o.material)) mats.push(o.material); }));
+    items[key] = { group: hg, hit: chit, mats, anchor: hg.position.clone(), chair };
+    hookahs[key] = { coalM, glow, smokeM, puff: 0 };
+  }
+  hookah('chairL', chairs.chairL, -1);
+  hookah('chairR', chairs.chairR, 1);
+  anim.push((t, dt) => {
+    for (const k in hookahs) {
+      const h = hookahs[k];
+      h.puff = Math.max(0, h.puff - dt * 0.35);
+      h.smokeM.uniforms.uTime.value = t; h.smokeM.uniforms.uPuff.value = h.puff;
+      const f = 0.8 + Math.sin(t * 3 + (k === 'chairL' ? 0 : 2)) * 0.1 + h.puff * 2.2;
+      h.coalM.color.setRGB(1.3 * f, 0.26 * f, 0.08 * f); h.glow.intensity = 0.12 + h.puff * 1.2;
+    }
+  });
+  function puff(key) { if (hookahs[key]) hookahs[key].puff = 1; }
 
   // zidni sat (mostarsko vrijeme)
   const clock = new THREE.Group(); clock.position.set(2.1, 2.1, BACK + 0.03); scene.add(clock);
@@ -529,7 +607,7 @@ export function buildRoom(opts) {
   }
   function scatter() { fishGoal.scatter = performance.now() / 1000 + 1.2; }
 
-  return { scene, items, groups, setLayout, flags: api, anim, setLighting, setClock, setRain, poke, scatter, dustMat, shadows, lights: { moon, aqLight, lampLight }, deskY, deskZ, aqRect: { ...AQ, z: BACK } };
+  return { scene, items, groups, setLayout, puff, flags: api, anim, setLighting, setClock, setRain, poke, scatter, dustMat, shadows, lights: { moon, aqLight, lampLight }, deskY, deskZ, aqRect: { ...AQ, z: BACK } };
 }
 
 /* spoji dvije geometrije (tijelo ribe i rep) bez dodatnih biblioteka */

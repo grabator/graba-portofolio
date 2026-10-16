@@ -20,13 +20,13 @@ Portfolio je jedna tamna 3D soba u tri ujutro: rebrasti zidovi, krovni prozor kr
 | Kasetofon | Zvuk sobe (pamti se, ugašen po defaultu) |
 | Tastatura | Alati i tehnologije |
 
-Po sobi se može malo prošetati: prevlačenjem mišem ili prstom okreće se pogled, a hoda se strelicama ili tipkama WASD (točkić miša ide naprijed i nazad). Na mobitelu je dolje lijevo krug za kretanje kao u FIFI, a dva prsta (štipanje) idu naprijed i nazad. Kretanje je ograničeno na par koraka ispred stola, a dugme u donjem desnom uglu vraća početni pogled. Dugme "?" na tren pokaže imena svih predmeta; inače se ime vidi kad je predmet na sredini pogleda ili pod mišem. Kad niko ništa ne dira, monitor sam vrti projekte.
+Po sobi se može malo prošetati: prevlačenjem mišem ili prstom okreće se pogled, a hoda se strelicama ili tipkama WASD (točkić miša ide naprijed i nazad). Na mobitelu je dolje lijevo krug za kretanje kao u FIFI, a dva prsta (štipanje) idu naprijed i nazad. Dugme u donjem desnom uglu vraća početni pogled. Dugme "?" na tren pokaže imena svih predmeta; inače se ime vidi kad je predmet na sredini pogleda ili pod mišem. Kad niko ništa ne dira, monitor sam vrti projekte.
 
 Svjetlo kroz krovni prozor prati pravo doba dana u Mostaru (Europe/Sarajevo), a kad u Mostaru pada kiša (Open-Meteo), kapi klize niz staklo. Zidni sat pokazuje mostarsko vrijeme.
 
 **Glavna stranica je obična verzija** (i na desktopu i na mobitelu): četiri dijela, Radovi, Usluge, O meni i Kontakt, koji staju na jedan ekran, bez dugog listanja. Projekti se gledaju jedan po jedan: velika slika i opis, a mijenjaju se sličicama, strelicama ili tipkama ← →, na mobitelu prevlačenjem. Sav sadržaj je i u `index.html` kao pravi HTML, zbog Googlea.
 
-**3D soba postoji samo na mobitelu i tabletu** (uređaji na dodir). Ulazi se karticom "Uđi u moju sobu". Na desktopu se three.js nikad ne učitava. Na bočnim zidovima sobe su uramljeni dresovi: ÖZIL 10 lijevo i DŽEKO 11 desno.
+**3D soba postoji samo na mobitelu i tabletu** (uređaji na dodir). Ulazi se karticom "Uđi u moju sobu". Na desktopu se three.js nikad ne učitava. Na bočnim zidovima sobe su uramljeni dresovi: lijevo ÖZIL 10 i EZE 10 (Arsenal), desno DŽEKO 11 (BiH) i IBRAHIMOVIĆ 10 (PSG). Klik na dres otvara karticu igrača: klubovi kroz cijelu karijeru, reprezentacija, trofeji i jedna zanimljivost (podaci su u `PF.players` u `js/i18n.js`). Pored obje stolice je nargila: klik na stolicu te posjedne, a dugme "Povuci" zažari ugalj i pusti dim. Pogled se okreće u krug, a po sobi se hoda svuda (sto i zidovi se ne mogu proći); iza leđa su vrata.
 
 Soba je inspirisana radom [Andrea Jorgensen · hideou.se](https://hideou.se). Sve u sobi je napravljeno u kodu, bez njenih rendera i bez preuzetih modela.
 

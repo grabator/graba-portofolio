@@ -30,7 +30,13 @@ const HOTS = [
   ['cassette', 'cassette', V(0, 0.19, 0), 'r'],
   ['lamp', 'lamp', V(-0.18, 0.48, -0.07), 'r'],
   ['aquarium', null, V(0.75, 1.72, -3.0), 'r'],
-  ['poster', 'poster', V(0.25, 0.45, 0.03), 'r']
+  ['poster', 'poster', V(0.25, 0.45, 0.03), 'r'],
+  ['ozil', 'ozil', V(0.3, 0.42, 0.05), 'r'],
+  ['eze', 'eze', V(0.3, 0.42, 0.05), 'r'],
+  ['dzeko', 'dzeko', V(0.3, 0.42, 0.05), 'l'],
+  ['ibra', 'ibra', V(0.3, 0.42, 0.05), 'l'],
+  ['chairL', 'chairL', V(0, 0.86, 0), 'r'],
+  ['chairR', 'chairR', V(0, 0.86, 0), 'l']
 ];
 // krupni kadrovi: [grupa, tačka gledanja u grupi, smjer kamere, udaljenost]
 const CLOSE = {
@@ -44,6 +50,8 @@ const CLOSE = {
   poster: ['poster', V(0, 0, 0), V(0.3, -0.02, 1), 1.65]
 };
 const ACTIONS = new Set(['aquarium', 'lamp', 'cassette']);
+const JERSEYS = ['ozil', 'eze', 'dzeko', 'ibra'];
+const CHAIRS = ['chairL', 'chairR'];
 
 export async function createRoom(o) {
   const { PF, sound, toast, progress, reduced } = o;
@@ -102,7 +110,7 @@ export async function createRoom(o) {
     stats.frames++; stats.sum += ms;
     if (stats.frames >= 90 || stats.sum > 3000) { const avg = stats.sum / stats.frames; stats.avg = Math.round(avg * 10) / 10; stats.frames = 0; stats.sum = 0; if (avg > 25) degrade(); }
   }
-  window.grabaRoom = { stats, get dpr() { return dpr; }, get bloom() { return post.bloom; }, get shadows() { return renderer.shadowMap.enabled; } };
+  window.grabaRoom = { stats, get walk() { return walk; }, get dpr() { return dpr; }, get bloom() { return post.bloom; }, get shadows() { return renderer.shadowMap.enabled; } };
 
   /* ---------- kamera ---------- */
   const rig = { pos: V(0, 1.4, 3), look: V(0, 1.1, -1.5), fov: 46, off: new THREE.Vector2() };
@@ -111,12 +119,24 @@ export async function createRoom(o) {
     return portrait() ? { pos: V(0, 2.25, 1.1), look: V(0, 1.16, -1.3), fov: 70 } : { pos: V(0, 1.36, 1.85), look: V(0, 1.16, -1.6), fov: 50 };
   }
   // pogled i par koraka po sobi: okret glave i pomak su ograničeni da se ne izađe iz kadra
-  const UP = V(0, 1, 0), LIM = { yaw: 1.3, pitch: 0.4, x: 1.6, zMin: 0.2, zMax: 3.1 };
-  const walk = { x: 0, z: 0, yaw: 0, pitch: 0, tyaw: 0, tpitch: 0, vx: 0, vz: 0, moved: false, reset: false };
+  // pogled se okreće u krug (360°), a hoda se po cijeloj sobi; sto i zidovi se ne mogu proći
+  const UP = V(0, 1, 0), LIM = { pitch: 1.1 }, ROOM = { x0: -3.2, x1: 3.2, z0: -2.65, z1: 3.6 }, DESK = { x0: -1.6, x1: 1.6, z0: -1.95, z1: -0.25 };
+  const walk = { x: 0, y: 0, z: 0, yaw: 0, pitch: 0, tyaw: 0, tpitch: 0, vx: 0, vz: 0, moved: false, reset: false };
+  const grp = (k) => room.groups[k] || (room.items[k] && room.items[k].group);
+  // drži poziciju (u svijetu) unutar sobe i van stola
+  function collide(b) {
+    let x = b.pos.x + walk.x, z = b.pos.z + walk.z;
+    x = THREE.MathUtils.clamp(x, ROOM.x0, ROOM.x1); z = THREE.MathUtils.clamp(z, ROOM.z0, ROOM.z1);
+    if (x > DESK.x0 && x < DESK.x1 && z > DESK.z0 && z < DESK.z1) {
+      const d = [x - DESK.x0, DESK.x1 - x, z - DESK.z0, DESK.z1 - z], m = Math.min(...d);
+      if (m === d[0]) x = DESK.x0; else if (m === d[1]) x = DESK.x1; else if (m === d[2]) z = DESK.z0; else z = DESK.z1;
+    }
+    walk.x = x - b.pos.x; walk.z = z - b.pos.z;
+  }
   const keysDown = new Set(), joy = { x: 0, y: 0 };
   function wideView() {
     const b = baseView();
-    const pos = b.pos.clone().add(V(walk.x, 0, walk.z));
+    const pos = b.pos.clone().add(V(walk.x, walk.y, walk.z));
     const dir = b.look.clone().sub(b.pos).applyAxisAngle(UP, walk.yaw);
     const right = V(0, 0, 0).crossVectors(dir, UP).normalize();
     dir.applyAxisAngle(right, walk.pitch);
@@ -136,10 +156,12 @@ export async function createRoom(o) {
     walk.vx += ((fz * sn + fx * c) * sp - walk.vx) * k;
     walk.vz += ((fz * c - fx * sn) * sp - walk.vz) * k;
     walk.x += walk.vx * dt; walk.z += walk.vz * dt;
-    if (walk.reset) { const r = Math.min(1, dt * 4); walk.x -= walk.x * r; walk.z -= walk.z * r; walk.tyaw -= walk.tyaw * r; walk.tpitch -= walk.tpitch * r; if (Math.abs(walk.x) + Math.abs(walk.z) + Math.abs(walk.tyaw) < 0.003) { walk.reset = false; walk.moved = false; tools.classList.remove('moved'); } }
-    walk.x = THREE.MathUtils.clamp(walk.x, -LIM.x, LIM.x);
-    walk.z = THREE.MathUtils.clamp(walk.z, LIM.zMin - b.pos.z, LIM.zMax - b.pos.z);
-    walk.tyaw = THREE.MathUtils.clamp(walk.tyaw, -LIM.yaw, LIM.yaw); walk.tpitch = THREE.MathUtils.clamp(walk.tpitch, -LIM.pitch, LIM.pitch);
+    if (walk.reset) { const r = Math.min(1, dt * 4); walk.x -= walk.x * r; walk.z -= walk.z * r; walk.tyaw -= walk.tyaw * r; walk.tpitch -= walk.tpitch * r; if (Math.abs(walk.x) + Math.abs(walk.z) + Math.abs(walk.tyaw) + Math.abs(walk.y) < 0.004) { walk.reset = false; walk.moved = false; tools.classList.remove('moved'); } }
+    collide(b);
+    walk.tpitch = THREE.MathUtils.clamp(walk.tpitch, -LIM.pitch, LIM.pitch);
+    // kad krene hodati, kamera se spusti na visinu očiju
+    const ty = walk.moved && !walk.reset ? 1.6 - b.pos.y : 0;
+    walk.y += (ty - walk.y) * Math.min(1, dt * 2.5);
     const r = Math.min(1, dt * 9);
     walk.yaw += (walk.tyaw - walk.yaw) * r; walk.pitch += (walk.tpitch - walk.pitch) * r;
     setRig(wideView());
@@ -148,14 +170,26 @@ export async function createRoom(o) {
   }
   function markMoved() { if (!walk.moved) { walk.moved = true; tools.classList.add('moved'); hideHint(); } }
   function closeView(key) {
-    const [gk, off, dir, dist0] = CLOSE[key];
     const p = portrait();
+    if (JERSEYS.includes(key)) {
+      const g = grp(key), look = g.position.clone();
+      const dir = V(0, 0.02, 1).applyQuaternion(g.quaternion);
+      return { pos: look.clone().add(dir.multiplyScalar(p ? 2.1 : 1.45)), look, fov: p ? 62 : 46 };
+    }
+    if (CHAIRS.includes(key)) {
+      // sjedne se na stolicu: pogled preko stola na akvarijum, nargila pored
+      const ch = room.items[key].chair.position, side = key === 'chairL' ? -1 : 1;
+      const pos = V(ch.x + side * 0.05, 1.18, ch.z + 0.45);
+      return { pos, look: V(ch.x * 0.6, 0.72, -2.2), fov: p ? 78 : 60 };
+    }
+    const [gk, off, dir, dist0] = CLOSE[key];
     let look, dist = dist0;
     if (gk) { const g = room.groups[gk]; look = g.localToWorld(off.clone()); if (key === 'poster') dist *= g.scale.x; }
     else look = room.groups.floppies.position.clone().add(room.groups.drive.position).multiplyScalar(0.5).add(V(0, 0.06, 0));
     return { pos: look.clone().add(dir.clone().normalize().multiplyScalar(dist * (p ? 1.45 : 1))), look, fov: p ? 62 : 46 };
   }
-  function panelOffset() {
+  function panelOffset(key = focusKey) {
+    if (CHAIRS.includes(key)) return W >= 760 ? new THREE.Vector2(Math.min(460, W * 0.4) / 4, 0) : new THREE.Vector2(0, H * 0.17);
     if (W >= 760) return new THREE.Vector2(Math.min(460, W * 0.4) / 2 + 8, 0);
     return new THREE.Vector2(0, H * 0.27);
   }
@@ -252,7 +286,7 @@ export async function createRoom(o) {
   const pv = V(0, 0, 0);
   function placeHots() {
     for (const [key, gk, p] of HOTS) {
-      if (gk) room.groups[gk].localToWorld(pv.copy(p)); else pv.copy(p);
+      if (gk) grp(gk).localToWorld(pv.copy(p)); else pv.copy(p);
       pv.project(camera);
       const b = hotBtns[key], vis = pv.z < 1 && Math.abs(pv.x) < 1.02 && Math.abs(pv.y) < 1.02;
       const x = (pv.x + 1) / 2 * W, y = (1 - pv.y) / 2 * H;
@@ -337,7 +371,7 @@ export async function createRoom(o) {
         walk.tyaw += dx * (o.coarse ? 0.0062 : 0.0042); walk.tpitch += dy * (o.coarse ? 0.0045 : 0.003); walk.reset = false; markMoved();
       } else if (ptrs.size === 2) {
         const [a, b] = [...ptrs.values()], d = Math.hypot(a.x - b.x, a.y - b.y);
-        if (pinch) { const bz = baseView().pos.z; walk.z = THREE.MathUtils.clamp(walk.z - (d - pinch) * 0.006, LIM.zMin - bz, LIM.zMax - bz); walk.reset = false; markMoved(); }
+        if (pinch) { const f = -(d - pinch) * 0.006; walk.x += -Math.sin(walk.yaw) * -f; walk.z += -Math.cos(walk.yaw) * -f; collide(baseView()); walk.reset = false; markMoved(); }
         pinch = d;
       }
     }
@@ -366,7 +400,7 @@ export async function createRoom(o) {
   canvas.addEventListener('wheel', (e) => {
     if (!running || focusKey) return;
     e.preventDefault();
-    const bz = baseView().pos.z; walk.z = THREE.MathUtils.clamp(walk.z + Math.sign(e.deltaY) * Math.min(0.25, Math.abs(e.deltaY) * 0.0016), LIM.zMin - bz, LIM.zMax - bz);
+    const f = Math.sign(e.deltaY) * Math.min(0.25, Math.abs(e.deltaY) * 0.0016); walk.x += Math.sin(walk.yaw) * f; walk.z += Math.cos(walk.yaw) * f; collide(baseView());
     walk.reset = false; markMoved();
   }, { passive: false });
   // tipke za hodanje (desktop): WASD i strelice
@@ -438,7 +472,7 @@ export async function createRoom(o) {
     focusKey = key; busy = true; setHover(null); nameTip.classList.remove('on');
     html.classList.add('is-focus');
     onOpen(key);
-    moveTo(closeView(key), panelOffset(), reduced ? 0 : 1200).then(() => { busy = false; showPanel(key); });
+    moveTo(closeView(key), panelOffset(key), reduced ? 0 : 1200).then(() => { busy = false; showPanel(key); });
   }
   function showPanel(key) {
     render(key);
@@ -534,6 +568,18 @@ export async function createRoom(o) {
       h += head('A:\\', l.timelineH) + '<p class="p-lead">' + esc(l.timelineP) + '</p>'
         + '<p class="p-disks" role="group" aria-label="' + esc(l.timelineH) + '">' + years.map((y) => '<button type="button" class="p-disk" data-year="' + y + '" aria-pressed="' + (y === sub.year) + '"><i aria-hidden="true"></i><span>' + y + '</span></button>').join('') + '</p>'
         + '<ol class="p-exe">' + PF.work.filter((w) => w.year === sub.year).map((w) => '<li><button type="button" data-run="' + w.id + '"><b>' + PF.exe[w.id] + '</b><span>' + esc(t.items[w.id][0]) + '</span><em>' + esc(t.items[w.id][1].split(' · ')[0]) + '</em></button></li>').join('') + '</ol>';
+    } else if (JERSEYS.includes(key)) {
+      const P = PF.players[key], L2 = lang;
+      h += '<div class="p-player" style="--pc:' + P.color + '"><p class="p-num" aria-hidden="true">' + P.num + '</p>'
+        + '<p class="p-k">' + esc(P.status[L2]) + '</p><h2 id="panel-h">' + esc(P.name) + '</h2>'
+        + '<dl class="p-pinfo"><div><dt>' + esc(l.posT) + '</dt><dd>' + esc(P.pos[L2]) + '</dd></div><div><dt>' + esc(l.bornT) + '</dt><dd>' + esc(P.born[L2]) + '</dd></div></dl></div>'
+        + '<h3 class="p-sub">' + esc(l.career) + '</h3><ol class="p-career">' + P.clubs.map(([y, c]) => '<li><span>' + esc(y) + '</span><b>' + esc(c) + '</b></li>').join('') + '</ol>'
+        + '<h3 class="p-sub">' + esc(l.national) + '</h3><p class="p-nat">' + esc(P.nat[L2]) + '</p>'
+        + '<h3 class="p-sub">' + esc(l.trophiesT) + '</h3><ul class="p-trophies">' + P.trophies[L2].map((x) => '<li>' + esc(x) + '</li>').join('') + '</ul>'
+        + '<p class="p-fact"><b>' + esc(l.factT) + '</b> ' + esc(P.fact[L2]) + '</p>';
+    } else if (CHAIRS.includes(key)) {
+      h += '<p class="p-k">' + esc(l.names[key]) + '</p><h2 id="panel-h">' + esc(l.sitH) + '</h2><p class="p-lead">' + esc(l.sitP) + '</p>'
+        + '<p class="p-actions"><button type="button" class="p-btn p-main" data-puff data-autofocus>' + esc(l.puff) + '</button><button type="button" class="p-btn" data-stand>' + esc(l.standUp) + '</button></p>';
     } else if (key === 'keyboard') {
       h += head(l.names.keyboard, t.stackK) + '<p class="p-lead">' + esc(l.stackP) + '</p>'
         + '<ul class="p-keys">' + PF.stack.map((s, i) => '<li><button type="button" data-key-i="' + i + '">' + esc(s) + '</button></li>').join('') + '</ul>';
@@ -548,6 +594,16 @@ export async function createRoom(o) {
     if (key === 'answering' || key === 'poster') typeAbout(key === 'answering');
     if (key === 'floppies') bindFloppies();
     if (key === 'keyboard') bindKeys();
+    if (CHAIRS.includes(key)) {
+      const pb = panelIn.querySelector('[data-puff]'); if (pb) pb.onclick = () => doPuff(key);
+      const sb = panelIn.querySelector('[data-stand]'); if (sb) sb.onclick = back;
+    }
+  }
+  // povlačenje: žar zasvijetli, dim krene, ekran se na tren zamagli
+  const exhale = document.createElement('i'); exhale.className = 'exhale'; exhale.setAttribute('aria-hidden', 'true'); document.getElementById('room').appendChild(exhale);
+  function doPuff(key) {
+    room.puff(key); sound.splash();
+    setTimeout(() => { exhale.classList.remove('on'); void exhale.offsetWidth; exhale.classList.add('on'); }, 900);
   }
   function rerender() { if (focusKey && !panel.hidden) { const a = document.activeElement && document.activeElement.id; render(focusKey); afterRender(focusKey, true); if (a) { const el = document.getElementById(a); if (el) el.focus({ preventScroll: true }); } } }
 
@@ -692,6 +748,8 @@ export async function createRoom(o) {
     if (key === 'monitor') { if (sub.project) crt.open(sub.project); else crt.menu(); }
     lastInput = performance.now();
     if (key === 'phone') { stopRing(); handsetUp = 1; }
+    if (CHAIRS.includes(key)) setTimeout(() => room.puff(key), 1300);
+    panel.classList.toggle('compact', CHAIRS.includes(key));
     if (key === 'floppies') flyState.t0 = -1;
     hots.hidden = true;
   }
