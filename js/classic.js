@@ -35,12 +35,13 @@ export function classicHTML(PF, lang) {
       + '<div class="s-info"><p class="s-meta"><span>' + esc(kind) + '</span><span>' + w.year + '</span></p>'
       + '<h3 id="p-' + w.id + '">' + esc(name) + '</h3><p class="s-desc">' + esc(desc) + '</p>'
       + '<ul class="s-tags">' + w.tags.map((t) => '<li>' + esc(t) + '</li>').join('') + '</ul>'
-      + '<p class="s-links">' + links + '</p></div></article>';
+      + '<p class="s-links">' + links + '</p>'
+      + '<button type="button" class="s-next" data-step="1"><span>' + esc(S.nextT) + '</span><b>' + esc(T.items[PF.work[(i + 1) % n].id][0]) + '</b><i aria-hidden="true">→</i></button></div></article>';
   }).join('');
 
   const thumbs = PF.work.map((w, i) => '<li><button type="button" data-p="' + i + '" aria-pressed="' + (i === 0) + '" aria-label="' + esc(T.items[w.id][0]) + '">'
     + (w.img ? '<img src="' + w.img + '" alt="" width="160" height="90" loading="lazy" decoding="async">' : '<span class="s-art s-art-' + w.art + '"></span>')
-    + '</button></li>').join('');
+    + '<span class="s-tcap">' + esc(T.items[w.id][0]) + '</span></button></li>').join('');
 
   const services = T.services.map(([h, p], i) => '<li><span class="s-n">' + pad(i + 1) + '</span><h3>' + esc(h) + '</h3><p>' + esc(p) + '</p></li>').join('');
   const process = T.process.map(([h, p], i) => '<li><b><span>' + (i + 1) + '</span> ' + esc(h) + '</b><p>' + esc(p) + '</p></li>').join('');
@@ -59,6 +60,10 @@ export function classicHTML(PF, lang) {
     + '<h1 class="s-name">Ahmed<br>Grabus</h1>'
     + '<p class="s-role">' + esc(T.role) + ' · ' + esc(S.place) + '</p>'
     + '<p class="s-intro">' + esc(T.hero) + '</p>'
+    + '<p class="s-quick" aria-label="' + esc(S.quickT) + '">'
+    + '<a href="' + C.viber + '"><i class="s-qi s-qi-viber" aria-hidden="true"></i>Viber</a>'
+    + '<a href="' + C.whatsapp + '" ' + ext + '><i class="s-qi s-qi-wa" aria-hidden="true"></i>WhatsApp</a>'
+    + '<button type="button" data-copy="' + C.email + '"><i class="s-qi s-qi-mail" aria-hidden="true"></i>Email</button></p>'
     + '<button type="button" class="s-room" data-room><b>' + esc(S.roomT) + '</b><i aria-hidden="true">→</i></button>'
     + '<nav class="s-nav" aria-label="' + esc(S.navLabel) + '">' + nav + '</nav>'
     + '<p class="s-foot"><span class="s-time" data-time>Mostar</span><span>© 2026 Graba</span></p>'
@@ -69,6 +74,7 @@ export function classicHTML(PF, lang) {
     + '<p class="s-count" aria-live="polite"><b data-cur>01</b><span> / ' + pad(n) + '</span></p>'
     + '<p class="s-arrows"><button type="button" class="s-arr" data-step="-1" aria-label="' + esc(S.prev) + '">←</button><button type="button" class="s-arr" data-step="1" aria-label="' + esc(S.next) + '">→</button></p></header>'
     + '<div class="s-projs" data-projs>' + projects + '</div>'
+    + '<p class="s-dots" aria-hidden="true">' + PF.work.map((w, i) => '<i' + (i === 0 ? ' class="on"' : '') + '></i>').join('') + '</p>'
     + '<ol class="s-thumbs" aria-label="' + esc(T.workK) + '">' + thumbs + '</ol>'
     + '</section>'
     + '<section class="s-panel s-serv" id="services" data-panel="services" aria-labelledby="serv-h">'

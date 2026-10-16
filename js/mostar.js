@@ -27,27 +27,34 @@ export function dayPhase({ h, m, month }) {
   return { day, dusk: Math.min(1, dusk) };
 }
 
-export async function mostarRain() {
-  const q = params().get('rain');
-  if (q === '1') return true;
-  if (q === '0') return false;
-  try {
-    const c = JSON.parse(sessionStorage.getItem('graba-wx') || 'null');
-    if (c && Date.now() - c.at < 15 * 60 * 1000) return c.rain;
-  } catch (e) { /* bez keša */ }
-  const ctl = new AbortController();
-  const timer = setTimeout(() => ctl.abort(), 4000);
-  try {
-    const r = await fetch('https://api.open-meteo.com/v1/forecast?latitude=43.34&longitude=17.81&current=precipitation,rain,showers,weather_code&timezone=Europe%2FSarajevo', { signal: ctl.signal });
-    if (!r.ok) throw new Error('http ' + r.status);
-    const j = await r.json(), c = j.current || {};
-    const code = c.weather_code;
-    const rain = (c.precipitation || 0) > 0 || (c.rain || 0) > 0 || (c.showers || 0) > 0 || (code >= 51 && code <= 67) || (code >= 80 && code <= 82) || code >= 95;
-    try { sessionStorage.setItem('graba-wx', JSON.stringify({ at: Date.now(), rain })); } catch (e) { /* nije bitno */ }
-    return rain;
-  } catch (e) {
-    return false;
-  } finally {
-    clearTimeout(timer);
-  }
+// vrijeme u Mostaru (kiša i temperatura), jedan poziv, keš 15 minuta
+let wxPromise = null;
+export function mostarWeather() {
+  if (wxPromise) return wxPromise;
+  const qt = params().get('temp');
+  wxPromise = (async () => {
+    const q = params().get('rain');
+    try {
+      const c = JSON.parse(sessionStorage.getItem('graba-wx2') || 'null');
+      if (c && Date.now() - c.at < 15 * 60 * 1000) return { rain: q === '1' ? true : q === '0' ? false : c.rain, temp: c.temp };
+    } catch (e) { /* bez keša */ }
+    const ctl = new AbortController();
+    const timer = setTimeout(() => ctl.abort(), 4000);
+    try {
+      const r = await fetch('https://api.open-meteo.com/v1/forecast?latitude=43.34&longitude=17.81&current=temperature_2m,precipitation,rain,showers,weather_code&timezone=Europe%2FSarajevo', { signal: ctl.signal });
+      if (!r.ok) throw new Error('http ' + r.status);
+      const j = await r.json(), c = j.current || {};
+      const code = c.weather_code;
+      const rain = (c.precipitation || 0) > 0 || (c.rain || 0) > 0 || (c.showers || 0) > 0 || (code >= 51 && code <= 67) || (code >= 80 && code <= 82) || code >= 95;
+      const temp = typeof c.temperature_2m === 'number' ? Math.round(c.temperature_2m) : null;
+      try { sessionStorage.setItem('graba-wx2', JSON.stringify({ at: Date.now(), rain, temp })); } catch (e) { /* nije bitno */ }
+      return { rain: q === '1' ? true : q === '0' ? false : rain, temp };
+    } catch (e) {
+      return { rain: q === '1', temp: null };
+    } finally {
+      clearTimeout(timer);
+    }
+  })().then((w) => (qt != null && qt !== '' && !isNaN(+qt) ? { ...w, temp: Math.round(+qt) } : w));
+  return wxPromise;
 }
+export async function mostarRain() { return (await mostarWeather()).rain; }

@@ -52,6 +52,25 @@ window.PF = {
       trophies: { en: ['Ligue 1 2013, 2014, 2015, 2016', 'Serie A 2007, 2008, 2009, 2011, 2022', 'La Liga 2010', 'Eredivisie 2002, 2004', 'Europa League 2017'], bs: ['Ligue 1 2013, 2014, 2015, 2016', 'Serie A 2007, 2008, 2009, 2011, 2022', 'La Liga 2010', 'Eredivisie 2002, 2004', 'Liga Evrope 2017'] },
       fact: { en: '156 goals in 180 games for PSG in all competitions. His father is from Bijeljina.', bs: '156 golova u 180 utakmica za PSG u svim takmičenjima. Otac mu je iz Bijeljine.' }
     },
+    rice: {
+      name: 'Declan Rice', num: '41', color: '#c8162a', status: { en: 'Active · as of October 2026', bs: 'Aktivan · stanje oktobar 2026.' },
+      born: { en: '14 January 1999, London, England', bs: '14. januar 1999, London, Engleska' },
+      pos: { en: 'Defensive midfielder', bs: 'Defanzivni vezni' },
+      clubs: [['2017–2023', 'West Ham United', 245], ['2023–', 'Arsenal']],
+      scope: { en: 'All competitions · only confirmed numbers are shown', bs: 'Sva takmičenja · upisani su samo potvrđeni brojevi' },
+      nat: { en: 'England · before that, 3 friendlies for the Republic of Ireland in 2018', bs: 'Engleska · prije toga 3 prijateljske utakmice za Irsku 2018.' },
+      trophies: { en: ['Conference League 2023 (captain)', 'Community Shield 2023'], bs: ['Konferencijska liga 2023 (kapiten)', 'Community Shield 2023'] },
+      fact: { en: 'Scored two direct free kicks against Real Madrid in the Champions League quarter-final in April 2025.', bs: 'Dao dva gola direktno iz slobodnjaka Real Madridu u četvrtfinalu Lige prvaka, aprila 2025.' }
+    },
+    felix: {
+      name: 'João Félix', num: '79', color: '#1a3d8f', status: { en: 'Active · as of October 2026', bs: 'Aktivan · stanje oktobar 2026.' },
+      born: { en: '10 November 1999, Viseu, Portugal', bs: '10. novembar 1999, Viseu, Portugal' },
+      pos: { en: 'Forward', bs: 'Napadač' },
+      clubs: [['2018–2019', 'Benfica'], ['2019–2024', 'Atlético Madrid'], ['2023', 'Chelsea (loan)'], ['2023–2024', 'Barcelona (loan)'], ['2024–2025', 'Chelsea'], ['2025', 'Milan (loan)'], ['2025–', 'Al-Nassr']],
+      nat: { en: 'Portugal · World Cups 2022 and 2026', bs: 'Portugal · svjetska prvenstva 2022. i 2026.' },
+      trophies: { en: ['Primeira Liga 2019', 'La Liga 2021', 'Golden Boy 2019'], bs: ['Prvenstvo Portugala 2019', 'La Liga 2021', 'Golden Boy 2019'] },
+      fact: { en: 'Benfica sold him to Atlético in 2019 for 126 million euros, one of the biggest transfers ever.', bs: 'Benfica ga je 2019. prodala Atléticu za 126 miliona eura, jedan od najvećih transfera ikad.' }
+    },
     schweini: {
       name: 'Bastian Schweinsteiger', num: '31', color: '#d3122f', status: { en: 'Retired in 2019', bs: 'Penzionisan 2019.' },
       born: { en: '1 August 1984, Kolbermoor, Germany', bs: '1. august 1984, Kolbermoor, Njemačka' },
@@ -133,7 +152,7 @@ window.PF = {
       skip: 'Skip to content',
       tabs: { work: 'Work', services: 'Services', about: 'About', contact: 'Contact' },
       avail: 'Available for new projects', place: 'Bosnia and Herzegovina', navLabel: 'Sections',
-      roomT: 'Step into my room', prev: 'Previous project', next: 'Next project'
+      roomT: 'Step into my room', nextT: 'Next', quickT: 'Write to me', prev: 'Previous project', next: 'Next project'
     },
     room: {
       loading: 'Loading projects...', press: 'PRESS ANY KEY TO START', tap: 'TAP TO START', nogl: 'This room needs WebGL. Opening the classic view.',
@@ -141,10 +160,10 @@ window.PF = {
       reset: 'Back to the start view', showNames: 'Show all names',
       career: 'Career', national: 'National team', trophiesT: 'Trophies', bornT: 'Born', posT: 'Position', factT: 'Did you know',
       sitH: 'Pull up a chair', sitP: 'Hold the hose to take a pull, let go to blow the smoke.', puff: 'Take a pull', standUp: 'Stand up', holdHose: 'Hold',
-      appsT: 'Apps', goalsT: 'Goals', assistsT: 'Assists', totalT: 'Total', leaving: 'Leaving the room...',
+      goal: 'GOOOL!', appsT: 'Apps', goalsT: 'Goals', assistsT: 'Assists', totalT: 'Total', leaving: 'Leaving the room...',
       back: 'Back', classic: 'Classic view', room: 'Enter the room', soundOn: 'Sound on', soundOff: 'Sound off', lang: 'Language',
-      names: { ozil: 'Özil · 10', eze: 'Eze · 10', odegaard: 'Ødegaard · 8', dzeko: 'Džeko · 11', ibra: 'Ibrahimović · 10', schweini: 'Schweinsteiger · 31', door: 'Exit', chairL: 'Hookah', chairR: 'Hookah', monitor: 'Projects', phone: 'Contact', answering: 'About me', coffee: 'Grab a coffee', notes: 'Services', floppies: 'Timeline', poster: 'Skoči.', aquarium: 'Aquarium', lamp: 'Desk lamp', cassette: 'Sound', keyboard: 'Tech stack' },
-      objs: { ozil: 'Framed jersey', eze: 'Framed jersey', odegaard: 'Framed jersey', dzeko: 'Framed jersey', ibra: 'Framed jersey', schweini: 'Framed jersey', door: 'Back to the classic view', chairL: 'Chair and hookah', chairR: 'Chair and hookah', monitor: 'Old computer', phone: 'Red phone', answering: 'Answering machine', coffee: 'Džezva and fildžan', notes: 'Sticky notes', floppies: 'Floppy disks', poster: 'Poster', aquarium: 'Aquarium', lamp: 'Desk lamp', cassette: 'Cassette player', keyboard: 'Keyboard' },
+      names: { ozil: 'Özil · 10', eze: 'Eze · 10', rice: 'Rice · 41', odegaard: 'Ødegaard · 8', dzeko: 'Džeko · 11', ibra: 'Ibrahimović · 10', schweini: 'Schweinsteiger · 31', felix: 'Félix · 79', ball: 'Take a shot', tins: 'MyShishapedia', door: 'Exit', chairL: 'Hookah', chairR: 'Hookah', monitor: 'Projects', phone: 'Contact', answering: 'About me', coffee: 'Grab a coffee', notes: 'Services', floppies: 'Timeline', poster: 'Skoči.', aquarium: 'Aquarium', lamp: 'Desk lamp', cassette: 'Sound', keyboard: 'Tech stack' },
+      objs: { ozil: 'Framed jersey', eze: 'Framed jersey', rice: 'Framed jersey', odegaard: 'Framed jersey', dzeko: 'Framed jersey', ibra: 'Framed jersey', schweini: 'Framed jersey', felix: 'Framed jersey', ball: 'Ball and mini goal', tins: 'Shelf with hookah tobacco', door: 'Back to the classic view', chairL: 'Chair and hookah', chairR: 'Chair and hookah', monitor: 'Old computer', phone: 'Red phone', answering: 'Answering machine', coffee: 'Džezva and fildžan', notes: 'Sticky notes', floppies: 'Floppy disks', poster: 'Poster', aquarium: 'Aquarium', lamp: 'Desk lamp', cassette: 'Cassette player', keyboard: 'Keyboard' },
       lampOn: 'Lights on', lampOff: 'Lights off', fish: 'The fish scattered. They will be back.',
       programs: 'Programs', run: 'Run live', source: 'Source', all: 'All programs', loadingExe: 'LOADING', noLive: 'Source only',
       termHint: 'Type help and press Enter', termLabel: 'Terminal command',
@@ -211,7 +230,7 @@ window.PF = {
       skip: 'Preskoči na sadržaj',
       tabs: { work: 'Radovi', services: 'Usluge', about: 'O meni', contact: 'Kontakt' },
       avail: 'Dostupan za nove projekte', place: 'Bosna i Hercegovina', navLabel: 'Dijelovi stranice',
-      roomT: 'Uđi u moju sobu', prev: 'Prethodni projekat', next: 'Sljedeći projekat'
+      roomT: 'Uđi u moju sobu', nextT: 'Sljedeći', quickT: 'Javi se', prev: 'Prethodni projekat', next: 'Sljedeći projekat'
     },
     room: {
       loading: 'Učitavam projekte...', press: 'PRITISNI BILO KOJU TIPKU', tap: 'DODIRNI ZA START', nogl: 'Ova soba traži WebGL. Otvaram klasičnu verziju.',
@@ -219,10 +238,10 @@ window.PF = {
       reset: 'Vrati početni pogled', showNames: 'Prikaži sva imena',
       career: 'Karijera', national: 'Reprezentacija', trophiesT: 'Trofeji', bornT: 'Rođen', posT: 'Pozicija', factT: 'Zanimljivo',
       sitH: 'Sjedni malo', sitP: 'Drži crijevo da povučeš, pusti da izbaciš dim.', puff: 'Povuci', standUp: 'Ustani', holdHose: 'Drži',
-      appsT: 'Ut.', goalsT: 'Gol.', assistsT: 'Ast.', totalT: 'Ukupno', leaving: 'Izlazim iz sobe...',
+      goal: 'GOOOL!', appsT: 'Ut.', goalsT: 'Gol.', assistsT: 'Ast.', totalT: 'Ukupno', leaving: 'Izlazim iz sobe...',
       back: 'Nazad', classic: 'Klasična verzija', room: 'Uđi u sobu', soundOn: 'Zvuk uključen', soundOff: 'Zvuk isključen', lang: 'Jezik',
-      names: { ozil: 'Özil · 10', eze: 'Eze · 10', odegaard: 'Ødegaard · 8', dzeko: 'Džeko · 11', ibra: 'Ibrahimović · 10', schweini: 'Schweinsteiger · 31', door: 'Izlaz', chairL: 'Nargila', chairR: 'Nargila', monitor: 'Projekti', phone: 'Kontakt', answering: 'O meni', coffee: 'Idemo na kafu', notes: 'Usluge', floppies: 'Vremenska linija', poster: 'Skoči.', aquarium: 'Akvarijum', lamp: 'Stona lampa', cassette: 'Zvuk', keyboard: 'Tehnologije' },
-      objs: { ozil: 'Uramljen dres', eze: 'Uramljen dres', odegaard: 'Uramljen dres', dzeko: 'Uramljen dres', ibra: 'Uramljen dres', schweini: 'Uramljen dres', door: 'Nazad na običnu verziju', chairL: 'Stolica i nargila', chairR: 'Stolica i nargila', monitor: 'Stari računar', phone: 'Crveni telefon', answering: 'Telefonska sekretarica', coffee: 'Džezva i fildžan', notes: 'Ceduljice', floppies: 'Diskete', poster: 'Plakat', aquarium: 'Akvarijum', lamp: 'Stona lampa', cassette: 'Kasetofon', keyboard: 'Tastatura' },
+      names: { ozil: 'Özil · 10', eze: 'Eze · 10', rice: 'Rice · 41', odegaard: 'Ødegaard · 8', dzeko: 'Džeko · 11', ibra: 'Ibrahimović · 10', schweini: 'Schweinsteiger · 31', felix: 'Félix · 79', ball: 'Šutni', tins: 'MyShishapedia', door: 'Izlaz', chairL: 'Nargila', chairR: 'Nargila', monitor: 'Projekti', phone: 'Kontakt', answering: 'O meni', coffee: 'Idemo na kafu', notes: 'Usluge', floppies: 'Vremenska linija', poster: 'Skoči.', aquarium: 'Akvarijum', lamp: 'Stona lampa', cassette: 'Zvuk', keyboard: 'Tehnologije' },
+      objs: { ozil: 'Uramljen dres', eze: 'Uramljen dres', rice: 'Uramljen dres', odegaard: 'Uramljen dres', dzeko: 'Uramljen dres', ibra: 'Uramljen dres', schweini: 'Uramljen dres', felix: 'Uramljen dres', ball: 'Lopta i mali gol', tins: 'Polica sa duhanima za nargilu', door: 'Nazad na običnu verziju', chairL: 'Stolica i nargila', chairR: 'Stolica i nargila', monitor: 'Stari računar', phone: 'Crveni telefon', answering: 'Telefonska sekretarica', coffee: 'Džezva i fildžan', notes: 'Ceduljice', floppies: 'Diskete', poster: 'Plakat', aquarium: 'Akvarijum', lamp: 'Stona lampa', cassette: 'Kasetofon', keyboard: 'Tastatura' },
       lampOn: 'Svjetlo upaljeno', lampOff: 'Svjetlo ugašeno', fish: 'Ribice su se razbježale. Vratit će se.',
       programs: 'Programi', run: 'Otvori uživo', source: 'Kod', all: 'Svi programi', loadingExe: 'UČITAVAM', noLive: 'Samo kod',
       termHint: 'Upiši help i pritisni Enter', termLabel: 'Komanda za terminal',

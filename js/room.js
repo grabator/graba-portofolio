@@ -8,7 +8,7 @@ import { buildRoom } from './scene.js';
 import { createPost } from './post.js';
 import { createCRT } from './crt.js';
 import { makeTextures } from './textures.js';
-import { mostarTime, dayPhase, mostarRain } from './mostar.js';
+import { mostarTime, dayPhase, mostarWeather } from './mostar.js';
 import { creditHTML } from './classic.js';
 
 const V = (x, y, z) => new THREE.Vector3(x, y, z);
@@ -32,10 +32,14 @@ const HOTS = [
   ['aquarium', null, V(0.75, 1.72, -3.0), 'r'],
   ['ozil', 'ozil', V(0.3, 0.42, 0.05), 'r'],
   ['eze', 'eze', V(0.3, 0.42, 0.05), 'r'],
+  ['rice', 'rice', V(0.3, 0.42, 0.05), 'r'],
   ['odegaard', 'odegaard', V(0.3, 0.42, 0.05), 'r'],
   ['dzeko', 'dzeko', V(0.3, 0.42, 0.05), 'l'],
   ['ibra', 'ibra', V(0.3, 0.42, 0.05), 'l'],
   ['schweini', 'schweini', V(0.3, 0.42, 0.05), 'l'],
+  ['felix', 'felix', V(0.3, 0.42, 0.05), 'l'],
+  ['ball', 'ball', V(0, 0.2, 0), 'r'],
+  ['tins', 'tins', V(0.3, 0.45, 0), 'l'],
   ['door', 'door', V(0, 0.15, -0.08), 'r'],
   ['chairL', 'chairL', V(0, 0.86, 0), 'r'],
   ['chairR', 'chairR', V(0, 0.86, 0), 'l']
@@ -51,7 +55,7 @@ const CLOSE = {
   keyboard: ['keyboard', V(0, 0.06, -0.05), V(0, 0.9, 1), 0.8]
 };
 const ACTIONS = new Set(['aquarium', 'lamp', 'cassette']);
-const JERSEYS = ['ozil', 'eze', 'odegaard', 'dzeko', 'ibra', 'schweini'];
+const JERSEYS = ['ozil', 'eze', 'rice', 'odegaard', 'dzeko', 'ibra', 'schweini', 'felix'];
 const CHAIRS = ['chairL', 'chairR'];
 
 export async function createRoom(o) {
@@ -260,7 +264,7 @@ export async function createRoom(o) {
     const mt = mostarTime(); room.setClock(mt.h, mt.m); phase = dayPhase(mt); lighting();
   }
   clockTick(); setInterval(clockTick, 30000);
-  mostarRain().then((r) => { room.setRain(r); sound.rain(r); });
+  mostarWeather().then((w) => { room.setRain(w.rain); sound.rain(w.rain); if (w.temp != null) room.setTemp('MOSTAR ' + w.temp + '°'); });
 
   /* ---------- oznake (dugmad preko scene) ---------- */
   const hots = document.getElementById('hots');
@@ -365,6 +369,12 @@ export async function createRoom(o) {
   let pinch = 0;
   canvas.addEventListener('pointermove', (e) => {
     // prevlačenje okreće pogled, dva prsta (štipanje) idu naprijed i nazad
+    if (ptrs.has(e.pointerId) && running && sitKey && !tween) {
+      const pr = ptrs.get(e.pointerId), dx = e.clientX - pr.x, dy = e.clientY - pr.y;
+      pr.x = e.clientX; pr.y = e.clientY;
+      if (ptrs.size === 1 && down && Math.hypot(e.clientX - down.x, e.clientY - down.y) > 6) { sit.tyaw += dx * (o.coarse ? 0.0062 : 0.0042); sit.tpitch += dy * (o.coarse ? 0.0045 : 0.003); }
+      return;
+    }
     if (ptrs.has(e.pointerId) && running && !focusKey) {
       const pr = ptrs.get(e.pointerId), dx = e.clientX - pr.x, dy = e.clientY - pr.y;
       pr.x = e.clientX; pr.y = e.clientY;
@@ -419,6 +429,7 @@ export async function createRoom(o) {
     if (!down || !running) return;
     const moved = Math.hypot(e.clientX - down.x, e.clientY - down.y); down = null;
     if (moved > 10) return;
+    if (sitKey) return;
     if (focusKey) { if (!busy) back(); return; }
     const h = pick(e.clientX, e.clientY);
     if (h) activate(h.key, hotBtns[h.key === 'drive' ? 'floppies' : h.key]);
@@ -468,6 +479,8 @@ export async function createRoom(o) {
     if (key === 'aquarium') { room.scatter(); sound.splash(); toast(L().fish); return; }
     if (key === 'lamp') { lit = !lit; try { localStorage.setItem('graba-lamp', lit ? '1' : '0'); } catch (e) { /* nema */ } lighting(); sound.lamp(); toast(lit ? L().lampOn : L().lampOff); labelHots(); return; }
     if (key === 'cassette') { o.toggleSound(); return; }
+    if (key === 'ball') { if (room.shoot()) { sound.splash(); setTimeout(() => { toast(L().goal); sound.dial(3); }, 700); } return; }
+    if (key === 'tins') { if (focusKey) return; sub.project = 'myshishapedia'; activate('monitor', btn); return; }
     if (key === 'door') { toast(L().leaving); sound.lamp(); setTimeout(() => o.exit(), 250); return; }
     if (focusKey) return;
     opener = btn || null;
@@ -611,6 +624,7 @@ export async function createRoom(o) {
 
   // karijera po klubovima: godine, klub, utakmice, golovi (i asistencije kad su poznate)
   function careerTable(P, l) {
+    if (!P.clubs.some((c) => c[2] != null)) return '<ol class="p-career">' + P.clubs.map(([y, c]) => '<li><span>' + esc(y) + '</span><b>' + esc(c) + '</b></li>').join('') + '</ol>' + (P.scope ? '<p class="p-scope">' + esc(P.scope[lang]) + '</p>' : '');
     const hasA = P.clubs.some((c) => c[4] != null), num = (v) => (v == null ? '·' : v);
     const tot = [2, 3, 4].map((i) => P.clubs.every((c) => c[i] != null) ? P.clubs.reduce((a, c) => a + c[i], 0) : null);
     const head = '<tr><th scope="col">' + esc(l.career) + '</th><th scope="col">' + esc(l.appsT) + '</th><th scope="col">' + esc(l.goalsT) + '</th>' + (hasA ? '<th scope="col">' + esc(l.assistsT) + '</th>' : '') + '</tr>';
@@ -631,11 +645,29 @@ export async function createRoom(o) {
     hoseBtn.querySelector('span').textContent = L().holdHose;
     hoseBtn.setAttribute('aria-label', L().puff);
   }
+  // dok sjediš možeš se okretati; crijevo ostaje kod usta
+  const sit = { pos: V(0, 0, 0), dir0: V(0, 0, 1), yaw: 0, pitch: 0, tyaw: 0, tpitch: 0, ay: 99, ap: 99, tick: 0 };
+  function mouthTarget() {
+    const fwd = rig.look.clone().sub(rig.pos).normalize(), right = V(0, 0, 0).crossVectors(fwd, UP).normalize();
+    const flat = V(fwd.x, 0, fwd.z).normalize();
+    return rig.pos.clone().addScaledVector(flat, 0.3).addScaledVector(right, 0.04).addScaledVector(UP, -0.2);
+  }
+  function stepSit(dt) {
+    if (!sitKey || tween) return;
+    const r = Math.min(1, dt * 9);
+    sit.tpitch = THREE.MathUtils.clamp(sit.tpitch, -0.9, 0.7);
+    sit.yaw += (sit.tyaw - sit.yaw) * r; sit.pitch += (sit.tpitch - sit.pitch) * r;
+    const dir = sit.dir0.clone().applyAxisAngle(UP, sit.yaw);
+    dir.applyAxisAngle(V(0, 0, 0).crossVectors(dir, UP).normalize(), sit.pitch);
+    rig.pos.copy(sit.pos); rig.look.copy(sit.pos).add(dir);
+    if ((Math.abs(sit.yaw - sit.ay) > 0.015 || Math.abs(sit.pitch - sit.ap) > 0.03) && ++sit.tick % 2 === 0) {
+      sit.ay = sit.yaw; sit.ap = sit.pitch; hoseHit = room.aimHose(sitKey, mouthTarget());
+    }
+  }
   function sitDown(key) {
     sitKey = key;
-    const fwd = rig.look.clone().sub(rig.pos).normalize(), right = V(0, 0, 0).crossVectors(fwd, UP).normalize();
-    const target = rig.pos.clone().addScaledVector(fwd, 0.34).addScaledVector(right, 0.04).addScaledVector(UP, -0.17);
-    hoseHit = room.aimHose(key, target);
+    sit.pos.copy(rig.pos); sit.dir0.copy(rig.look).sub(rig.pos).normalize(); sit.yaw = sit.tyaw = sit.pitch = sit.tpitch = 0; sit.ay = sit.ap = 0;
+    hoseHit = room.aimHose(key, mouthTarget());
     labelSit(); sitUI.hidden = false; html.classList.add('is-sitting');
     sitUI.querySelector('.sit-stand').focus({ preventScroll: true });
   }
@@ -647,14 +679,13 @@ export async function createRoom(o) {
   function startPull() { if (!sitKey || pulling) return; pulling = performance.now(); hoseBtn.classList.add('on'); }
   function endPull(silent) {
     if (!pulling) return;
-    const v = Math.min(1, (performance.now() - pulling) / 2600); pulling = 0; hoseBtn.classList.remove('on');
+    const v = Math.min(1, (performance.now() - pulling) / 2600); pulling = 0; hoseBtn.classList.remove('on'); hoseBtn.style.setProperty('--p', 0);
     room.pull(sitKey, 0);
     if (silent || v < 0.08) return;
     // izdah: dim izlazi ispred kamere i ide naprijed
     const fwd = rig.look.clone().sub(rig.pos).normalize();
-    room.exhale(rig.pos.clone().addScaledVector(fwd, 0.18).addScaledVector(UP, -0.06), fwd, v);
-    room.puff(sitKey);
-    exhale.style.setProperty('--s', (0.4 + v * 0.6).toFixed(2));
+    room.exhale(rig.pos.clone().addScaledVector(fwd, 0.22).addScaledVector(UP, -0.07), fwd, v);
+    exhale.style.setProperty('--s', (0.15 + v * 0.3).toFixed(2));
     exhale.classList.remove('on'); void exhale.offsetWidth; exhale.classList.add('on');
   }
   function stepPull(now) {
@@ -890,7 +921,7 @@ export async function createRoom(o) {
     const t = (now - clock0) / 1000, dt = Math.min(0.05, dtMs / 1000);
     if (introP < 1 && introT0) { introP = Math.min(1, (now - introT0) / (reduced ? 300 : 2800)); lighting(); }
     stepTween(now);
-    stepWalk(dt);
+    stepWalk(dt); stepSit(dt);
     applyCamera(t);
     // mapa sjena: samo kad se nešto pomjeri (raspored, slušalica), inače svakih 20 kadrova
     if (renderer.shadowMap.enabled && (room.flags.shadowDirty || ++shadowTick % 20 === 0)) { renderer.shadowMap.needsUpdate = true; room.flags.shadowDirty = false; }

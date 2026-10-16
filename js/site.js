@@ -3,6 +3,7 @@
  * projekti jedan po jedan (sličice, strelice, tipke ← →, na mobitelu prevlačenje), sat u Mostaru.
  */
 import { TABS } from './classic.js';
+import { mostarWeather } from './mostar.js';
 
 const state = { tab: 'work', p: 0 };
 const narrow = matchMedia('(max-width: 899px)');
@@ -49,6 +50,7 @@ export function setProject(i, quiet = false, fromScroll = false) {
   arts.forEach((a, k) => a.classList.toggle('on', k === i));
   root.querySelectorAll('[data-p]').forEach((b) => b.setAttribute('aria-pressed', String(+b.dataset.p === i)));
   const c = root.querySelector('[data-cur]'); if (c) c.textContent = String(i + 1).padStart(2, '0');
+  root.querySelectorAll('.s-dots i').forEach((d, k) => d.classList.toggle('on', k === i));
   if (narrow.matches && !fromScroll && !quiet) {
     const projs = root.querySelector('[data-projs]');
     projs.scrollTo({ left: arts[i].offsetLeft - projs.offsetLeft - 18, behavior: 'smooth' });
@@ -60,8 +62,11 @@ export function setProject(i, quiet = false, fromScroll = false) {
 function clock() {
   const el = root && root.querySelector('[data-time]'); if (!el) return;
   const t = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Sarajevo', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).format(new Date());
-  el.textContent = 'Mostar ' + t;
+  el.textContent = 'Mostar ' + t + (temp != null ? ' · ' + temp + '°C' : '');
 }
+// temperatura u Mostaru (Open-Meteo, keš 15 minuta)
+let temp = null;
+mostarWeather().then((w) => { if (w.temp != null) { temp = w.temp; clock(); } });
 
 // klikovi i tipke (jedan slušač za cijelu stranicu, radi i poslije promjene jezika)
 document.addEventListener('click', (e) => {
