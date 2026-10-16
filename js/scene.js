@@ -454,17 +454,22 @@ export function buildRoom(opts) {
     const sk = new THREE.Color().setRGB(0.35 + day * 1.4, 0.45 + day * 1.4, 1.0 + day * 1.2);
     sk.lerp(new THREE.Color(1.4, 0.9, 0.9), dusk * 0.5);
     skyMat.color.copy(sk).multiplyScalar(intro);
-    moon.intensity = (shadows ? 3.2 + day * 3 : 1.5 + day * 2.4) * intro;
-    moon.color.set(day > 0.5 ? 0xcfd8ff : 0x7f9bff);
-    hemi.intensity = (0.45 + day * 0.9 + (lit ? 0.5 : 0)) * intro;
-    shaftMat.uniforms.uStrength.value = (0.2 + day * 0.12) * intro;
+    moon.intensity = (shadows ? 3.2 + day * 2.4 : 1.5 + day * 2.2) * intro;
+    // noć hladno plava, dan skoro bijel, svitanje i sumrak ljubičasti
+    moon.color.set(0x7f9bff).lerp(new THREE.Color(0xe4eaff), day).lerp(new THREE.Color(0xb592ff), dusk * 0.6);
+    hemi.intensity = (0.45 + day * 1.5 + (lit ? 0.5 : 0)) * intro;
+    hemi.color.set(0x2a3570).lerp(new THREE.Color(0x5a6cb0), day);
+    scene.fog.color.set(0x070a1c).lerp(new THREE.Color(0x1a2348), day * 0.8);
+    scene.background.set(0x05060f).lerp(new THREE.Color(0x141b3a), day);
+    shaftMat.uniforms.uStrength.value = (0.2 + day * 0.18) * intro;
+    shaftMat.uniforms.uColor.value.setRGB(0.45, 0.58, 1.0).lerp(new THREE.Color(0.75, 0.62, 1.0), dusk * 0.6);
     env.aq = 7.5 * aqIntro;
     aqBackM.color.setScalar(0.95 * aqIntro); aqFill.intensity = 3.5 * aqIntro;
     strip.material.color.setRGB(2.2 * aqIntro, 2.6 * aqIntro, 2.8 * aqIntro);
     lampLight.intensity = lit ? 6 : 0;
     roomFill.intensity = lit ? 0.9 : 0;
     bulbM.color.setScalar(lit ? 3 : 0.25);
-    scene.fog.density = lit ? 0.045 : 0.075;
+    scene.fog.density = (lit ? 0.045 : 0.075) * (1 - day * 0.4);
   }
 
   function setClock(h, m) {
