@@ -24,7 +24,9 @@ Po sobi se može malo prošetati: prevlačenjem mišem ili prstom okreće se pog
 
 Svjetlo kroz krovni prozor prati pravo doba dana u Mostaru (Europe/Sarajevo), a kad u Mostaru pada kiša (Open-Meteo), kapi klize niz staklo. Zidni sat pokazuje mostarsko vrijeme.
 
-Postoji i **klasična verzija**: obična stranica sa svim sadržajem. Otvara se dugmetom "Klasična verzija", a sama se prikaže ako uređaj nema WebGL ili ako je uključeno smanjeno kretanje (reduced motion). Sav sadržaj klasične verzije je i u `index.html` kao pravi HTML, zbog Googlea.
+**Glavna stranica je obična verzija** (i na desktopu i na mobitelu): četiri dijela, Radovi, Usluge, O meni i Kontakt, koji staju na jedan ekran, bez dugog listanja. Projekti se gledaju jedan po jedan: velika slika i opis, a mijenjaju se sličicama, strelicama ili tipkama ← →, na mobitelu prevlačenjem. Sav sadržaj je i u `index.html` kao pravi HTML, zbog Googlea.
+
+**3D soba postoji samo na mobitelu i tabletu** (uređaji na dodir). Ulazi se karticom "Uđi u moju sobu". Na desktopu se three.js nikad ne učitava. Na bočnim zidovima sobe su uramljeni dresovi: ÖZIL 10 lijevo i DŽEKO 11 desno.
 
 Soba je inspirisana radom [Andrea Jorgensen · hideou.se](https://hideou.se). Sve u sobi je napravljeno u kodu, bez njenih rendera i bez preuzetih modela.
 
@@ -33,13 +35,14 @@ Soba je inspirisana radom [Andrea Jorgensen · hideou.se](https://hideou.se). Sv
 Bez frameworka i bez build koraka: HTML, CSS i JavaScript moduli.
 
 - `js/i18n.js` je jedini izvor sadržaja (projekti, usluge, kontakt), na engleskom i bosanskom.
-- `js/main.js` jezik, gornja traka, boot ekran "GRABA OS" i klasična verzija. 3D dio se učitava tek kad zatreba.
+- `js/main.js` jezik, gornja traka, boot ekran "GRABA OS", prelaz između obične verzije i sobe. 3D dio se učitava tek kad zatreba.
+- `js/site.js` ponašanje obične verzije: dijelovi kao kartice, projekti jedan po jedan, sat u Mostaru.
 - `js/room.js` kamera, oznake predmeta, paneli, terminal, zvono telefona, prilagođavanje kvaliteta.
 - `js/scene.js` soba i svi predmeti (three.js geometrija i materijali), raspored za širok ekran i za uspravan mobitel.
 - `js/post.js` bloom, filmsko zrno, vinjeta i blaga hromatska aberacija.
 - `js/crt.js` ekran računara (canvas tekstura), `js/textures.js` plakat, sat, ceduljice.
 - `js/mostar.js` vrijeme i kiša u Mostaru, `js/sound.js` zvuk napravljen u WebAudio, bez audio fajlova.
-- `js/classic.js` klasična verzija; isti kod pravi i statični HTML (`tools/staticno.mjs`).
+- `js/classic.js` HTML obične verzije; isti kod pravi i statični HTML (`tools/staticno.mjs`).
 - three.js (r169) je lokalno u `assets/vendor/`, fontovi (VT323, Inter Tight, SIL OFL) u `assets/fonts/`.
 
 Kvalitet se sam prilagođava: ako je kadar sporiji od 25 ms, prvo se smanji rezolucija, pa se ugasi bloom, pa sjene. Kad tab nije vidljiv ili je otvorena klasična verzija, soba se ne crta.
@@ -52,7 +55,7 @@ node serve.mjs
 
 Zatim otvori http://localhost:8080. Lokalni server šalje i zaglavlja iz `_headers` (CSP), kao Cloudflare.
 
-Za probu: `?hour=7.5` postavlja sat u Mostaru, `?rain=1` uključuje kišu, `?view=classic` otvara klasičnu verziju.
+Za probu (soba, na uređaju na dodir): `?view=room` otvara sobu odmah, `?hour=7.5` postavlja sat u Mostaru, `?rain=1` uključuje kišu.
 
 Poslije izmjene sadržaja u `js/i18n.js` ili `js/classic.js`, ili inline skripti u `index.html`:
 

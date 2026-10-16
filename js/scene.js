@@ -406,6 +406,38 @@ export function buildRoom(opts) {
   const pFrame = new THREE.Mesh(new THREE.BoxGeometry(0.82, 1.14, 0.03), mat(0x8c7a52, 0.5, 0.4)); poster.add(pFrame);
   const pImg = new THREE.Mesh(new THREE.PlaneGeometry(0.76, 1.08), new THREE.MeshStandardMaterial({ map: opts.posterTexture, roughness: 0.75, emissiveMap: opts.posterTexture, emissive: 0xffffff, emissiveIntensity: 0.28 })); pImg.position.z = 0.017; poster.add(pImg);
   reg('poster', poster, [0.85, 1.18, 0.08], new THREE.Vector3(0, 0, 0.03), new THREE.Vector3(-2.25, 2.35, BACK + 0.1));
+  // dresovi u ramovima na bočnim zidovima: lijevo Özil 10, desno Džeko 11 (leđa dresa, bez grbova)
+  function jerseyTex(name, num, body, sleeve, ink, trim) {
+    return canvas(512, 600, (g, w, h) => {
+      g.fillStyle = '#0c0f26'; g.fillRect(0, 0, w, h);
+      const shirt = new Path2D('M176 70 Q256 98 336 70 L430 112 L500 236 L424 276 L392 222 L392 560 Q256 580 120 560 L120 222 L88 276 L12 236 L82 112 Z');
+      g.save(); g.shadowColor = 'rgba(0,0,0,0.6)'; g.shadowBlur = 24; g.shadowOffsetY = 10; g.fillStyle = body; g.fill(shirt); g.restore();
+      g.save(); g.clip(shirt);
+      g.fillStyle = sleeve; g.beginPath(); g.moveTo(82, 112); g.lineTo(176, 70); g.lineTo(150, 250); g.lineTo(88, 276); g.lineTo(0, 240); g.closePath(); g.fill();
+      g.beginPath(); g.moveTo(430, 112); g.lineTo(336, 70); g.lineTo(362, 250); g.lineTo(424, 276); g.lineTo(512, 240); g.closePath(); g.fill();
+      g.fillStyle = trim; g.fillRect(0, 252, 512, 10); g.fillRect(116, 230, 8, 340); g.fillRect(388, 230, 8, 340);
+      const sh = g.createLinearGradient(0, 0, w, 0); sh.addColorStop(0, 'rgba(0,0,0,0.25)'); sh.addColorStop(0.5, 'rgba(255,255,255,0.06)'); sh.addColorStop(1, 'rgba(0,0,0,0.25)');
+      g.fillStyle = sh; g.fillRect(0, 0, w, h);
+      g.restore();
+      g.strokeStyle = trim; g.lineWidth = 8; g.beginPath(); g.moveTo(176, 72); g.quadraticCurveTo(256, 104, 336, 72); g.stroke();
+      g.fillStyle = ink; g.textAlign = 'center'; g.textBaseline = 'alphabetic';
+      g.font = '600 50px "Inter Tight", sans-serif'; g.fillText(name, 256, 200);
+      g.font = '600 230px "Inter Tight", sans-serif'; g.fillText(num, 256, 430);
+    });
+  }
+  function framedJersey(tex, x, z, rotY) {
+    const fr = new THREE.Group(); fr.position.set(x, 1.72, z); fr.rotation.y = rotY; scene.add(fr);
+    const box = new THREE.Mesh(new THREE.BoxGeometry(0.98, 1.12, 0.06), mat(0x090a12, 0.4, 0.4)); fr.add(box);
+    const shirt = new THREE.Mesh(new THREE.PlaneGeometry(0.86, 1.0), new THREE.MeshStandardMaterial({ map: tex, roughness: 0.8, emissiveMap: tex, emissive: 0xffffff, emissiveIntensity: 0.38 }));
+    shirt.position.z = 0.032; fr.add(shirt);
+    const glass = new THREE.Mesh(new THREE.PlaneGeometry(0.9, 1.04), new THREE.MeshPhysicalMaterial({ color: 0xbfd6ff, transparent: true, opacity: 0.07, roughness: 0.05, depthWrite: false }));
+    glass.position.z = 0.036; fr.add(glass);
+    const plate = new THREE.Mesh(new THREE.BoxGeometry(0.26, 0.04, 0.01), mat(0x8c7a52, 0.4, 0.6)); plate.position.set(0, -0.6, 0.03); fr.add(plate);
+    return fr;
+  }
+  framedJersey(jerseyTex('ÖZIL', '10', '#c8162a', '#f2f2f2', '#ffffff', '#f2f2f2'), -W / 2 + 0.04, -1.0, Math.PI / 2);
+  framedJersey(jerseyTex('DŽEKO', '11', '#1d3a94', '#1d3a94', '#ffffff', '#f2c230'), W / 2 - 0.04, -1.0, -Math.PI / 2);
+
   // zidni sat (mostarsko vrijeme)
   const clock = new THREE.Group(); clock.position.set(2.1, 2.1, BACK + 0.03); scene.add(clock);
   const face = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.2, 0.03, 40), [mat(0x101326, 0.5), new THREE.MeshStandardMaterial({ map: opts.clockTexture, roughness: 0.5, emissiveMap: opts.clockTexture, emissive: 0xffffff, emissiveIntensity: 0.12 }), mat(0x101326, 0.5)]);

@@ -111,7 +111,7 @@ export async function createRoom(o) {
     return portrait() ? { pos: V(0, 2.25, 1.1), look: V(0, 1.16, -1.3), fov: 70 } : { pos: V(0, 1.36, 1.85), look: V(0, 1.16, -1.6), fov: 50 };
   }
   // pogled i par koraka po sobi: okret glave i pomak su ograničeni da se ne izađe iz kadra
-  const UP = V(0, 1, 0), LIM = { yaw: 0.6, pitch: 0.26, x: 1.15, zMin: 0.25, zMax: 3.0 };
+  const UP = V(0, 1, 0), LIM = { yaw: 1.3, pitch: 0.4, x: 1.6, zMin: 0.2, zMax: 3.1 };
   const walk = { x: 0, z: 0, yaw: 0, pitch: 0, tyaw: 0, tpitch: 0, vx: 0, vz: 0, moved: false, reset: false };
   const keysDown = new Set(), joy = { x: 0, y: 0 };
   function wideView() {
@@ -334,7 +334,7 @@ export async function createRoom(o) {
       const pr = ptrs.get(e.pointerId), dx = e.clientX - pr.x, dy = e.clientY - pr.y;
       pr.x = e.clientX; pr.y = e.clientY;
       if (ptrs.size === 1 && down && Math.hypot(e.clientX - down.x, e.clientY - down.y) > 6) {
-        walk.tyaw += dx * (o.coarse ? 0.006 : 0.0042); walk.tpitch += dy * (o.coarse ? 0.004 : 0.003); walk.reset = false; markMoved();
+        walk.tyaw += dx * (o.coarse ? 0.0062 : 0.0042); walk.tpitch += dy * (o.coarse ? 0.0045 : 0.003); walk.reset = false; markMoved();
       } else if (ptrs.size === 2) {
         const [a, b] = [...ptrs.values()], d = Math.hypot(a.x - b.x, a.y - b.y);
         if (pinch) { const bz = baseView().pos.z; walk.z = THREE.MathUtils.clamp(walk.z - (d - pinch) * 0.006, LIM.zMin - bz, LIM.zMax - bz); walk.reset = false; markMoved(); }

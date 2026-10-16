@@ -65,7 +65,13 @@ window.PF = {
     foot: 'Designed and built by Ahmed Grabus.',
     credit: 'Room inspired by',
     role: 'Software engineer',
-    hero: 'Based in Bosnia and Herzegovina. I build fast, beautiful websites and full-stack products.',
+    hero: 'I build fast, beautiful websites and full-stack products, from the database to the last animation.',
+    site: {
+      skip: 'Skip to content',
+      tabs: { work: 'Work', services: 'Services', about: 'About', contact: 'Contact' },
+      avail: 'Available for new projects', place: 'Bosnia and Herzegovina', navLabel: 'Sections',
+      roomT: 'Step into my room', roomP: '3 AM, aquarium, old computer', prev: 'Previous project', next: 'Next project'
+    },
     room: {
       loading: 'Loading projects...', press: 'PRESS ANY KEY TO START', tap: 'TAP TO START', nogl: 'This room needs WebGL. Opening the classic view.',
       hintD: 'Click anything · drag to look · WASD to walk', hintM: 'Tap anything · drag to look · stick to walk',
@@ -134,7 +140,13 @@ window.PF = {
     foot: 'Dizajnirao i napravio Ahmed Grabus.',
     credit: 'Soba inspirisana radom',
     role: 'Softverski inženjer',
-    hero: 'Iz Bosne i Hercegovine. Pravim brze i lijepe web stranice i full-stack proizvode.',
+    hero: 'Pravim brze i lijepe web stranice i full-stack proizvode, od baze do zadnje animacije.',
+    site: {
+      skip: 'Preskoči na sadržaj',
+      tabs: { work: 'Radovi', services: 'Usluge', about: 'O meni', contact: 'Kontakt' },
+      avail: 'Dostupan za nove projekte', place: 'Bosna i Hercegovina', navLabel: 'Dijelovi stranice',
+      roomT: 'Uđi u moju sobu', roomP: '3 ujutro, akvarijum, stari računar', prev: 'Prethodni projekat', next: 'Sljedeći projekat'
+    },
     room: {
       loading: 'Učitavam projekte...', press: 'PRITISNI BILO KOJU TIPKU', tap: 'DODIRNI ZA START', nogl: 'Ova soba traži WebGL. Otvaram klasičnu verziju.',
       hintD: 'Klikni bilo šta · prevuci za pogled · WASD za hod', hintM: 'Dodirni bilo šta · prevuci za pogled · krug za hod',

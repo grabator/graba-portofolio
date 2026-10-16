@@ -3,6 +3,7 @@
  * 3D soba (three.js) se učitava tek kad zatreba, pa je klasična verzija lagana.
  */
 import { classicHTML } from './classic.js';
+import { initSite } from './site.js';
 import { sound } from './sound.js';
 
 const PF = window.PF;
@@ -10,6 +11,8 @@ const html = document.documentElement;
 const $ = (s, r = document) => r.querySelector(s);
 const coarse = matchMedia('(pointer: coarse)').matches;
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+// soba je samo za uređaje na dodir; na desktopu se 3D nikad ne učitava
+const canRoom = document.documentElement.classList.contains('can-room');
 const state = { lang: html.lang === 'bs' ? 'bs' : 'en', room: null, loading: null, started: false };
 const T = () => PF[state.lang];
 const store = {
@@ -45,7 +48,10 @@ function applyLang() {
   document.querySelectorAll('[data-t]').forEach((el) => { const v = pick(el.dataset.t); if (typeof v === 'string') el.textContent = v; });
   document.querySelectorAll('[data-t-label]').forEach((el) => { const v = pick(el.dataset.tLabel); if (typeof v === 'string') el.setAttribute('aria-label', v); });
   document.querySelectorAll('[data-lang]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.lang === state.lang)));
-  const cl = $('#classic'); if (cl.dataset.rendered !== state.lang) { cl.innerHTML = classicHTML(PF, state.lang); cl.dataset.rendered = state.lang; }
+  const cl = $('#classic');
+  if (cl.dataset.rendered !== state.lang) { cl.innerHTML = classicHTML(PF, state.lang); cl.dataset.rendered = state.lang; initSite(cl); }
+  else if (!cl.dataset.ready) initSite(cl);
+  cl.dataset.ready = '1';
   syncView(); syncSound();
   if (state.room) state.room.setLang(state.lang);
 }
@@ -53,7 +59,8 @@ function setLang(l) {
   if (l !== 'en' && l !== 'bs') return;
   state.lang = l; store.set('graba-lang', l); applyLang();
 }
-document.querySelectorAll('[data-lang]').forEach((b) => b.addEventListener('click', () => setLang(b.dataset.lang)));
+document.addEventListener('click', (e) => { const b = e.target.closest('[data-lang]'); if (b) setLang(b.dataset.lang); });
+document.addEventListener('click', (e) => { if (e.target.closest('[data-room]') && canRoom) showClassic(false); });
 
 /* ---------- zvuk ---------- */
 function syncSound() {
@@ -80,7 +87,7 @@ const isClassic = () => html.classList.contains('is-classic');
 function syncView() {
   const b = $('#view'); const c = isClassic();
   b.textContent = c ? T().room.room : T().room.classic;
-  b.hidden = c && html.classList.contains('no-gl');
+  b.hidden = !canRoom || (c && html.classList.contains('no-gl'));
 }
 function showClassic(on, save = true) {
   html.classList.toggle('is-classic', on);
@@ -92,8 +99,10 @@ function showClassic(on, save = true) {
     const h = $('#classic h1'); if (h) { h.setAttribute('tabindex', '-1'); h.focus({ preventScroll: true }); }
   } else if (state.started && state.room) {
     state.room.pause(false);
-  } else {
+  } else if (canRoom) {
     boot();
+  } else {
+    html.classList.add('is-classic');
   }
 }
 $('#view').addEventListener('click', () => showClassic(!isClassic()));
@@ -163,4 +172,5 @@ function start(room, gesture) {
 
 /* ---------- start ---------- */
 applyLang();
-if (!isClassic()) boot();
+if (!isClassic() && canRoom) boot();
+else html.classList.add('is-classic');
