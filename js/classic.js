@@ -7,6 +7,8 @@ const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replac
 const em = (s) => esc(s).replace(/\*(.+?)\*/g, '<em>$1</em>');
 const ext = 'target="_blank" rel="noopener"';
 const pad = (n) => String(n).padStart(2, '0');
+// logo GRABA (slova pretvorena u putanju, bez dodatnog fonta)
+const LOGO = '<svg class="d-logo" viewBox="91 -700 3426 712" aria-hidden="true"><path fill="currentColor" d="M344.1 12.0Q192.6 12.0 131.4 -77.2Q70.2 -166.4 102.1 -344.0Q123.7 -463.5 177.0 -542.4Q230.3 -621.2 312.3 -660.6Q394.4 -700.0 501.7 -700.0Q569.0 -700.0 622.9 -683.6Q676.9 -667.3 713.2 -634.8Q749.5 -602.3 763.8 -553.3Q778.0 -504.3 766.2 -439.0H566.3Q570.2 -460.6 565.8 -478.8Q561.4 -497.0 549.6 -510.1Q537.7 -523.2 519.4 -530.3Q501.2 -537.5 477.1 -537.5Q444.1 -537.5 418.0 -527.8Q391.9 -518.1 373.2 -498.8Q354.5 -479.5 342.3 -452.1Q330.0 -424.7 323.5 -388.6L307.5 -299.3Q298.8 -251.2 306.1 -218.1Q313.4 -184.9 338.6 -167.7Q363.9 -150.4 408.0 -150.4Q439.6 -150.4 465.8 -161.9Q491.9 -173.3 509.5 -193.8Q527.1 -214.3 531.7 -239.6L532.4 -244.0H404.6L429.8 -384.0H756.3L687.2 0.0H579.5L573.3 -66.7Q543.9 -42.3 509.4 -24.6Q474.9 -6.9 434.1 2.5Q393.3 12.0 344.1 12.0Z M804.2 0.0 928.1 -688.0H1301.6Q1378.6 -688.0 1422.0 -657.9Q1465.4 -627.8 1479.8 -578.5Q1494.2 -529.1 1483.8 -470.8Q1472.6 -408.6 1438.8 -358.3Q1405.1 -308.1 1352.3 -275.8L1419.0 0.0H1189.6L1144.5 -231.0H1054.8L1013.2 0.0ZM1081.9 -381.4H1201.2Q1226.6 -381.4 1245.2 -403.5Q1263.9 -425.6 1269.9 -459.0Q1273.7 -480.3 1270.1 -496.7Q1266.5 -513.2 1256.2 -523.2Q1245.9 -533.2 1228.5 -533.2H1109.2Z M1440.8 0.0 1779.6 -688.0H2036.3L2127.5 0.0H1906.4L1899.8 -98.2H1696.4L1654.8 0.0ZM1762.1 -251.6H1890.3L1883.4 -375.5Q1882.4 -386.5 1881.4 -402.9Q1880.5 -419.3 1879.8 -438.1Q1879.2 -457.0 1878.3 -475.5Q1877.4 -494.0 1876.6 -508.3H1868.3Q1861.6 -490.0 1852.2 -466.8Q1842.8 -443.6 1832.9 -419.8Q1823.1 -395.9 1813.6 -375.5Z M2197.2 0.0 2321.1 -688.0H2715.6Q2768.2 -688.0 2806.7 -667.2Q2845.2 -646.5 2863.3 -609.0Q2881.5 -571.5 2872.2 -519.9Q2863.6 -472.1 2842.8 -440.3Q2822.0 -408.4 2793.6 -389.0Q2765.2 -369.5 2732.9 -359.0L2732.2 -355.0Q2765.0 -346.0 2789.7 -327.0Q2814.3 -308.0 2825.3 -274.2Q2836.3 -240.5 2826.7 -187.4Q2816.6 -130.8 2782.3 -88.7Q2748.0 -46.6 2698.5 -23.3Q2649.0 0.0 2592.1 0.0ZM2433.7 -160.0H2563.9Q2585.0 -160.0 2600.9 -176.0Q2616.8 -192.0 2622.6 -224.0Q2625.3 -239.0 2621.5 -251.5Q2617.7 -264.0 2608.3 -271.0Q2598.8 -278.0 2585.1 -278.0H2455.0ZM2480.5 -420.0H2597.8Q2612.5 -420.0 2624.3 -427.5Q2636.0 -435.0 2644.4 -449.0Q2652.8 -463.0 2656.5 -484.0Q2660.5 -506.0 2649.6 -521.5Q2638.6 -537.0 2618.9 -537.0H2501.6Z M2830.8 0.0 3169.6 -688.0H3426.3L3517.5 0.0H3296.4L3289.8 -98.2H3086.4L3044.8 0.0ZM3152.1 -251.6H3280.3L3273.4 -375.5Q3272.4 -386.5 3271.4 -402.9Q3270.5 -419.3 3269.8 -438.1Q3269.2 -457.0 3268.3 -475.5Q3267.4 -494.0 3266.6 -508.3H3258.3Q3251.6 -490.0 3242.2 -466.8Q3232.8 -443.6 3222.9 -419.8Q3213.1 -395.9 3203.6 -375.5Z"/></svg>';
 
 export function creditHTML(PF, lang) {
   const c = PF.credit;
@@ -55,6 +57,10 @@ export function classicHTML(PF, lang) {
   ].map(([k, href, v, ex]) => '<li><a href="' + href + '"' + (ex ? ' ' + ext : '') + '><span>' + esc(T[k]) + '</span><b>' + esc(v) + '</b><i aria-hidden="true">↗</i></a></li>').join('');
 
   return ''
+    // desktop: velika slika sobe sa laganim animacijama (iza menija)
+    + '<div class="d-art" aria-hidden="true"><div class="d-img"></div><i class="d-aq"></i><i class="d-mon"></i><i class="d-glow d-g1"></i><i class="d-glow d-g2"></i>'
+    + '<i class="d-sm d-sm1"></i><i class="d-sm d-sm2"></i><i class="d-sm d-sm3"></i><i class="d-sm d-sm4"></i>'
+    + '<i class="d-sk d-sk1"></i><i class="d-sk d-sk2"></i><i class="d-sk d-sk3"></i><i class="d-sk d-sk4"></i></div><div class="d-dim" aria-hidden="true"></div>'
     + '<aside class="s-rail">'
     + '<p class="s-avail"><i aria-hidden="true"></i>' + esc(S.avail) + '</p>'
     + '<h1 class="s-name">Ahmed<br>Grabus</h1>'
@@ -66,9 +72,11 @@ export function classicHTML(PF, lang) {
     + '<button type="button" data-copy="' + C.email + '"><i class="s-qi s-qi-mail" aria-hidden="true"></i>Email</button></p>'
     + '<button type="button" class="s-room" data-room><b>' + esc(S.roomT) + '</b><i aria-hidden="true">→</i></button>'
     + '<nav class="s-nav" aria-label="' + esc(S.navLabel) + '">' + nav + '</nav>'
+    + '<p class="d-brand">' + LOGO + '<span>Ahmed Grabus<br>' + esc(T.role) + '</span></p>'
     + '<p class="s-foot"><span class="s-time" data-time>Mostar</span><span>© 2026 Graba</span></p>'
     + '</aside>'
     + '<div class="s-stage">'
+    + '<button type="button" class="s-close" data-close aria-label="' + esc(S.close) + '"><i aria-hidden="true"></i></button>'
     + '<section class="s-panel s-work on" id="work" data-panel="work" aria-labelledby="work-h">'
     + '<header class="s-ph"><p class="s-k">' + esc(T.workK) + '</p><h2 id="work-h">' + em(T.workH) + '</h2>'
     + '<p class="s-count" aria-live="polite"><b data-cur>01</b><span> / ' + pad(n) + '</span></p>'

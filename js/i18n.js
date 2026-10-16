@@ -152,7 +152,7 @@ window.PF = {
       skip: 'Skip to content',
       tabs: { work: 'Work', services: 'Services', about: 'About', contact: 'Contact' },
       avail: 'Available for new projects', place: 'Bosnia and Herzegovina', navLabel: 'Sections',
-      roomT: 'Step into my room', nextT: 'Next', quickT: 'Write to me', prev: 'Previous project', next: 'Next project'
+      roomT: 'Step into my room', nextT: 'Next', quickT: 'Write to me', prev: 'Previous project', next: 'Next project', close: 'Close'
     },
     room: {
       loading: 'Loading projects...', press: 'PRESS ANY KEY TO START', tap: 'TAP TO START', nogl: 'This room needs WebGL. Opening the classic view.',
@@ -230,7 +230,7 @@ window.PF = {
       skip: 'Preskoči na sadržaj',
       tabs: { work: 'Radovi', services: 'Usluge', about: 'O meni', contact: 'Kontakt' },
       avail: 'Dostupan za nove projekte', place: 'Bosna i Hercegovina', navLabel: 'Dijelovi stranice',
-      roomT: 'Uđi u moju sobu', nextT: 'Sljedeći', quickT: 'Javi se', prev: 'Prethodni projekat', next: 'Sljedeći projekat'
+      roomT: 'Uđi u moju sobu', nextT: 'Sljedeći', quickT: 'Javi se', prev: 'Prethodni projekat', next: 'Sljedeći projekat', close: 'Zatvori'
     },
     room: {
       loading: 'Učitavam projekte...', press: 'PRITISNI BILO KOJU TIPKU', tap: 'DODIRNI ZA START', nogl: 'Ova soba traži WebGL. Otvaram klasičnu verziju.',
