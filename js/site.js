@@ -7,14 +7,6 @@ import { mostarWeather } from './mostar.js';
 
 const state = { tab: 'work', p: 0 };
 const narrow = matchMedia('(max-width: 899px)');
-// desktop: sadržaj se otvara u prozoru iznad slike sobe (meni dole lijevo)
-const html = document.documentElement;
-const winOpen = () => html.classList.contains('win-open');
-function openWin(on) {
-  if (narrow.matches) on = false;
-  html.classList.toggle('win-open', on);
-  if (!on) { try { history.replaceState(null, '', location.pathname + location.search); } catch (e) { /* nije bitno */ } }
-}
 let root = null, timeTimer = 0;
 
 export function initSite(el) {
@@ -22,7 +14,6 @@ export function initSite(el) {
   const h = (location.hash || '').slice(1);
   if (TABS.includes(h)) state.tab = h;
   setTab(state.tab, false, true);
-  openWin(TABS.includes(h));
   setProject(state.p, true);
   const projs = root.querySelector('[data-projs]');
   // mobitel: projekti se prevlače vodoravno, brojač prati koji je na sredini
@@ -81,18 +72,14 @@ mostarWeather().then((w) => { if (w.temp != null) { temp = w.temp; clock(); } })
 document.addEventListener('click', (e) => {
   if (!root || !root.contains(e.target)) return;
   const tab = e.target.closest('[data-tab]');
-  if (tab) { e.preventDefault(); openWin(true); setTab(tab.dataset.tab); return; }
-  if (winOpen() && !narrow.matches && e.target === root) { openWin(false); return; }
-  if (e.target.closest('[data-close]')) { const cur = root.querySelector('[data-tab][aria-current]'); openWin(false); if (cur) cur.focus(); return; }
+  if (tab) { e.preventDefault(); setTab(tab.dataset.tab); return; }
   const th = e.target.closest('[data-p]');
   if (th) { setProject(+th.dataset.p); return; }
   const st = e.target.closest('[data-step]');
   if (st) setProject(state.p + +st.dataset.step);
 });
 document.addEventListener('keydown', (e) => {
-  if (!root || !html.classList.contains('is-classic')) return;
-  if (e.key === 'Escape' && winOpen()) { const cur = root.querySelector('[data-tab][aria-current]'); openWin(false); if (cur) cur.focus(); return; }
-  if (state.tab !== 'work' || (!narrow.matches && !winOpen())) return;
+  if (!root || !document.documentElement.classList.contains('is-classic') || document.documentElement.classList.contains('is-z') || state.tab !== 'work') return;
   if (e.target.closest && e.target.closest('input, textarea')) return;
   if (e.key === 'ArrowRight') { e.preventDefault(); setProject(state.p + 1); }
   if (e.key === 'ArrowLeft') { e.preventDefault(); setProject(state.p - 1); }
@@ -118,4 +105,4 @@ document.addEventListener('pointermove', (e) => {
     if (!calm.matches) { shot.style.setProperty('--rx', ((0.5 - y) * 5).toFixed(2) + 'deg'); shot.style.setProperty('--ry', ((x - 0.5) * 7).toFixed(2) + 'deg'); }
   });
 }, { passive: true });
-addEventListener('hashchange', () => { const h = location.hash.slice(1); if (TABS.includes(h)) { openWin(true); setTab(h, false); } });
+addEventListener('hashchange',() => { const h = location.hash.slice(1); if (TABS.includes(h)) setTab(h, false); });

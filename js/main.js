@@ -54,6 +54,7 @@ function applyLang() {
   cl.dataset.ready = '1';
   syncView(); syncSound();
   if (state.room) state.room.setLang(state.lang);
+  document.dispatchEvent(new CustomEvent('graba:lang'));
 }
 function setLang(l) {
   if (l !== 'en' && l !== 'bs') return;
@@ -174,3 +175,11 @@ function start(room, gesture) {
 applyLang();
 if (!isClassic() && canRoom) boot();
 else html.classList.add('is-classic');
+
+/* ---------- desktop: stranica sa IT žirafom ---------- */
+if (html.classList.contains('is-z')) {
+  Promise.all([import('../assets/vendor/d3-delaunay.min.js'), document.fonts ? document.fonts.load('11px "Space Mono"') : 0])
+    .then(() => import('./z/site.js'))
+    .then((m) => m.initZ({ PF, getLang: () => state.lang }))
+    .catch(() => { html.classList.remove('is-z'); });
+}

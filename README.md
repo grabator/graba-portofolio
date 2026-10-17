@@ -26,7 +26,9 @@ Po sobi se može malo prošetati: prevlačenjem mišem ili prstom okreće se pog
 
 Svjetlo kroz krovni prozor prati pravo doba dana u Mostaru (Europe/Sarajevo), a kad u Mostaru pada kiša (Open-Meteo), kapi klize niz staklo. Zidni sat pokazuje mostarsko vrijeme.
 
-**Glavna stranica je obična verzija** (i na desktopu i na mobitelu). Na desktopu izgleda kao glavni meni igre: preko cijelog ekrana je slika moje sobe (`assets/soba.webp`, ispisana iz 3D sobe) sa laganim CSS animacijama (svjetlosne trake, akvarijum, neoni, dim), dole lijevo je meni i logo GRABA (slova pretvorena u SVG putanju, bez dodatnog fonta), a dole desno kontakt, sat i temperatura. Klik na stavku menija otvara prozor sa sadržajem iznad slike (zatvara se dugmetom ×, tipkom Esc ili klikom pored prozora). U prozoru blago svjetlo prati miš, a slika projekta se lagano nagne prema mišu. Tu su brzi kontakt (Viber, WhatsApp, email), sat i temperatura u Mostaru, i četiri dijela, Radovi, Usluge, O meni i Kontakt, koji staju na jedan ekran, bez dugog listanja. Projekti se gledaju jedan po jedan: velika slika i opis, a mijenjaju se sličicama, strelicama ili tipkama ← →, na mobitelu prevlačenjem. Sav sadržaj je i u `index.html` kao pravi HTML, zbog Googlea.
+**Na desktopu je "IT žirafa".** Crno-bijela stranica u kojoj je žirafa nacrtana od znakova koda (`{ } [ ] < > / = ; 0 1`), sa mrljama po Voronoi uzorku i nekoliko zelenih riječi (`graba`, `build()`, `ship()`). Žirafa savija vrat i okreće glavu prema mišu, oko prati kursor, povremeno trepne, a znakovi se stalno tiho mijenjaju. Stranica ima sedam dijelova: početak ("Vidim dalje. Pravim bolje."), manifest koji se odmotava u perspektivi, radove poredane uz vrat koji raste nadolje dok se lista, brojke koje se odbroje, usluge i način rada, o meni i kontakt, gdje žirafa izviruje sa strane. Meni se razvlači iz jednog dugmeta, naslovi se "dešifruju" kad se pojave, a gore desno je sat u Mostaru. Uključuje se kad uređaj nije na dodir i ekran je širok bar 900 px; ako nešto ne uspije, ostaje obična verzija. Kad je uključeno "smanji pokrete", sve stoji mirno.
+
+**Na mobitelu i tabletu je obična verzija.** Tu su brzi kontakt (Viber, WhatsApp, email), sat i temperatura u Mostaru, i četiri dijela, Radovi, Usluge, O meni i Kontakt. Projekti se gledaju jedan po jedan, a mijenjaju se sličicama ili prevlačenjem. Sav sadržaj je i u `index.html` kao pravi HTML, zbog Googlea.
 
 **3D soba postoji samo na mobitelu i tabletu** (uređaji na dodir). Ulazi se karticom "Uđi u moju sobu". Na desktopu se three.js nikad ne učitava. Na bočnim zidovima sobe su uramljeni dresovi: lijevo ÖZIL 10, EZE 10, RICE 41 i ØDEGAARD 8 (Arsenal), desno DŽEKO 11 (BiH), IBRAHIMOVIĆ 10 (PSG), SCHWEINSTEIGER 31 (Bayern) i FÉLIX 79 (Al-Nassr). Klik na dres otvara karticu igrača: svi klubovi kroz karijeru sa utakmicama i golovima (gdje su poznate i asistencijama), reprezentacija, trofeji i zanimljivost. Uz svaku tabelu piše obuhvat i izvor podataka (`PF.players` u `js/i18n.js`). Pored obje stolice je nargila: klik na stolicu te posjedne, crijevo dođe prema tebi, držiš usnik da povučeš (žar se zažari, voda klokoće), a kad pustiš, dim izađe ispred tebe i raširi se po sobi. Dok sjediš, pogled se može okretati. Iza leđa su vrata, a klik na njih vraća na običnu verziju. Na zadnjem zidu je u sredini sat (mostarsko vrijeme i trenutna temperatura u Mostaru), a pored njega dva neona: lijevo lopta, desno nargila. Uz akvarijum su dvije LED trake, lijevo hladna, desno topla. Lijevo je taktička tabla kao u svlačionici (teren sa magnetima 4-3-3 i bilješke za SquadJury i FPL, klik otvara SquadJury na monitoru), a ispod nje mali gol sa loptom (klik je šut u gol). Desno je polica MyShishapedia sa pravim logom (`assets/myshishapedia.png`) i 20 okusa iz baze MyShishapedije (klik otvara taj projekat na monitoru). Sve konzerve su jedna geometrija i jedna tekstura, da soba ostane lagana na mobitelu.
 
@@ -44,10 +46,13 @@ Bez frameworka i bez build koraka: HTML, CSS i JavaScript moduli.
 - `js/post.js` bloom, filmsko zrno, vinjeta i blaga hromatska aberacija.
 - `js/crt.js` ekran računara (canvas tekstura), `js/textures.js` plakat, sat, ceduljice.
 - `js/mostar.js` vrijeme i kiša u Mostaru, `js/sound.js` zvuk napravljen u WebAudio, bez audio fajlova.
+- `js/z/site.js` desktop stranica sa žirafom (tekstovi, raspored, skrol efekti), `js/z/giraffe.js` žirafa od znakova na canvasu, `js/z/neck.js` vrat kroz dio Radovi.
 - `js/classic.js` HTML obične verzije; isti kod pravi i statični HTML (`tools/staticno.mjs`).
-- three.js (r169) je lokalno u `assets/vendor/`, fontovi (VT323, Inter Tight, SIL OFL) u `assets/fonts/`.
+- three.js (r169) je lokalno u `assets/vendor/`, fontovi (VT323, Inter Tight, Space Mono, Anton, SIL OFL) u `assets/fonts/`. Mrlje žirafe računa d3-delaunay (ISC), isto lokalno u `assets/vendor/`.
 
-Kvalitet se sam prilagođava: ako je kadar sporiji od 25 ms, prvo se smanji rezolucija, pa se ugasi bloom, pa sjene. Kad tab nije vidljiv ili je otvorena klasična verzija, soba se ne crta.
+Žirafa se crta samo dok je na ekranu i dok je tab vidljiv; na sporom računaru preskače svaki drugi kadar.
+
+Kvalitet sobe se sam prilagođava: ako je kadar sporiji od 25 ms, prvo se smanji rezolucija, pa se ugasi bloom, pa sjene. Kad tab nije vidljiv ili je otvorena klasična verzija, soba se ne crta.
 
 ## Pokretanje
 
