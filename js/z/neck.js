@@ -1,6 +1,7 @@
 /*
  * Vrat kroz dio "Radovi": dugačka traka od znakova koda koja raste nadolje dok se skrola.
- * Canvas je "sticky" (visok koliko ekran) i crta samo dio vrata koji se trenutno vidi.
+ * Cijela traka se iscrta jednom u visoku sliku; "sticky" canvas (visok koliko ekran) iz nje svaki kadar
+ * prepiše samo dio koji se trenutno vidi.
  */
 const SPOT_CH = '01{}[]<>/=+*;:$#&', GAP_CH = '·.:';
 
@@ -47,58 +48,59 @@ export function createNeckStrip(host, canvas, onReveal) {
       cellCh[k] = cellB[k] ? (r() * SPOT_CH.length) | 0 : SPOT_CH.length + ((r() * GAP_CH.length) | 0);
     }
   }
+  let strip = null, sdpr = 1;
   function buildAtlas() {
     const all = SPOT_CH + GAP_CH; cw = Math.ceil(11 * 0.8 * dpr) + 2; chh = Math.ceil(11 * 1.4 * dpr);
     atlas = document.createElement('canvas'); atlas.width = cw * all.length; atlas.height = chh;
     const a = atlas.getContext('2d'); a.fillStyle = '#fff'; a.font = (11 * dpr) + 'px "Space Mono", monospace'; a.textAlign = 'center'; a.textBaseline = 'middle';
     for (let i = 0; i < all.length; i++) a.fillText(all[i], i * cw + cw / 2, chh / 2);
   }
+  // cijela traka (znakovi, ivice, griva) se iscrta jednom u jednu visoku sliku
+  const cwC = () => Math.floor(STEP_X * sdpr), chC = () => Math.floor(STEP_Y * sdpr);
+  function paint(k, clear) {
+    const j = (k / cols) | 0, i = k - j * cols, y = j * STEP_Y + STEP_Y / 2, x = cx(y) - half + STEP_X / 2 + i * STEP_X;
+    const c = strip.getContext('2d'), w = cwC(), h = chh > chC() ? chC() : chh, px = Math.round(x * sdpr - w / 2), py = Math.round(y * sdpr - h / 2);
+    if (clear) c.clearRect(px, py, w, h);
+    c.globalAlpha = alpha[cellB[k]];
+    c.drawImage(atlas, cellCh[k] * cw + ((cw - w) >> 1), (chh - h) >> 1, w, h, px, py, w, h);
+  }
+  function buildStrip() {
+    sdpr = Math.min(dpr, 16000 / Math.max(1, len));
+    strip = document.createElement('canvas'); strip.width = Math.ceil(W * sdpr); strip.height = Math.ceil(len * sdpr);
+    const c = strip.getContext('2d');
+    for (let k = 0; k < cols * rows; k++) paint(k, false);
+    c.globalAlpha = 1; c.setTransform(sdpr, 0, 0, sdpr, 0, 0);
+    c.strokeStyle = 'rgba(255,255,255,.85)'; c.lineWidth = 1.6;
+    for (const side of [-1, 1]) { c.beginPath(); for (let y = 0; y <= len; y += 6) { const x = cx(y) + side * (half + 4); if (y) c.lineTo(x, y); else c.moveTo(x, y); } c.stroke(); }
+    c.strokeStyle = 'rgba(255,255,255,.3)'; c.lineWidth = 3; c.lineCap = 'round'; c.beginPath();
+    for (let y = 0; y <= len; y += 14) { const x = cx(y) + half + 6, l = 6 + ((y / 14) % 3) * 3; c.moveTo(x, y); c.lineTo(x + l, y - 2); }
+    c.stroke(); c.setTransform(1, 0, 0, 1, 0, 0);
+  }
   function resize() {
     const rc = canvas.getBoundingClientRect(); W = rc.width; H = rc.height;
     dpr = Math.min(devicePixelRatio || 1, 1.5); canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
-    build(); buildAtlas(); measure(); reveal = reduced ? len : Math.min(reveal, target); draw();
+    build(); buildAtlas(); buildStrip(); measure(); reveal = reduced ? len : Math.min(reveal, target); draw();
   }
   function measure() {
     const top = host.getBoundingClientRect().top;
     target = reduced ? len : Math.max(0, Math.min(len, innerHeight * 0.72 - top));
   }
   const alpha = [0.16, ...Array.from({ length: 10 }, (_, k) => 0.55 + k / 22)];
+  let off = 0;
   function draw() {
-    const top = host.getBoundingClientRect().top;          // vrh trake u odnosu na ekran
-    const cTop = canvas.getBoundingClientRect().top;       // sticky canvas
-    const off = cTop - top;                                // koliko je trake iznad canvasa
+    off = canvas.getBoundingClientRect().top - host.getBoundingClientRect().top;   // koliko je trake iznad sticky canvasa
     g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, canvas.width, canvas.height);
-    const y0 = Math.max(0, Math.floor(off / STEP_Y) - 1), y1 = Math.min(rows, Math.ceil((off + H) / STEP_Y) + 1);
-    const lim = reveal;
-    let lastA = -1;
-    for (let j = y0; j < y1; j++) {
-      const y = j * STEP_Y + STEP_Y / 2; if (y > lim) break;
-      const c = cx(y), sy = (y - off) * dpr;
-      for (let i = 0; i < cols; i++) {
-        const k = j * cols + i, b = cellB[k];
-        if (b !== lastA) { g.globalAlpha = alpha[b]; lastA = b; }
-        const x = (c - half + STEP_X / 2 + i * STEP_X) * dpr;
-        g.drawImage(atlas, cellCh[k] * cw, 0, cw, chh, x - cw / 2, sy - chh / 2, cw, chh);
-      }
+    const lim = reveal, y0 = Math.max(0, off), y1 = Math.min(lim, off + H);
+    if (y1 > y0) {
+      const k = dpr / sdpr;
+      g.drawImage(strip, 0, y0 * sdpr, strip.width, (y1 - y0) * sdpr, 0, (y0 - off) * dpr, strip.width * k, (y1 - y0) * dpr);
     }
-    g.globalAlpha = 1; g.setTransform(dpr, 0, 0, dpr, 0, 0);
-    // ivice vrata i griva
-    const a = Math.max(0, off - 20), bEnd = Math.min(lim, off + H + 20);
-    if (bEnd > a) {
-      g.strokeStyle = 'rgba(255,255,255,.85)'; g.lineWidth = 1.6; g.beginPath();
-      for (let y = a; y <= bEnd; y += 6) { const x = cx(y) - half - 4; if (y === a) g.moveTo(x, y - off); else g.lineTo(x, y - off); }
-      g.stroke(); g.beginPath();
-      for (let y = a; y <= bEnd; y += 6) { const x = cx(y) + half + 4; if (y === a) g.moveTo(x, y - off); else g.lineTo(x, y - off); }
-      g.stroke();
-      g.strokeStyle = 'rgba(255,255,255,.3)'; g.lineWidth = 3; g.lineCap = 'round'; g.beginPath();
-      for (let y = Math.ceil(a / 14) * 14; y <= bEnd; y += 14) { const x = cx(y) + half + 6, l = 6 + ((y / 14) % 3) * 3; g.moveTo(x, y - off); g.lineTo(x + l, y - off - 2); }
-      g.stroke();
-      // čelo rasta: svijetla linija gdje vrat trenutno raste
-      if (lim < len - 2 && lim > off && lim < off + H) {
-        const y = lim - off, c = cx(lim), gr = g.createLinearGradient(c - half - 30, 0, c + half + 30, 0);
-        gr.addColorStop(0, 'rgba(125,255,176,0)'); gr.addColorStop(0.5, 'rgba(125,255,176,.9)'); gr.addColorStop(1, 'rgba(125,255,176,0)');
-        g.fillStyle = gr; g.fillRect(c - half - 30, y - 1, half * 2 + 60, 2);
-      }
+    // čelo rasta: svijetla linija gdje vrat trenutno raste
+    g.setTransform(dpr, 0, 0, dpr, 0, 0);
+    if (lim < len - 2 && lim > off && lim < off + H) {
+      const y = lim - off, c = cx(lim), gr = g.createLinearGradient(c - half - 30, 0, c + half + 30, 0);
+      gr.addColorStop(0, 'rgba(125,255,176,0)'); gr.addColorStop(0.5, 'rgba(125,255,176,.9)'); gr.addColorStop(1, 'rgba(125,255,176,0)');
+      g.fillStyle = gr; g.fillRect(c - half - 30, y - 1, half * 2 + 60, 2);
     }
   }
   function tick(now) {
@@ -107,7 +109,10 @@ export function createNeckStrip(host, canvas, onReveal) {
     reveal += (target - reveal) * 0.12;
     if (Math.abs(target - reveal) < 0.5) reveal = target;
     onReveal(reveal);
-    if (now - lastTick > 83) { lastTick = now; const n = Math.round(cols * Math.min(rows, Math.ceil(H / STEP_Y)) * 0.04); const j0 = Math.max(0, Math.floor((canvas.getBoundingClientRect().top - host.getBoundingClientRect().top) / STEP_Y)); for (let q = 0; q < n; q++) { const k = (j0 + ((r() * (H / STEP_Y)) | 0)) * cols + ((r() * cols) | 0); if (k < cellCh.length) cellCh[k] = cellB[k] ? (r() * SPOT_CH.length) | 0 : SPOT_CH.length + ((r() * GAP_CH.length) | 0); } }
+    if (now - lastTick > 83) {
+      lastTick = now; const j0 = Math.max(0, Math.floor(off / STEP_Y)), vis = Math.min(rows - j0, Math.ceil(H / STEP_Y)), n = Math.round(cols * vis * 0.03);
+      for (let q = 0; q < n; q++) { const k = (j0 + ((r() * vis) | 0)) * cols + ((r() * cols) | 0); if (k < cellCh.length) { cellCh[k] = cellB[k] ? (r() * SPOT_CH.length) | 0 : SPOT_CH.length + ((r() * GAP_CH.length) | 0); paint(k, true); } }
+    }
     draw();
   }
   let visible = false;

@@ -11,19 +11,19 @@ const Z = {
   bs: {
     nav: ['Radovi', 'Usluge', 'O meni', 'Kontakt'], cta: 'Javi se', menu: 'Meni', h1: ['Vidim', 'dalje.'], h2: ['Pravim', 'bolje.'], wm: 'Vidim dalje',
     heroP: 'Ahmed Grabus, softverski inženjer iz BiH. Pravim brze i lijepe web stranice i full-stack proizvode, od baze do zadnje animacije.',
-    gaze: 'pogled → kursor', secs: ['početak', 'ko sam', 'radovi', 'u brojkama', 'usluge', 'o meni', 'kontakt'],
-    nums: ['Projekata', 'Uživo na internetu', 'Alata i tehnologija', 'Jezika'], servSide: 'Od ideje do objave.', proc: 'Proces', tools: 'Alati',
+    gaze: 'pogled → kursor', secs: ['početak', 'ko sam', 'radovi', 'svi projekti', 'u brojkama', 'usluge', 'o meni', 'kontakt'],
+    nums: ['Projekata', 'Uživo na internetu', 'Alata i tehnologija', 'Jezika'], servSide: 'Od ideje do objave.', allH: 'Sve na *jednom* mjestu.', allBtn: 'Pogledaj sve', allP: 'Svaki projekat na jednom ekranu. Klikni na sliku za stranicu uživo.', proc: 'Proces', tools: 'Alati',
     live: 'Uživo', code: 'Kod', copy: 'Kopiraj email', copied: 'Kopirano ✓', ch: ['Telefon', 'Viber', 'WhatsApp', 'GitHub'], logo: 'graba, na vrh stranice', skip: 'Preskoči na sadržaj'
   },
   en: {
     nav: ['Work', 'Services', 'About', 'Contact'], cta: 'Get in touch', menu: 'Menu', h1: ['I see', 'further.'], h2: ['I build', 'better.'], wm: 'I see further',
     heroP: 'Ahmed Grabus, software engineer from Bosnia and Herzegovina. I build fast, beautiful websites and full-stack products, from the database to the last animation.',
-    gaze: 'gaze → cursor', secs: ['start', 'who I am', 'work', 'in numbers', 'services', 'about', 'contact'],
-    nums: ['Projects', 'Live on the web', 'Tools and technologies', 'Languages'], servSide: 'From idea to launch.', proc: 'Process', tools: 'Tools',
+    gaze: 'gaze → cursor', secs: ['start', 'who I am', 'work', 'all projects', 'in numbers', 'services', 'about', 'contact'],
+    nums: ['Projects', 'Live on the web', 'Tools and technologies', 'Languages'], servSide: 'From idea to launch.', allH: 'Everything in *one* place.', allBtn: 'See all', allP: 'Every project on one screen. Click a picture to open the live site.', proc: 'Process', tools: 'Tools',
     live: 'Live', code: 'Source', copy: 'Copy email', copied: 'Copied ✓', ch: ['Phone', 'Viber', 'WhatsApp', 'GitHub'], logo: 'graba, back to top', skip: 'Skip to content'
   }
 };
-const IDS = ['pocetak', 'ko-sam', 'radovi', 'brojke', 'usluge', 'o-meni', 'kontakt'];
+const IDS = ['pocetak', 'ko-sam', 'radovi', 'projekti', 'brojke', 'usluge', 'o-meni', 'kontakt'];
 const NAV_IDS = ['radovi', 'usluge', 'o-meni', 'kontakt'];
 const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789{}[]<>/=+*;:$#&';
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -93,6 +93,14 @@ function html(PF, lang) {
       + '<p class="z-cl">' + (w.live ? '<a class="z-btn z-solid" href="' + w.live + '" ' + ext + '>' + esc(t.live) + ' ↗</a>' : '') + (w.src ? '<a class="z-btn" href="' + w.src + '" ' + ext + '>' + esc(t.code) + ' ↗</a>' : '') + '</p>'
       + '</article></li>';
   }).join('');
+  const all = PF.work.map((w, i) => {
+    const [name, kind] = T.items[w.id], href = w.live || w.src;
+    return '<li class="z-up" style="--d:' + ((i % 3) * 0.08 + Math.floor(i / 3) * 0.06).toFixed(2) + 's">'
+      + (href ? '<a class="z-tile" href="' + href + '" ' + ext + '>' : '<div class="z-tile">')
+      + '<span class="z-tn">' + pad(i + 1) + '</span><figure class="z-shot">' + cover(w, name) + '</figure>'
+      + '<span class="z-tm"><b>' + esc(name) + '</b><small>' + esc(kind) + ' · ' + w.year + '</small></span><i aria-hidden="true">' + (href ? '↗' : '') + '</i>'
+      + (href ? '</a>' : '</div>') + '</li>';
+  }).join('');
   const nums = [[PF.work.length, t.nums[0]], [PF.work.filter((w) => w.live).length, t.nums[1]], [PF.stack.length, t.nums[2]], [2, t.nums[3]]]
     .map(([n, l], i) => '<div class="z-up" style="--d:' + (i * 0.15) + 's"><b data-count="' + n + '">0</b><span>' + esc(l) + '</span></div>').join('');
   const serv = T.services.map(([h, p], i) => '<li class="z-up" style="--d:' + (i * 0.1) + 's"><span class="z-n">' + pad(i + 1) + '</span><h3>' + esc(h) + '</h3><p>' + esc(p) + '</p></li>').join('');
@@ -109,7 +117,7 @@ function html(PF, lang) {
     + '<div class="z-pill z-menu"><button type="button" class="z-hb" aria-expanded="false" aria-controls="z-links" aria-label="' + esc(t.menu) + '"><i></i><i></i><i></i></button><nav id="z-links" class="z-links" aria-label="' + esc(t.menu) + '">' + nav + '</nav></div>'
     + '</div><div class="z-right"><div class="z-lang" role="group" aria-label="Jezik / Language"><button type="button" data-lang="bs" aria-pressed="' + (lang === 'bs') + '">BS</button><button type="button" data-lang="en" aria-pressed="' + (lang === 'en') + '">EN</button></div>'
     + '<a class="z-cta" href="#kontakt" data-zgo="kontakt"><i aria-hidden="true"></i><span data-scr="' + esc(t.cta) + '">' + esc(t.cta) + '</span></a></div></header>'
-    + '<p class="z-metarow" aria-hidden="true"><span><b data-zsec>01</b> / 07 · <span data-zsecn>' + esc(t.secs[0]) + '</span></span><span data-ztime>Mostar</span></p>'
+    + '<p class="z-metarow" aria-hidden="true"><span><b data-zsec>01</b> / 08 · <span data-zsecn>' + esc(t.secs[0]) + '</span></span><span data-ztime>Mostar</span></p>'
     + '<main id="z-main">'
     // 1. početak
     + '<section class="z-hero" id="pocetak" aria-labelledby="z-h1"><div class="z-dots"></div><p class="z-wm" aria-hidden="true">' + esc(t.wm) + '</p>'
@@ -121,19 +129,21 @@ function html(PF, lang) {
     // 2. ko sam
     + '<section class="z-man" id="ko-sam" aria-labelledby="z-man-k"><p class="z-k" id="z-man-k">02 · ' + esc(t.secs[1]) + '</p><div class="z-persp"><p class="z-mtext">' + esc(manifest) + '</p></div></section>'
     // 3. radovi
-    + '<section class="z-work" id="radovi" aria-labelledby="z-work-h"><header class="z-sh"><p class="z-k">03 · ' + esc(t.secs[2]) + '</p><h2 id="z-work-h" data-sin2>' + em(T.workH) + '</h2></header>'
+    + '<section class="z-work" id="radovi" aria-labelledby="z-work-h"><header class="z-sh"><p class="z-k">03 · ' + esc(t.secs[2]) + '</p><h2 id="z-work-h" data-sin2>' + em(T.workH) + '</h2><p><a class="z-btn" href="#projekti" data-zgo="projekti"><span data-scr="' + esc(t.allBtn) + '">' + esc(t.allBtn) + '</span>&nbsp;↓</a></p></header>'
     + '<div class="z-neck"><div class="z-neckhost"><canvas class="z-neckcv" aria-hidden="true"></canvas></div><ol class="z-cards">' + works + '</ol></div></section>'
     // 4. brojke
-    + '<section class="z-nums" id="brojke" aria-labelledby="z-nums-k"><div class="z-dots"></div><p class="z-k z-up" id="z-nums-k">04 · ' + esc(t.secs[3]) + '</p><div class="z-ngrid">' + nums + '</div></section>'
+    + '<section class="z-all" id="projekti" aria-labelledby="z-all-h"><header class="z-sh"><p class="z-k">04 · ' + esc(t.secs[3]) + '</p><h2 id="z-all-h" class="z-up">' + em(t.allH) + '</h2><p class="z-cp z-up" style="--d:.1s">' + esc(t.allP) + '</p></header><ol class="z-agrid">' + all + '</ol></section>'
+
+    + '<section class="z-nums" id="brojke" aria-labelledby="z-nums-k"><div class="z-dots"></div><p class="z-k z-up" id="z-nums-k">05 · ' + esc(t.secs[4]) + '</p><div class="z-ngrid">' + nums + '</div></section>'
     // 5. usluge
-    + '<section class="z-serv" id="usluge" aria-labelledby="z-serv-h"><canvas class="z-ghost" aria-hidden="true"></canvas><div class="z-stop"><div><p class="z-k">05 · ' + esc(t.secs[4]) + '</p><h2 id="z-serv-h" class="z-up">' + em(T.servH) + '</h2></div><p class="z-side z-up" style="--d:.2s">' + esc(t.servSide) + '</p></div>'
+    + '<section class="z-serv" id="usluge" aria-labelledby="z-serv-h"><canvas class="z-ghost" aria-hidden="true"></canvas><div class="z-stop"><div><p class="z-k">06 · ' + esc(t.secs[5]) + '</p><h2 id="z-serv-h" class="z-up">' + em(T.servH) + '</h2></div><p class="z-side z-up" style="--d:.2s">' + esc(t.servSide) + '</p></div>'
     + '<ul class="z-sgrid">' + serv + '</ul><div class="z-proc"><p class="z-k">' + esc(t.proc) + '</p><ol>' + proc + '</ol></div></section>'
     // 6. o meni
-    + '<section class="z-about" id="o-meni" aria-labelledby="z-about-h"><div><p class="z-k">06 · ' + esc(t.secs[5]) + '</p><h2 id="z-about-h" class="z-up">' + em(T.aboutH) + '</h2><dl class="z-facts z-up" style="--d:.15s">' + facts + '</dl></div>'
+    + '<section class="z-about" id="o-meni" aria-labelledby="z-about-h"><div><p class="z-k">07 · ' + esc(t.secs[6]) + '</p><h2 id="z-about-h" class="z-up">' + em(T.aboutH) + '</h2><dl class="z-facts z-up" style="--d:.15s">' + facts + '</dl></div>'
     + '<div><p class="z-k">' + esc(t.tools) + '</p><ul class="z-chips z-up" style="--d:.25s">' + stack + '</ul></div></section>'
     // 7. kontakt
     + '<section class="z-contact" id="kontakt" aria-labelledby="z-contact-h"><div class="z-dots"></div><div class="z-chead"><canvas class="z-ccv" aria-hidden="true"></canvas></div>'
-    + '<div class="z-cbody"><p class="z-k">07 · ' + esc(t.secs[6]) + '</p><h2 id="z-contact-h" class="z-up">' + em(T.contactH) + '</h2><p class="z-cp z-up" style="--d:.1s">' + esc(T.contactP) + '</p>'
+    + '<div class="z-cbody"><p class="z-k">08 · ' + esc(t.secs[7]) + '</p><h2 id="z-contact-h" class="z-up">' + em(T.contactH) + '</h2><p class="z-cp z-up" style="--d:.1s">' + esc(T.contactP) + '</p>'
     + '<button type="button" class="z-mail z-up" style="--d:.2s" data-zcopy="' + esc(C.email) + '"><span>' + esc(C.email) + '</span><small data-zcopied>' + esc(t.copy) + '</small></button>'
     + '<ul class="z-chans z-up" style="--d:.3s">' + chans + '</ul>'
     + '<p class="z-foot">© 2026 Graba · ' + esc(T.foot) + '</p></div></section>'
@@ -261,7 +271,7 @@ function render(PF, lang) {
   if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
     let cx = innerWidth / 2, cy = innerHeight / 2, tx = cx, ty = cy, craf = 0;
     const move = (e) => { tx = e.clientX; ty = e.clientY; cur.classList.add('on'); const inHero = !!(e.target.closest && e.target.closest('.z-hero')); gaze.classList.toggle('out', !inHero); if (!gazeShown && inHero) { gazeShown = true; gaze.classList.add('on'); gT = setTimeout(() => gaze.classList.add('gone'), 5000); } cur.classList.toggle('big', !!(e.target.closest && e.target.closest('a, button'))); if (!craf) craf = requestAnimationFrame(loop); };
-    const loop = () => { cx += (tx - cx) * 0.25; cy += (ty - cy) * 0.25; cur.style.transform = 'translate(' + cx.toFixed(1) + 'px,' + cy.toFixed(1) + 'px)'; gaze.style.transform = 'translate(' + (cx + 22).toFixed(1) + 'px,' + (cy - 10).toFixed(1) + 'px)'; craf = Math.abs(tx - cx) + Math.abs(ty - cy) > 0.3 ? requestAnimationFrame(loop) : 0; };
+    const loop = () => { cx += (tx - cx) * 0.5; cy += (ty - cy) * 0.5; cur.style.transform = 'translate(' + cx.toFixed(1) + 'px,' + cy.toFixed(1) + 'px)'; gaze.style.transform = 'translate(' + (cx + 22).toFixed(1) + 'px,' + (cy - 10).toFixed(1) + 'px)'; craf = Math.abs(tx - cx) + Math.abs(ty - cy) > 0.3 ? requestAnimationFrame(loop) : 0; };
     addEventListener('pointermove', move, { passive: true });
     const leave = () => cur.classList.remove('on');
     document.addEventListener('mouseleave', leave);

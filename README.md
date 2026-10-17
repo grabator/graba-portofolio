@@ -26,7 +26,7 @@ Po sobi se može malo prošetati: prevlačenjem mišem ili prstom okreće se pog
 
 Svjetlo kroz krovni prozor prati pravo doba dana u Mostaru (Europe/Sarajevo), a kad u Mostaru pada kiša (Open-Meteo), kapi klize niz staklo. Zidni sat pokazuje mostarsko vrijeme.
 
-**Na desktopu je "IT žirafa".** Crno-bijela stranica u kojoj je žirafa nacrtana od znakova koda (`{ } [ ] < > / = ; 0 1`), sa mrljama po Voronoi uzorku i nekoliko zelenih riječi (`graba`, `build()`, `ship()`). Žirafa savija vrat i okreće glavu prema mišu, oko prati kursor, povremeno trepne, a znakovi se stalno tiho mijenjaju. Stranica ima sedam dijelova: početak ("Vidim dalje. Pravim bolje."), manifest koji se odmotava u perspektivi, radove poredane uz vrat koji raste nadolje dok se lista, brojke koje se odbroje, usluge i način rada, o meni i kontakt, gdje žirafa izviruje sa strane. Meni se razvlači iz jednog dugmeta, naslovi se "dešifruju" kad se pojave, a gore desno je sat u Mostaru. Uključuje se kad uređaj nije na dodir i ekran je širok bar 900 px; ako nešto ne uspije, ostaje obična verzija. Kad je uključeno "smanji pokrete", sve stoji mirno.
+**Na desktopu je "IT žirafa".** Crno-bijela stranica u kojoj je žirafa nacrtana od znakova koda (`{ } [ ] < > / = ; 0 1`), sa mrljama po Voronoi uzorku i nekoliko zelenih riječi (`graba`, `build()`, `ship()`). Žirafa savija vrat i okreće glavu prema mišu na sve strane: gore, dolje, a kad je miš desno od nje, okrene glavu nadesno. Oko prati kursor, povremeno trepne, a znakovi se stalno tiho mijenjaju. Stranica ima osam dijelova: početak ("Vidim dalje. Pravim bolje."), manifest koji se odmotava u perspektivi, radove poredane uz vrat koji raste nadolje dok se lista, sve projekte na jednom ekranu (mreža 3 x 3, dugme "Pogledaj sve" u Radovima), brojke koje se odbroje, usluge i način rada, o meni i kontakt, gdje žirafa izviruje sa strane. Meni se razvlači iz jednog dugmeta, naslovi se "dešifruju" kad se pojave, a gore desno je sat u Mostaru. Uključuje se kad uređaj nije na dodir i ekran je širok bar 900 px; ako nešto ne uspije, ostaje obična verzija. Kad je uključeno "smanji pokrete", sve stoji mirno.
 
 **Na mobitelu i tabletu je obična verzija.** Tu su brzi kontakt (Viber, WhatsApp, email), sat i temperatura u Mostaru, i četiri dijela, Radovi, Usluge, O meni i Kontakt. Projekti se gledaju jedan po jedan, a mijenjaju se sličicama ili prevlačenjem. Sav sadržaj je i u `index.html` kao pravi HTML, zbog Googlea.
 
@@ -50,7 +50,7 @@ Bez frameworka i bez build koraka: HTML, CSS i JavaScript moduli.
 - `js/classic.js` HTML obične verzije; isti kod pravi i statični HTML (`tools/staticno.mjs`).
 - three.js (r169) je lokalno u `assets/vendor/`, fontovi (VT323, Inter Tight, Space Mono, Anton, SIL OFL) u `assets/fonts/`. Mrlje žirafe računa d3-delaunay (ISC), isto lokalno u `assets/vendor/`.
 
-Žirafa se crta samo dok je na ekranu i dok je tab vidljiv; na sporom računaru preskače svaki drugi kadar.
+Znakovi žirafe se ne crtaju svaki kadar: glava i vrat se jednom iscrtaju u sliku, a u petlji se glava samo zarotira i okrene, a vrat iscrta u tankim trakama koliko se savio. Kad se znak promijeni, prepiše se samo njegovo polje. Vrat u Radovima je isto jedna slika iz koje se prepisuje vidljivi dio. Žirafa se crta samo dok je na ekranu i dok je tab vidljiv; ako je računar spor, slika se crta u manjoj rezoluciji.
 
 Kvalitet sobe se sam prilagođava: ako je kadar sporiji od 25 ms, prvo se smanji rezolucija, pa se ugasi bloom, pa sjene. Kad tab nije vidljiv ili je otvorena klasična verzija, soba se ne crta.
 
