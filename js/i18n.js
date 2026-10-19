@@ -9,7 +9,7 @@ window.PF = {
     github: 'https://github.com/grabator'
   },
   credit: { name: 'Andrea Jorgensen', site: 'hideou.se', url: 'https://hideou.se' },
-  exe: { myshishapedia: 'MYSHISHA.EXE', squadjury: 'SQUADJURY.EXE', salon: 'GLAZE.EXE', lounge: 'LOUNGE.EXE', svecana: 'SVECANA.EXE', planinka: 'PLANINKA.EXE', mostar: 'MOSTAR.EXE', grabpoints: 'GRABPTS.EXE', apoteke: 'APOTEKE.EXE' },
+  exe: { myshishapedia: 'MYSHISHA.EXE', squadjury: 'SQUADJURY.EXE', salon: 'GLAZE.EXE', lounge: 'LOUNGE.EXE', svecana: 'SVECANA.EXE', planinka: 'PLANINKA.EXE', ashiana: 'ASHIANA.EXE', mostar: 'MOSTAR.EXE', grabpoints: 'GRABPTS.EXE', apoteke: 'APOTEKE.EXE' },
   // dresovi u sobi: osnovni podaci o karijeri (klubovi, reprezentacija, trofeji)
   players: {
     ozil: {
@@ -99,6 +99,7 @@ window.PF = {
     { id: 'lounge', year: '2026', img: 'assets/work/exclusive-lounge.jpg', live: 'https://rezervacije-production-6f84.up.railway.app/r/exclusive/rezervacije', src: 'https://github.com/grabator/exclusive-lounge-caffe-rezervacije', tags: ['Angular 19', '.NET 10', 'SQLite', 'Railway'] },
     { id: 'svecana', year: '2026', img: 'assets/work/svecana-sala.jpg', live: 'https://svecana-sala.grabafaceit.workers.dev/', src: 'https://github.com/grabator/svecana-sala', tags: ['JavaScript', 'Cloudflare Workers', 'Google Calendar', 'i18n'] },
     { id: 'planinka', year: '2026', img: 'assets/work/planinka.jpg', live: 'https://planinka.grabafaceit.workers.dev/', src: 'https://github.com/grabator/planinka', tags: ['JavaScript', 'SVG', 'Cloudflare'] },
+    { id: 'ashiana', year: '2026', img: 'assets/work/ashiana-cafe.jpg', live: 'https://ashiana-cafe.grabafaceit.workers.dev/', src: 'https://github.com/grabator/ashiana-cafe', tags: ['JavaScript', 'HTML', 'CSS', 'Cloudflare Workers'] },
     { id: 'mostar', year: '2026', img: 'assets/work/old-bridge-mostar.jpg', src: 'https://github.com/grabator/old-bridge-mostar', tags: ['JavaScript', 'SVG', 'Scroll animation'] },
     { id: 'grabpoints', year: '2025', art: 'pitch', src: 'https://github.com/grabator/IB210176-seminarski-rs2', tags: ['.NET 10', 'RabbitMQ', 'ONNX', 'Flutter', 'Docker'] },
     { id: 'apoteke', year: '2025', art: 'map', src: 'https://github.com/grabator/dezurne-apoteke', tags: ['Next.js 16', 'React 19', 'PWA'] }
@@ -117,6 +118,7 @@ window.PF = {
       squadjury: ['SquadJury', 'Web app · Fantasy football', 'Fantasy Premier League managers post their squad with one screenshot and the community rates it from 1 to 10 before the deadline. The squad is read in the browser (OCR), with head to head duels, private leagues, real points after each gameweek and badges. Full stack on Cloudflare Workers, D1 and R2.'],
       salon: ['Glaze Nail Studio', 'Website · Nail salon', 'A website for a nail salon: try a polish colour, shape and style on a realistic hand drawn in SVG, browse designs by style and season, get shades that match an outfit photo and send a booking inquiry to Viber or WhatsApp in three steps. Three languages, installable as an app.'],
       svecana: ['Svečana sala', 'Website · Wedding venue', 'A demo site for wedding venues: an availability calendar synced from Google Calendar through a Cloudflare Worker, an instant price estimate, inquiries straight to Viber, viewing booking and a guest page with a QR code.'],
+      ashiana: ['Café Ashiana', 'Website · Shisha lounge', 'A website proposal for a shisha lounge and halal restaurant in Derby, UK: the full menu with search, a shisha flavour list, a live open or closed status by London time, a lounge gallery, FAQ and one-tap calling, directions and ordering.'],
       mostar: ['Old Bridge Mostar', 'Website · Scroll story', 'A cinematic scroll story about Mostar. Layered SVG scenes of the Old Bridge and the Neretva, a diver leaping from the arch, and an endless places slider, all drawn in code.'],
       planinka: ['Planinka', 'Website · Mountain cabin', 'A website for a mountain cabin on Vlašić: seasonal prices with a stay calculator, live weather, a gallery and booking inquiries to Viber or WhatsApp. Bosnian, English and German.'],
       grabpoints: ['GrabPoints', 'Product · Fantasy football', 'A Fantasy Premier League companion with ML-driven predictions for points, captain picks and transfers. A .NET 10 API and worker over RabbitMQ, a Flutter mobile app and a desktop admin.'],
@@ -195,6 +197,7 @@ window.PF = {
       squadjury: ['SquadJury', 'Web aplikacija · Fantasy fudbal', 'Igrači Fantasy Premier Leaguea objave svoj tim jednim screenshotom, a zajednica ga ocijeni od 1 do 10 prije deadlinea. Tim se čita u pregledniku (OCR), uz duele, privatne lige, stvarne bodove poslije kola i značke. Cijeli sistem na Cloudflare Workers, D1 i R2.'],
       salon: ['Glaze Nail Studio', 'Web stranica · Salon za nokte', 'Stranica za salon za nokte: isprobavanje boje, oblika i stila na realistično nacrtanoj ruci u SVG-u, galerija dizajna po stilu i godišnjem dobu, prijedlog nijanse uz fotografiju outfita i upit za termin na Viber ili WhatsApp u tri koraka. Tri jezika, može se instalirati kao aplikacija.'],
       svecana: ['Svečana sala', 'Web stranica · Svadbeni salon', 'Demo stranica za svadbene salone: kalendar slobodnih datuma povezan sa Google Kalendarom preko Cloudflare Workera, okvirna cijena odmah, upit na Viber, zakazivanje razgledanja i stranica za goste sa QR kodom.'],
+      ashiana: ['Café Ashiana', 'Web stranica · Shisha lounge', 'Prijedlog stranice za shisha lounge i halal restoran u Derbyju, Engleska: cijeli meni sa pretragom, lista okusa nargile, status otvoreno ili zatvoreno po londonskom vremenu, galerija, česta pitanja i poziv, put i narudžba jednim dodirom.'],
       mostar: ['Old Bridge Mostar', 'Web stranica · Priča na skrol', 'Filmska priča o Mostaru dok skrolate. Slojevite SVG scene Starog mosta i Neretve, skakač sa mosta i beskonačna lista mjesta, sve nacrtano u kodu.'],
       planinka: ['Planinka', 'Web stranica · Vikendica', 'Stranica za vikendicu na Vlašiću: sezonske cijene sa kalkulatorom, vrijeme uživo, galerija i upit za rezervaciju na Viber ili WhatsApp. Bosanski, engleski i njemački.'],
       grabpoints: ['GrabPoints', 'Proizvod · Fantasy fudbal', 'Pomoćnik za Fantasy Premier League sa ML predviđanjima bodova, kapitena i transfera. .NET 10 API i worker preko RabbitMQ-a, Flutter mobilna aplikacija i desktop admin.'],
