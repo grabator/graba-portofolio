@@ -35,7 +35,7 @@ export function classicHTML(PF, lang) {
   const langs = '<div class="g-langs" role="group" aria-label="' + esc(T.room.lang) + '">'
     + ['bs', 'en'].map((l) => '<button type="button" data-lang="' + l + '" aria-pressed="' + (l === lang) + '">' + l.toUpperCase() + '</button>').join('') + '</div>';
 
-  const nav = '<header class="g-nav"><a class="g-logo" href="#top" aria-label="Graba"><i aria-hidden="true">G</i>graba</a>'
+  const nav = '<header class="g-nav"><a class="g-logo" href="#top" aria-label="Ahmed Grabus">AHMED <span class="g-box">GRABUS</span></a>'
     + '<nav class="g-links" aria-label="' + esc(S.navLabel) + '">' + G.nav.map((t, i) => '<a href="#' + TABS[i] + '">' + esc(t) + '</a>').join('') + '</nav>'
     + '<div class="g-nav-r">' + langs + '<a class="g-btn g-pr g-sm" href="#contact">' + esc(G.cta) + '</a></div></header>';
 
@@ -43,7 +43,7 @@ export function classicHTML(PF, lang) {
   const faces = ['casa-montana.jpg', 'ashiana-cafe.jpg', 'beauty-salon.jpg'].map((f) => '<img src="assets/work/' + f + '" alt="" width="40" height="40" decoding="async">').join('');
 
   const hero = '<section class="g-hero" id="top"><div class="g-hero-txt">'
-    + '<div class="g-who"><i aria-hidden="true">G</i><div><b>Ahmed Grabus</b><small>' + esc(T.role) + ' · ' + esc(S.place) + '</small></div></div>'
+    + '<div class="g-who"><i aria-hidden="true">AG</i><div><b>Ahmed Grabus</b><small>' + esc(T.role) + ' · ' + esc(S.place) + '</small></div></div>'
     + '<h1 class="g-h1">' + esc(G.h1a) + ' <span class="g-box">' + esc(G.h1b) + '</span></h1>'
     + '<p class="g-lead">' + esc(G.lead) + '</p>'
     + '<p class="g-btns"><a class="g-btn g-pr" href="#contact">' + esc(G.cta) + '</a><a class="g-btn g-po" href="#work">' + esc(G.ctaWork) + '</a></p>'
