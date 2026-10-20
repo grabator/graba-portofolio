@@ -9,7 +9,7 @@ window.PF = {
     github: 'https://github.com/grabator'
   },
   credit: { name: 'Andrea Jorgensen', site: 'hideou.se', url: 'https://hideou.se' },
-  exe: { myshishapedia: 'MYSHISHA.EXE', squadjury: 'SQUADJURY.EXE', salon: 'GLAZE.EXE', lounge: 'LOUNGE.EXE', svecana: 'SVECANA.EXE', planinka: 'PLANINKA.EXE', ashiana: 'ASHIANA.EXE', mostar: 'MOSTAR.EXE', grabpoints: 'GRABPTS.EXE', apoteke: 'APOTEKE.EXE' },
+  exe: { casa: 'CASAMONT.EXE', myshishapedia: 'MYSHISHA.EXE', squadjury: 'SQUADJURY.EXE', salon: 'GLAZE.EXE', lounge: 'LOUNGE.EXE', svecana: 'SVECANA.EXE', planinka: 'PLANINKA.EXE', ashiana: 'ASHIANA.EXE', mostar: 'MOSTAR.EXE', grabpoints: 'GRABPTS.EXE', apoteke: 'APOTEKE.EXE' },
   // dresovi u sobi: osnovni podaci o karijeri (klubovi, reprezentacija, trofeji)
   players: {
     ozil: {
@@ -93,6 +93,7 @@ window.PF = {
     }
   },
   work: [
+    { id: 'casa', year: '2026', client: true, img: 'assets/work/casa-montana.jpg', phone: 'assets/work/casa-mobile.webp', live: 'https://casamontanavlasic.com/', src: 'https://github.com/grabator/casa-montana', tags: ['JavaScript', 'HTML', 'CSS', 'Cloudflare Workers'] },
     { id: 'myshishapedia', year: '2025', img: 'assets/work/myshishapedia.jpg', live: 'https://myshishapedia.com', src: 'https://github.com/grabator/myshishapedia', tags: ['JavaScript', 'Node.js', 'SVG', 'Cloudflare Pages'] },
     { id: 'squadjury', year: '2026', img: 'assets/work/squadjury.jpg', live: 'https://squadjury.com', src: 'https://github.com/grabator/squadjury', tags: ['JavaScript', 'Cloudflare Workers', 'D1', 'OCR'] },
     { id: 'salon', year: '2026', img: 'assets/work/beauty-salon.jpg', live: 'https://beauty-salon.grabafaceit.workers.dev/', src: 'https://github.com/grabator/beauty-salon', tags: ['JavaScript', 'SVG', 'PWA', 'Cloudflare Workers'] },
@@ -114,6 +115,7 @@ window.PF = {
     workK: 'Selected work', workH: 'Things I designed, built and *shipped.*',
     view: 'View', live: 'Live site', code: 'Source', liveTag: 'Live',
     items: {
+      casa: ['Casa Montana', 'Client · Mountain apartments', 'Mountain apartments on Vlašić. A website in three languages with real photos and video, inquiries straight to Viber, WhatsApp and email, both phone numbers, and a Google Business Profile set up so guests find it on Maps.'],
       myshishapedia: ['MyShishapedia', 'Web app · Encyclopedia', 'A bilingual hookah flavor encyclopedia: ingredient breakdowns, flavor profiles, comparisons, a mixer and a quiz. A custom static site generator prerenders 190+ pages, with fuzzy search and shareable story cards.'],
       squadjury: ['SquadJury', 'Web app · Fantasy football', 'Fantasy Premier League managers post their squad with one screenshot and the community rates it from 1 to 10 before the deadline. The squad is read in the browser (OCR), with head to head duels, private leagues, real points after each gameweek and badges. Full stack on Cloudflare Workers, D1 and R2.'],
       salon: ['Glaze Nail Studio', 'Website · Nail salon', 'A website for a nail salon: try a polish colour, shape and style on a realistic hand drawn in SVG, browse designs by style and season, get shades that match an outfit photo and send a booking inquiry to Viber or WhatsApp in three steps. Three languages, installable as an app.'],
@@ -150,6 +152,26 @@ window.PF = {
     credit: 'Room inspired by',
     role: 'Software engineer',
     hero: 'I build fast, beautiful websites and full-stack products, from the database to the last animation.',
+    g: {
+      nav: ['Services', 'Work', 'Process', 'Contact'],
+      avail: 'Available for new projects',
+      h1a: 'Your business online,', h1b: 'done right.',
+      lead: 'Websites for apartments, cafés and salons. Fast on mobile, in several languages, with inquiries straight to Viber and WhatsApp.',
+      cta: 'Get a quote', ctaWork: 'See my work', room: 'Step into my room', roomSub: '3D room · touch devices',
+      chips: [['Live', 'casamontanavlasic.com'], ['Inquiry on Viber', 'with dates and number of guests'], ['BS · EN · DE', 'three languages']],
+      trust: 'and other local businesses',
+      featK: 'Latest project · Client · 2026',
+      res: [['3', 'languages (BS, EN, DE)'], ['28', 'photos and 5 videos'], ['3', 'ways to send an inquiry'], ['1', 'Google Maps profile, set up']],
+      tagsF: ['Design', 'Build', 'Google Maps'],
+      servH: 'Services', servSub: 'Everything made to measure, no templates.',
+      serv: [['Apartments and stays', 'gallery · inquiry · Maps'], ['Cafés and restaurants', 'menu · reservations'], ['Salons and services', 'online booking'], ['Web applications', '.NET · Angular · Next.js · Flutter']],
+      procH: 'How I work',
+      proc: [['Talk', 'What you need and who your guests are.'], ['Proposal', 'A first look at your site.'], ['Build', 'Your photos, texts and changes.'], ['Launch', 'Domain, Google and support after.']],
+      moreH: 'More work', moreSub: 'Websites, web apps and my own products.',
+      live: 'Live', source: 'Source',
+      contactH: 'Let\'s build something good.', contactP: 'Tell me about your idea or your business. I usually reply the same day.',
+      copy: 'Copy email', foot: 'Designed and built by Ahmed Grabus.', place: 'Mostar, Bosnia and Herzegovina'
+    },
     site: {
       skip: 'Skip to content',
       tabs: { work: 'Work', services: 'Services', about: 'About', contact: 'Contact' },
@@ -193,6 +215,7 @@ window.PF = {
     workK: 'Izabrani radovi', workH: 'Stvari koje sam dizajnirao, napravio i *objavio.*',
     view: 'Pogledaj', live: 'Otvori stranicu', code: 'Kod', liveTag: 'Uživo',
     items: {
+      casa: ['Casa Montana', 'Klijent · Planinski apartmani', 'Planinski apartmani na Vlašiću. Stranica na tri jezika sa pravim slikama i videom, upit direktno na Viber, WhatsApp i email, oba broja telefona i sređen Google profil da ih gosti nađu na mapi.'],
       myshishapedia: ['MyShishapedia', 'Web aplikacija · Enciklopedija', 'Dvojezična enciklopedija okusa za nargile: sastojci, profili okusa, poređenja, mikser i kviz. Vlastiti generator unaprijed pravi 190+ stranica, uz pametnu pretragu i kartice za dijeljenje.'],
       squadjury: ['SquadJury', 'Web aplikacija · Fantasy fudbal', 'Igrači Fantasy Premier Leaguea objave svoj tim jednim screenshotom, a zajednica ga ocijeni od 1 do 10 prije deadlinea. Tim se čita u pregledniku (OCR), uz duele, privatne lige, stvarne bodove poslije kola i značke. Cijeli sistem na Cloudflare Workers, D1 i R2.'],
       salon: ['Glaze Nail Studio', 'Web stranica · Salon za nokte', 'Stranica za salon za nokte: isprobavanje boje, oblika i stila na realistično nacrtanoj ruci u SVG-u, galerija dizajna po stilu i godišnjem dobu, prijedlog nijanse uz fotografiju outfita i upit za termin na Viber ili WhatsApp u tri koraka. Tri jezika, može se instalirati kao aplikacija.'],
@@ -229,6 +252,26 @@ window.PF = {
     credit: 'Soba inspirisana radom',
     role: 'Softverski inženjer',
     hero: 'Pravim brze i lijepe web stranice i full-stack proizvode, od baze do zadnje animacije.',
+    g: {
+      nav: ['Usluge', 'Radovi', 'Kako radim', 'Kontakt'],
+      avail: 'Slobodan za nove projekte',
+      h1a: 'Vaš biznis na internetu,', h1b: 'urađen kako treba.',
+      lead: 'Stranice za smještaj, kafiće i salone. Brze na mobitelu, na više jezika, sa upitima direktno na Viber i WhatsApp.',
+      cta: 'Zatraži ponudu', ctaWork: 'Pogledaj radove', room: 'Uđi u moju sobu', roomSub: '3D soba · samo na mobitelu',
+      chips: [['Stranica je live', 'casamontanavlasic.com'], ['Upit stiže na Viber', 'sa datumima i brojem gostiju'], ['BS · EN · DE', 'tri jezika']],
+      trust: 'i drugi lokalni biznisi',
+      featK: 'Najnoviji projekat · Klijent · 2026',
+      res: [['3', 'jezika (BS, EN, DE)'], ['28', 'slika i 5 videa'], ['3', 'načina za upit'], ['1', 'sređen Google Maps profil']],
+      tagsF: ['Dizajn', 'Izrada', 'Google Maps'],
+      servH: 'Usluge', servSub: 'Sve po mjeri, bez šablona.',
+      serv: [['Smještaj i apartmani', 'galerija · upit · Maps'], ['Kafići i restorani', 'meni · rezervacije'], ['Saloni i usluge', 'zakazivanje'], ['Web aplikacije', '.NET · Angular · Next.js · Flutter']],
+      procH: 'Kako radim',
+      proc: [['Razgovor', 'Šta vam treba i ko su vaši gosti.'], ['Prijedlog', 'Prvi izgled stranice.'], ['Izrada', 'Vaše slike, tekstovi i izmjene.'], ['Objava', 'Domena, Google i podrška poslije.']],
+      moreH: 'Ostali radovi', moreSub: 'Stranice, web aplikacije i moji proizvodi.',
+      live: 'Uživo', source: 'Kod',
+      contactH: 'Napravimo nešto dobro.', contactP: 'Pišite mi o ideji ili biznisu. Obično odgovorim istog dana.',
+      copy: 'Kopiraj email', foot: 'Dizajnirao i napravio Ahmed Grabus.', place: 'Mostar, Bosna i Hercegovina'
+    },
     site: {
       skip: 'Preskoči na sadržaj',
       tabs: { work: 'Radovi', services: 'Usluge', about: 'O meni', contact: 'Kontakt' },

@@ -3,7 +3,7 @@
   Referrer-Policy: strict-origin-when-cross-origin
   X-Frame-Options: DENY
   Permissions-Policy: camera=(), microphone=(), geolocation=()
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'sha256-vC1cI8dsE+n7/tOWiTdyWrs/uTTwRFrXF3P1WYIg31Y=' 'sha256-jFQv5hNfJ9dLyYCx2teDhiP8gpqCosjUKpDo44kiG1A='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://api.open-meteo.com; frame-ancestors 'none'; base-uri 'self'; form-action 'none'; object-src 'none'
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'sha256-vC1cI8dsE+n7/tOWiTdyWrs/uTTwRFrXF3P1WYIg31Y=' 'sha256-c8O5t5Za1BATMcFpV8a/uee+42PejBqIn4F5FX66GVE='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://api.open-meteo.com; frame-ancestors 'none'; base-uri 'self'; form-action 'none'; object-src 'none'
 
 /
   Cache-Control: public, max-age=0, must-revalidate
