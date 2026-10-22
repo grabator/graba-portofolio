@@ -22,7 +22,18 @@ const IC = {
   mail: '<rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M4 7l8 6 8-6"/>',
   phone: '<path d="M6.5 3.5l3 3-2 2.5a12 12 0 0 0 7.5 7.5l2.5-2 3 3-2 2.5C11 20 4 13 4 5.5z"/>',
   gh: '<path d="M9 19c-4 1.3-4-2-6-2.5m12 4.5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.7 4.7 0 0 0-1.3-3.2 4.3 4.3 0 0 0-.1-3.2s-1-.3-3.4 1.3a11.6 11.6 0 0 0-6 0C6.8 2.8 5.8 3.1 5.8 3.1a4.3 4.3 0 0 0-.1 3.2A4.7 4.7 0 0 0 4.4 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/>',
-  room: '<path d="M3 10l9-6 9 6v10H3z"/><path d="M9 20v-6h6v6"/>'
+  room: '<path d="M3 10l9-6 9 6v10H3z"/><path d="M9 20v-6h6v6"/>',
+  home: '<path d="M3 11l9-7 9 7"/><path d="M5 9.5V20h14V9.5"/><path d="M10 20v-5h4v5"/>',
+  cup: '<path d="M4 8h13v5a6 6 0 0 1-6 6h-1a6 6 0 0 1-6-6z"/><path d="M17 10h1.5a2.5 2.5 0 0 1 0 5H17"/><path d="M8 3c0 1.5 1 1.5 1 3M12 3c0 1.5 1 1.5 1 3"/>',
+  spark: '<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8z"/>',
+  code: '<path d="M8 8l-4 4 4 4M16 8l4 4-4 4M13.5 5l-3 14"/>',
+  mobile: '<rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/>',
+  chat: '<path d="M4 5h16v11H9l-5 4z"/><path d="M8 10h8M8 13h5"/>',
+  lang: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.8 2.5 15.2 0 18M12 3c-2.5 2.8-2.5 15.2 0 18"/>',
+  pin: '<path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>',
+  globe: '<rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M3 9h18M7 6.5h.01M10 6.5h.01"/>',
+  tool: '<path d="M14.5 6.5a4 4 0 0 0 5 5L12 19a2.1 2.1 0 0 1-3-3l7.5-7.5a4 4 0 0 0-2-2z"/>',
+  arrow: '<path d="M5 12h14M13 6l6 6-6 6"/>'
 };
 const ic = (k) => '<svg class="g-ic" viewBox="0 0 24 24" aria-hidden="true">' + IC[k] + '</svg>';
 
@@ -43,13 +54,19 @@ export function classicHTML(PF, lang) {
   const faces = ['casa-montana.jpg', 'ashiana-cafe.jpg', 'beauty-salon.jpg'].map((f) => '<img src="assets/work/' + f + '" alt="" width="40" height="40" decoding="async">').join('');
 
   const hero = '<section class="g-hero" id="top"><div class="g-hero-txt">'
-    + '<div class="g-who"><i aria-hidden="true">AG</i><div><b>Ahmed Grabus</b><small>' + esc(T.role) + ' · ' + esc(S.place) + '</small></div></div>'
+    + '<div class="g-who"><i aria-hidden="true">AG</i><div><b>Ahmed Grabus</b><small>' + esc(T.role) + ' · ' + esc(S.place) + '</small></div><span class="g-avail">' + esc(G.avail) + '</span></div>'
     + '<h1 class="g-h1">' + esc(G.h1a) + ' <span class="g-box">' + esc(G.h1b) + '</span></h1>'
     + '<p class="g-lead">' + esc(G.lead) + '</p>'
     + '<p class="g-btns"><a class="g-btn g-pr" href="#contact">' + esc(G.cta) + '</a><a class="g-btn g-po" href="#work">' + esc(G.ctaWork) + '</a></p>'
     + '<button type="button" class="g-room" data-room>' + ic('room') + '<span><b>' + esc(G.room) + '</b><small>' + esc(G.roomSub) + '</small></span><i aria-hidden="true">→</i></button>'
     + '<p class="g-trust"><span class="g-faces">' + faces + '</span><span><b>' + esc(fName) + '</b> ' + esc(G.trust) + '</span></p>'
     + '</div><div class="g-stage" aria-hidden="true"><div class="g-glow"></div><div class="g-phone"><img src="' + feat.phone + '" alt="" width="560" height="1212" decoding="async"></div>' + chips + '</div></section>';
+
+  const tick = G.ticker.map((x) => '<li>' + esc(x) + '</li>').join('');
+  const ticker = '<div class="g-tick" aria-hidden="true"><ul>' + tick + tick + '</ul></div>';
+
+  const why = '<section class="g-sec g-why" aria-labelledby="why-h"><p class="g-kick">' + esc(G.whyK) + '</p><h2 class="g-an" id="why-h">' + esc(G.whyH.toUpperCase()) + '</h2>'
+    + '<ul class="g-why-l">' + G.why.map(([k, a, b]) => '<li><span class="g-why-i">' + ic(k) + '</span><b>' + esc(a) + '</b><span>' + esc(b) + '</span></li>').join('') + '</ul></section>';
 
   const res = G.res.map(([a, b]) => '<li><b>' + esc(a) + '</b><span>' + esc(b) + '</span></li>').join('');
   const featTags = G.tagsF.map((t) => '<li>' + esc(t) + '</li>').join('') + '<li><a href="' + feat.live + '" ' + ext + '>' + esc(feat.live.replace(/^https?:\/\//, '').replace(/\/$/, '')) + ' ↗</a></li>';
@@ -59,7 +76,11 @@ export function classicHTML(PF, lang) {
     + '<div class="g-phone g-phone-sm" aria-hidden="true"><img src="' + feat.phone + '" alt="" width="560" height="1212" loading="lazy" decoding="async"></div></div></article>'
     + '<ul class="g-res">' + res + '</ul></section>';
 
-  const serv = G.serv.map(([a, b]) => '<li><b>' + esc(a) + '</b><span>' + esc(b) + '</span></li>').join('');
+  const serv = G.serv.map(([a, b], i) => {
+    const w = PF.work.find((x) => x.id === G.servW[i]);
+    const ex = w ? '<a class="g-serv-ex" href="' + (w.live || w.src) + '" ' + ext + '>' + esc(G.servEx) + ': ' + esc(T.items[w.id][0]) + ' ↗</a>' : '';
+    return '<li><span class="g-serv-i">' + ic(G.servI[i]) + '</span><div><b>' + esc(a) + '</b><p>' + esc(G.servD[i]) + '</p><span class="g-serv-t">' + esc(b) + '</span>' + ex + '</div></li>';
+  }).join('');
   const proc = G.proc.map(([a, b], i) => '<li><span class="g-n">' + pad(i + 1) + '</span><b>' + esc(a) + '</b><span>' + esc(b) + '</span></li>').join('');
   const cols = '<section class="g-sec g-cols"><div id="services"><h2 class="g-an">' + esc(G.servH.toUpperCase()) + '</h2><p class="g-sub">' + esc(G.servSub) + '</p><ul class="g-serv">' + serv + '</ul></div>'
     + '<div id="process"><h2 class="g-an">' + esc(G.procH.toUpperCase()) + '</h2><ol class="g-proc">' + proc + '</ol></div></section>';
@@ -69,12 +90,17 @@ export function classicHTML(PF, lang) {
     const shot = w.img ? '<img src="' + w.img + '" alt="' + esc(name) + '" width="1200" height="675" loading="lazy" decoding="async">'
       : '<div class="s-art s-art-' + w.art + '" aria-hidden="true"><span>' + esc(name) + '</span></div>';
     const links = (w.live ? '<a href="' + w.live + '" ' + ext + '>' + esc(G.live) + ' ↗</a>' : '') + (w.src ? '<a href="' + w.src + '" ' + ext + '>' + esc(G.source) + ' ↗</a>' : '');
-    return '<li class="g-card"><figure>' + shot + '</figure><div class="g-card-t"><div><h3>' + esc(name) + '</h3><p>' + esc(kind) + ' · ' + w.year + '</p></div><p class="g-card-l">' + links + '</p></div></li>';
+    const tags = (w.tags || []).slice(0, 3).map((t) => '<span>' + esc(t) + '</span>').join('');
+    const wide = ['myshishapedia', 'squadjury', 'grabpoints', 'apoteke'].includes(w.id);
+    return '<li class="g-card' + (wide ? ' g-card-w' : '') + '" data-cat="' + (w.cat || 'biz') + '"><figure>' + shot + '<p class="g-card-tags">' + tags + '</p></figure><div class="g-card-t"><div><h3>' + esc(name) + '</h3><p>' + esc(kind) + ' · ' + w.year + '</p></div><p class="g-card-l">' + links + '</p></div></li>';
   };
   const more = '<section class="g-sec g-more" aria-labelledby="more-h"><div class="g-head"><h2 class="g-an" id="more-h">' + esc(G.moreH.toUpperCase()) + '</h2><p class="g-sub">' + esc(G.moreSub) + '</p></div>'
+    + '<div class="g-filt" role="group" aria-label="' + esc(G.moreH) + '">' + G.filt.map(([k, t], i) => '<button type="button" data-f="' + k + '" aria-pressed="' + (i === 0) + '">' + esc(t) + '</button>').join('') + '</div>'
     + '<ul class="g-grid">' + others.map(card).join('') + '</ul></section>';
 
-  const contact = '<section class="g-sec g-contact" id="contact" aria-labelledby="contact-h"><h2 class="g-an" id="contact-h">' + esc(G.contactH.toUpperCase()) + '</h2><p class="g-sub">' + esc(G.contactP) + '</p>'
+  const contact = '<section class="g-sec g-contact" id="contact" aria-labelledby="contact-h">'
+    + '<div class="g-band"><p>' + esc(G.ctaBand) + '</p><a class="g-btn g-wa" href="' + C.whatsapp + '" ' + ext + '>' + ic('wa') + esc(G.ctaWa) + '</a></div>'
+    + '<h2 class="g-an" id="contact-h">' + esc(G.contactH.toUpperCase()) + '</h2><p class="g-sub">' + esc(G.contactP) + '</p>'
     + '<button type="button" class="g-mail" data-copy="' + C.email + '"><span>' + C.email + '</span><small>' + esc(G.copy) + '</small></button>'
     + '<ul class="g-chan"><li><a href="' + C.viber + '">' + ic('viber') + '<span>' + esc(T.viber) + '</span><b>' + C.phone + '</b></a></li>'
     + '<li><a href="' + C.whatsapp + '" ' + ext + '>' + ic('wa') + '<span>' + esc(T.whatsapp) + '</span><b>' + C.phone + '</b></a></li>'
@@ -84,5 +110,5 @@ export function classicHTML(PF, lang) {
 
   const dock = '<nav class="g-dock" aria-label="' + esc(S.quickT) + '"><a class="g-d-v" href="' + C.viber + '">' + ic('viber') + 'Viber</a><a class="g-d-w" href="' + C.whatsapp + '" ' + ext + '>' + ic('wa') + 'WhatsApp</a><button type="button" data-copy="' + C.email + '">' + ic('mail') + 'Email</button></nav>';
 
-  return '<div class="g">' + nav + hero + featured + cols + more + contact + '</div>' + dock;
+  return '<div class="g">' + nav + hero + ticker + featured + why + cols + more + contact + '</div>' + dock;
 }

@@ -93,17 +93,17 @@ window.PF = {
     }
   },
   work: [
-    { id: 'casa', year: '2026', client: true, img: 'assets/work/casa-montana.jpg', phone: 'assets/work/casa-mobile.webp', live: 'https://casamontanavlasic.com/', src: 'https://github.com/grabator/casa-montana', tags: ['JavaScript', 'HTML', 'CSS', 'Cloudflare Workers'] },
-    { id: 'myshishapedia', year: '2025', img: 'assets/work/myshishapedia.jpg', live: 'https://myshishapedia.com', src: 'https://github.com/grabator/myshishapedia', tags: ['JavaScript', 'Node.js', 'SVG', 'Cloudflare Pages'] },
-    { id: 'squadjury', year: '2026', img: 'assets/work/squadjury.jpg', live: 'https://squadjury.com', src: 'https://github.com/grabator/squadjury', tags: ['JavaScript', 'Cloudflare Workers', 'D1', 'OCR'] },
-    { id: 'salon', year: '2026', img: 'assets/work/beauty-salon.jpg', live: 'https://beauty-salon.grabafaceit.workers.dev/', src: 'https://github.com/grabator/beauty-salon', tags: ['JavaScript', 'SVG', 'PWA', 'Cloudflare Workers'] },
-    { id: 'lounge', year: '2026', img: 'assets/work/exclusive-lounge.jpg', live: 'https://rezervacije-production-6f84.up.railway.app/r/exclusive/rezervacije', src: 'https://github.com/grabator/exclusive-lounge-caffe-rezervacije', tags: ['Angular 19', '.NET 10', 'SQLite', 'Railway'] },
-    { id: 'svecana', year: '2026', img: 'assets/work/svecana-sala.jpg', live: 'https://svecana-sala.grabafaceit.workers.dev/', src: 'https://github.com/grabator/svecana-sala', tags: ['JavaScript', 'Cloudflare Workers', 'Google Calendar', 'i18n'] },
-    { id: 'planinka', year: '2026', img: 'assets/work/planinka.jpg', live: 'https://planinka.grabafaceit.workers.dev/', src: 'https://github.com/grabator/planinka', tags: ['JavaScript', 'SVG', 'Cloudflare'] },
-    { id: 'ashiana', year: '2026', img: 'assets/work/ashiana-cafe.jpg', live: 'https://ashiana-cafe.grabafaceit.workers.dev/', src: 'https://github.com/grabator/ashiana-cafe', tags: ['JavaScript', 'HTML', 'CSS', 'Cloudflare Workers'] },
-    { id: 'mostar', year: '2026', img: 'assets/work/old-bridge-mostar.jpg', src: 'https://github.com/grabator/old-bridge-mostar', tags: ['JavaScript', 'SVG', 'Scroll animation'] },
-    { id: 'grabpoints', year: '2025', art: 'pitch', src: 'https://github.com/grabator/IB210176-seminarski-rs2', tags: ['.NET 10', 'RabbitMQ', 'ONNX', 'Flutter', 'Docker'] },
-    { id: 'apoteke', year: '2025', art: 'map', src: 'https://github.com/grabator/dezurne-apoteke', tags: ['Next.js 16', 'React 19', 'PWA'] }
+    { id: 'casa', cat: 'biz', year: '2026', client: true, img: 'assets/work/casa-montana.jpg', phone: 'assets/work/casa-mobile.webp', live: 'https://casamontanavlasic.com/', src: 'https://github.com/grabator/casa-montana', tags: ['JavaScript', 'HTML', 'CSS', 'Cloudflare Workers'] },
+    { id: 'myshishapedia', cat: 'app', year: '2025', img: 'assets/work/myshishapedia.jpg', live: 'https://myshishapedia.com', src: 'https://github.com/grabator/myshishapedia', tags: ['JavaScript', 'Node.js', 'SVG', 'Cloudflare Pages'] },
+    { id: 'squadjury', cat: 'app', year: '2026', img: 'assets/work/squadjury.jpg', live: 'https://squadjury.com', src: 'https://github.com/grabator/squadjury', tags: ['JavaScript', 'Cloudflare Workers', 'D1', 'OCR'] },
+    { id: 'salon', cat: 'biz', year: '2026', img: 'assets/work/beauty-salon.jpg', live: 'https://beauty-salon.grabafaceit.workers.dev/', src: 'https://github.com/grabator/beauty-salon', tags: ['JavaScript', 'SVG', 'PWA', 'Cloudflare Workers'] },
+    { id: 'lounge', cat: 'app', year: '2026', img: 'assets/work/exclusive-lounge.jpg', live: 'https://rezervacije-production-6f84.up.railway.app/r/exclusive/rezervacije', src: 'https://github.com/grabator/exclusive-lounge-caffe-rezervacije', tags: ['Angular 19', '.NET 10', 'SQLite', 'Railway'] },
+    { id: 'svecana', cat: 'biz', year: '2026', img: 'assets/work/svecana-sala.jpg', live: 'https://svecana-sala.grabafaceit.workers.dev/', src: 'https://github.com/grabator/svecana-sala', tags: ['JavaScript', 'Cloudflare Workers', 'Google Calendar', 'i18n'] },
+    { id: 'planinka', cat: 'biz', year: '2026', img: 'assets/work/planinka.jpg', live: 'https://planinka.grabafaceit.workers.dev/', src: 'https://github.com/grabator/planinka', tags: ['JavaScript', 'SVG', 'Cloudflare'] },
+    { id: 'ashiana', cat: 'biz', year: '2026', img: 'assets/work/ashiana-cafe.jpg', live: 'https://ashiana-cafe.grabafaceit.workers.dev/', src: 'https://github.com/grabator/ashiana-cafe', tags: ['JavaScript', 'HTML', 'CSS', 'Cloudflare Workers'] },
+    { id: 'mostar', cat: 'biz', year: '2026', img: 'assets/work/old-bridge-mostar.jpg', src: 'https://github.com/grabator/old-bridge-mostar', tags: ['JavaScript', 'SVG', 'Scroll animation'] },
+    { id: 'grabpoints', cat: 'app', year: '2025', art: 'pitch', src: 'https://github.com/grabator/IB210176-seminarski-rs2', tags: ['.NET 10', 'RabbitMQ', 'ONNX', 'Flutter', 'Docker'] },
+    { id: 'apoteke', cat: 'app', year: '2025', art: 'map', src: 'https://github.com/grabator/dezurne-apoteke', tags: ['Next.js 16', 'React 19', 'PWA'] }
   ],
   stack: ['.NET', 'C#', 'Angular', 'TypeScript', 'React', 'Next.js', 'JavaScript', 'Flutter', 'Dart', 'Java', 'Spring Boot', 'SQL Server', 'RabbitMQ', 'Docker', 'Cloudflare', 'Node.js', 'SVG', 'Git'],
 
@@ -168,6 +168,20 @@ window.PF = {
       procH: 'How I work',
       proc: [['Talk', 'What you need and who your guests are.'], ['Proposal', 'A first look at your site.'], ['Build', 'Your photos, texts and changes.'], ['Launch', 'Domain, Google and support after.']],
       moreH: 'More work', moreSub: 'Websites, web apps and my own products.',
+      filt: [['all', 'All'], ['biz', 'Business websites'], ['app', 'Apps and products']],
+      ticker: ['Apartments', 'Cafés', 'Restaurants', 'Shisha lounges', 'Salons', 'Wedding venues', 'Mountain cabins', 'Web apps'],
+      whyK: 'What you get', whyH: 'Everything a local business needs online',
+      why: [
+        ['mobile', 'Made for phones', 'Most of your guests find you on a phone, so the site is designed for mobile first.'],
+        ['chat', 'Inquiries on Viber and WhatsApp', 'A guest sends an inquiry in one tap and it lands straight on your phone.'],
+        ['lang', 'Several languages', 'Bosnian, English, German or whatever your guests speak.'],
+        ['pin', 'Found on Google Maps', 'I set up your Google Business Profile so people find you on the map.'],
+        ['globe', 'Your own domain', 'A site on your own name, like yourbusiness.com.'],
+        ['tool', 'Support after launch', 'New menu, prices or photos? I keep the site up to date after it goes live.']
+      ],
+      servEx: 'Example', servD: ['Gallery, inquiry with dates and guests, Google Maps.', 'Menu, opening hours, reservations.', 'Price list and booking inquiries.', 'Custom web apps, from booking systems to full products.'],
+      servI: ['home', 'cup', 'spark', 'code'], servW: ['casa', 'ashiana', 'salon', 'squadjury'],
+      ctaBand: 'Have a business without a website, or one that looks old? Send me a message and I will show you how it could look.', ctaWa: 'Message on WhatsApp',
       live: 'Live', source: 'Source',
       contactH: 'Let\'s build something good.', contactP: 'Tell me about your idea or your business. I usually reply the same day.',
       copy: 'Copy email', foot: 'Designed and built by Ahmed Grabus.', place: 'Mostar, Bosnia and Herzegovina'
@@ -268,6 +282,20 @@ window.PF = {
       procH: 'Kako radim',
       proc: [['Razgovor', 'Šta vam treba i ko su vaši gosti.'], ['Prijedlog', 'Prvi izgled stranice.'], ['Izrada', 'Vaše slike, tekstovi i izmjene.'], ['Objava', 'Domena, Google i podrška poslije.']],
       moreH: 'Ostali radovi', moreSub: 'Stranice, web aplikacije i moji proizvodi.',
+      filt: [['all', 'Sve'], ['biz', 'Stranice za biznise'], ['app', 'Aplikacije i proizvodi']],
+      ticker: ['Apartmani', 'Kafići', 'Restorani', 'Shisha lounge', 'Saloni', 'Svečane sale', 'Vikendice', 'Web aplikacije'],
+      whyK: 'Šta dobijate', whyH: 'Sve što lokalnom biznisu treba na internetu',
+      why: [
+        ['mobile', 'Napravljeno za mobitel', 'Većina gostiju vas traži na mobitelu, zato se stranica pravi prvo za mobitel.'],
+        ['chat', 'Upiti na Viber i WhatsApp', 'Gost pošalje upit jednim dodirom, a on stiže direktno na vaš telefon.'],
+        ['lang', 'Više jezika', 'Bosanski, engleski, njemački ili koji god jezik govore vaši gosti.'],
+        ['pin', 'Vidljivi na Google mapi', 'Sređujem vaš Google profil da vas ljudi nađu na mapi.'],
+        ['globe', 'Vaša domena', 'Stranica na vašem imenu, npr. vasbiznis.com.'],
+        ['tool', 'Podrška i poslije', 'Novi meni, cijene ili slike? Stranicu održavam i kad bude objavljena.']
+      ],
+      servEx: 'Primjer', servD: ['Galerija, upit sa datumima i brojem gostiju, Google mapa.', 'Meni, radno vrijeme, rezervacije.', 'Cjenovnik i upiti za termin.', 'Web aplikacije po mjeri, od rezervacija do cijelih proizvoda.'],
+      servI: ['home', 'cup', 'spark', 'code'], servW: ['casa', 'ashiana', 'salon', 'squadjury'],
+      ctaBand: 'Imate biznis bez stranice ili sa starom stranicom? Pošaljite poruku i pokazat ću vam kako bi mogla izgledati.', ctaWa: 'Piši na WhatsApp',
       live: 'Uživo', source: 'Kod',
       contactH: 'Napravimo nešto dobro.', contactP: 'Pišite mi o ideji ili biznisu. Obično odgovorim istog dana.',
       copy: 'Kopiraj email', foot: 'Dizajnirao i napravio Ahmed Grabus.', place: 'Mostar, Bosna i Hercegovina'

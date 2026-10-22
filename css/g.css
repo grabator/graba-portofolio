@@ -176,3 +176,81 @@
 }
 .is-classic .toast { bottom: calc(96px + env(safe-area-inset-bottom)); font: 600 15px/1.3 'Inter Tight', sans-serif; }
 @media (prefers-reduced-motion: reduce) { .rv { opacity: 1; transform: none; transition: none; } .g-btn, .g-card img { transition: none; } }
+
+/* ---------- dorada 10/2026: dostupnost, traka, "šta dobijate", usluge kao kartice, filteri, poziv na WhatsApp ---------- */
+.classic { overflow-x: clip; }
+.g-who { flex-wrap: wrap; }
+.g-avail { display: inline-flex; align-items: center; gap: 8px; margin-left: 6px; padding: 6px 12px; border-radius: 999px; border: 1px solid rgba(51, 209, 122, 0.35); background: rgba(51, 209, 122, 0.08); color: #b9f2cf; font-size: 13px; font-weight: 600; }
+.g-avail::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: #33d17a; box-shadow: 0 0 0 0 rgba(51, 209, 122, 0.6); animation: g-pulse 2s infinite; }
+@keyframes g-pulse { 70% { box-shadow: 0 0 0 9px rgba(51, 209, 122, 0); } 100% { box-shadow: 0 0 0 0 rgba(51, 209, 122, 0); } }
+.g-faces img { border-radius: 10px; border-color: var(--g-bg); }
+
+/* traka sa vrstama biznisa (preko cijele širine) */
+.g-tick { width: 100vw; margin: 0 0 30px calc(50% - 50vw); padding: 16px 0; border-block: 1px solid var(--g-line); background: linear-gradient(90deg, var(--g-bg), #120a0c 20%, #120a0c 80%, var(--g-bg)); overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent); mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent); }
+.g-tick ul { display: flex; width: max-content; margin: 0; padding: 0; list-style: none; animation: g-tick 34s linear infinite; }
+.g-tick li { display: flex; align-items: center; gap: 28px; padding-right: 28px; font: 400 26px/1 'Anton', Impact, sans-serif; letter-spacing: 0.04em; text-transform: uppercase; color: #d9cfd1; white-space: nowrap; }
+.g-tick li::after { content: ''; width: 9px; height: 9px; border-radius: 2px; background: var(--g-red); transform: rotate(45deg); }
+@keyframes g-tick { to { transform: translateX(-50%); } }
+
+/* šta dobijate */
+.g-why h2.g-an { margin-top: 10px; max-width: 18ch; }
+.g-why-l { list-style: none; margin: 34px 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.g-why-l li { position: relative; display: grid; gap: 6px; align-content: start; padding: 24px; border-radius: 20px; background: linear-gradient(160deg, var(--g-card2), var(--g-card)); border: 1px solid var(--g-line); overflow: hidden; transition: border-color 0.3s, transform 0.3s; }
+.g-why-l li::after { content: ''; position: absolute; right: -40px; top: -40px; width: 120px; height: 120px; border-radius: 50%; background: radial-gradient(closest-side, rgba(227, 16, 30, 0.22), transparent); pointer-events: none; }
+.g-why-l li:hover { border-color: var(--g-line2); transform: translateY(-3px); }
+.g-why-i { display: grid; place-items: center; width: 46px; height: 46px; margin-bottom: 8px; border-radius: 14px; background: rgba(227, 16, 30, 0.12); color: var(--g-red2); }
+.g-why-i .g-ic { width: 24px; height: 24px; }
+.g-why-l b { font-size: 19px; font-weight: 600; letter-spacing: -0.01em; }
+.g-why-l li > span:last-child { color: var(--g-mut); font-size: 15px; line-height: 1.5; }
+
+/* usluge kao kartice */
+.g-serv li { display: flex; flex-direction: row; justify-content: flex-start; align-items: flex-start; gap: 16px; padding: 20px 0; }
+.g-serv-i { display: grid; place-items: center; width: 44px; height: 44px; flex: none; border-radius: 12px; border: 1px solid var(--g-line2); color: var(--g-red2); }
+.g-serv li > div { display: grid; gap: 4px; }
+.g-serv li p { margin: 0; color: #d6cccd; font-size: 15px; }
+.g-serv .g-serv-t { color: var(--g-mut); font: 11px 'Space Mono', monospace; letter-spacing: 0.08em; text-transform: uppercase; text-align: left; }
+.g-serv-ex { justify-self: start; margin-top: 4px; font-size: 14px; font-weight: 600; color: var(--g-red2) !important; }
+.g-serv-ex:hover { text-decoration: underline !important; }
+
+/* radovi: filteri i veće kartice */
+.g-filt { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
+.g-filt button { border: 1px solid var(--g-line2); background: none; color: var(--g-mut); font: 600 14px 'Inter Tight', sans-serif; padding: 9px 16px; border-radius: 999px; cursor: pointer; transition: background-color 0.2s, color 0.2s; }
+.g-filt button:hover { color: var(--g-ink); }
+.g-filt button[aria-pressed='true'] { background: var(--g-ink); border-color: var(--g-ink); color: #120c0d; }
+/* 6 kolona: velike kartice (2 u redu) i obične (3 u redu), bez kartice koja ostane sama u redu */
+.g-grid { grid-template-columns: repeat(6, 1fr); gap: 28px 18px; }
+.g-card { grid-column: span 2; }
+.g-card-w { grid-column: span 3; }
+.g-card-w figure { aspect-ratio: 16 / 9; }
+.g-grid.is-filtered .g-card { grid-column: span 2; }
+.g-grid.is-filtered .g-card-w figure { aspect-ratio: 16 / 10; }
+.g-card figure { position: relative; box-shadow: 0 24px 50px -30px #000; }
+.g-card-tags { position: absolute; left: 10px; bottom: 10px; display: flex; flex-wrap: wrap; gap: 6px; margin: 0; opacity: 0; transform: translateY(6px); transition: opacity 0.3s, transform 0.3s; }
+.g-card-tags span { font: 10px 'Space Mono', monospace; letter-spacing: 0.06em; text-transform: uppercase; padding: 5px 9px; border-radius: 999px; background: rgba(10, 6, 7, 0.85); border: 1px solid var(--g-line2); color: #e6dcdc; }
+.g-card:hover .g-card-tags, .g-card:focus-within .g-card-tags { opacity: 1; transform: none; }
+.g-card:hover figure { border-color: var(--g-line2); }
+
+/* poziv na WhatsApp iznad kontakta */
+.g-band { display: flex; align-items: center; justify-content: space-between; gap: 20px 30px; margin-bottom: 70px; padding: 30px 34px; border-radius: 24px; background: radial-gradient(120% 140% at 0% 0%, rgba(227, 16, 30, 0.35), transparent 60%), linear-gradient(135deg, #1d0d10, #120a0c); border: 1px solid rgba(227, 16, 30, 0.35); }
+.g-band p { margin: 0; max-width: 48ch; font-size: 20px; font-weight: 500; line-height: 1.45; }
+.g-wa { flex: none; background: #25d366; color: #062a14; } .g-wa:hover { background: #3be07a; }
+
+@media (max-width: 980px) {
+  .g-why-l { grid-template-columns: 1fr 1fr; }
+  .g-grid { grid-template-columns: 1fr 1fr; }
+  .g-card, .g-card-w, .g-grid.is-filtered .g-card { grid-column: auto; }
+  .g-card-w figure { aspect-ratio: 16 / 10; }
+}
+@media (max-width: 760px) {
+  .g-avail { margin-left: 0; }
+  .g-tick { margin-bottom: 20px; padding: 12px 0; }
+  .g-tick li { font-size: 20px; gap: 20px; padding-right: 20px; }
+  .g-why-l { grid-template-columns: 1fr; gap: 10px; }
+  .g-why-l li { grid-template-columns: auto 1fr; column-gap: 14px; padding: 18px; }
+  .g-why-i { grid-row: span 2; margin-bottom: 0; }
+  .g-grid { grid-template-columns: 1fr; }
+  .g-card-tags { opacity: 1; transform: none; }
+  .g-band { flex-direction: column; align-items: stretch; padding: 24px 20px; margin-bottom: 50px; }
+  .g-band p { font-size: 18px; }
+}
+@media (prefers-reduced-motion: reduce) { .g-tick ul, .g-avail::before { animation: none; } .g-why-l li { transition: none; } }
