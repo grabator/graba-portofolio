@@ -98,6 +98,9 @@ export function classicHTML(PF, lang) {
     + '<div class="g-filt" role="group" aria-label="' + esc(G.moreH) + '">' + G.filt.map(([k, t], i) => '<button type="button" data-f="' + k + '" aria-pressed="' + (i === 0) + '">' + esc(t) + '</button>').join('') + '</div>'
     + '<ul class="g-grid">' + others.map(card).join('') + '</ul></section>';
 
+  const stack = '<section class="g-sec g-stack" aria-labelledby="stack-h"><div class="g-head"><h2 class="g-an" id="stack-h">' + esc(G.stackH.toUpperCase()) + '</h2><p class="g-sub">' + esc(G.stackSub) + '</p></div>'
+    + '<ul class="g-stack-l">' + G.stackG.map(([h, xs]) => '<li><b>' + esc(h) + '</b><p>' + xs.map((x) => '<span>' + esc(x) + '</span>').join('') + '</p></li>').join('') + '</ul></section>';
+
   const contact = '<section class="g-sec g-contact" id="contact" aria-labelledby="contact-h">'
     + '<div class="g-band"><p>' + esc(G.ctaBand) + '</p><a class="g-btn g-wa" href="' + C.whatsapp + '" ' + ext + '>' + ic('wa') + esc(G.ctaWa) + '</a></div>'
     + '<h2 class="g-an" id="contact-h">' + esc(G.contactH.toUpperCase()) + '</h2><p class="g-sub">' + esc(G.contactP) + '</p>'
@@ -110,5 +113,5 @@ export function classicHTML(PF, lang) {
 
   const dock = '<nav class="g-dock" aria-label="' + esc(S.quickT) + '"><a class="g-d-v" href="' + C.viber + '">' + ic('viber') + 'Viber</a><a class="g-d-w" href="' + C.whatsapp + '" ' + ext + '>' + ic('wa') + 'WhatsApp</a><button type="button" data-copy="' + C.email + '">' + ic('mail') + 'Email</button></nav>';
 
-  return '<div class="g">' + nav + hero + ticker + featured + why + cols + more + contact + '</div>' + dock;
+  return '<div class="g">' + nav + hero + ticker + featured + why + cols + more + stack + contact + '</div>' + dock;
 }

@@ -254,3 +254,13 @@
   .g-band p { font-size: 18px; }
 }
 @media (prefers-reduced-motion: reduce) { .g-tick ul, .g-avail::before { animation: none; } .g-why-l li { transition: none; } }
+
+/* tehnologije */
+.g-stack { padding-top: 80px; }
+.g-stack-l { list-style: none; margin: 28px 0 70px; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+.g-stack-l li { padding: 22px; border-radius: 20px; background: var(--g-card); border: 1px solid var(--g-line); }
+.g-stack-l b { display: block; margin-bottom: 14px; font: 11px 'Space Mono', monospace; letter-spacing: 0.14em; text-transform: uppercase; color: var(--g-red2); }
+.g-stack-l p { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; }
+.g-stack-l span { padding: 7px 12px; border-radius: 999px; background: var(--g-card2); border: 1px solid var(--g-line2); font-size: 14px; font-weight: 500; }
+@media (max-width: 980px) { .g-stack-l { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 760px) { .g-stack { padding-top: 56px; } .g-stack-l { grid-template-columns: 1fr; gap: 10px; margin-bottom: 50px; } .g-stack-l li { padding: 18px; } }
