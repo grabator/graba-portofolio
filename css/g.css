@@ -264,3 +264,34 @@
 .g-stack-l span { padding: 7px 12px; border-radius: 999px; background: var(--g-card2); border: 1px solid var(--g-line2); font-size: 14px; font-weight: 500; }
 @media (max-width: 980px) { .g-stack-l { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 760px) { .g-stack { padding-top: 56px; } .g-stack-l { grid-template-columns: 1fr; gap: 10px; margin-bottom: 50px; } .g-stack-l li { padding: 18px; } }
+
+/* sastavi svoju stranicu */
+.g-build { scroll-margin-top: 80px; }
+.g-build h2.g-an { margin-top: 10px; }
+.g-build-in { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 26px; margin-top: 30px; align-items: start; }
+.g-build-q { display: grid; gap: 22px; }
+.g-build fieldset { margin: 0; padding: 0; border: 0; min-width: 0; }
+.g-build legend { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; padding: 0; font-weight: 600; font-size: 17px; }
+.g-build legend span { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 8px; background: var(--g-red); color: #fff; font: 400 16px/1 'Anton', Impact, sans-serif; }
+.g-opts { display: flex; flex-wrap: wrap; gap: 8px; }
+.g-opt { position: relative; cursor: pointer; }
+.g-opt input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.g-opt span { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 16px; border-radius: 999px; border: 1px solid var(--g-line2); background: var(--g-card); color: #d9cfd1; font-size: 15px; font-weight: 500; transition: background-color 0.2s, border-color 0.2s, color 0.2s; }
+.g-opt input[type='checkbox'] + span::before { content: ''; width: 16px; height: 16px; border-radius: 5px; border: 1.5px solid var(--g-line2); flex: none; }
+.g-opt:hover span { border-color: #5a4448; color: var(--g-ink); }
+.g-opt input:checked + span { background: rgba(227, 16, 30, 0.14); border-color: var(--g-red); color: #fff; }
+.g-opt input[type='checkbox']:checked + span::before { background: var(--g-red) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 8.5l3 3 6-7' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 14px no-repeat; border-color: var(--g-red); }
+.g-opt input:focus-visible + span { outline: 2px solid var(--g-red2); outline-offset: 2px; }
+.g-build-out { position: sticky; top: 90px; padding: 22px; border-radius: 24px; background: radial-gradient(120% 90% at 100% 0%, rgba(37, 211, 102, 0.12), transparent 60%), var(--g-card); border: 1px solid var(--g-line2); }
+.g-build-k { font: 11px 'Space Mono', monospace; letter-spacing: 0.14em; text-transform: uppercase; color: var(--g-mut); }
+.g-bubble { position: relative; margin-top: 12px; padding: 14px 16px; border-radius: 16px 16px 4px 16px; background: #0b3d26; color: #e9fff1; font-size: 15px; line-height: 1.55; white-space: pre-line; min-height: 120px; box-shadow: 0 14px 30px -18px #000; }
+.g-build-like { min-height: 22px; margin-top: 12px; font-size: 14px; }
+.g-build-like a { color: var(--g-red2); font-weight: 600; }
+.g-build-like a:hover { text-decoration: underline; }
+.g-build-btns { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+.g-build-btns .g-btn { flex: 1; }
+.g-build-btns .g-po { color: var(--g-ink); background: none; font: inherit; font-weight: 600; font-size: 15px; cursor: pointer; }
+.g-build-hint { margin-top: 12px; color: var(--g-mut); font-size: 13px; }
+.g-contact { padding-top: 90px; }
+@media (max-width: 980px) { .g-build-in { grid-template-columns: 1fr; } .g-build-out { position: static; } }
+@media (max-width: 760px) { .g-opt span { font-size: 14px; padding: 0 14px; } .g-build-out { padding: 18px; } .g-contact { padding-top: 64px; } }

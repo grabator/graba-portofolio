@@ -48,7 +48,7 @@ export function classicHTML(PF, lang) {
 
   const nav = '<header class="g-nav"><a class="g-logo" href="#top" aria-label="Ahmed Grabus">AHMED <span class="g-box">GRABUS</span></a>'
     + '<nav class="g-links" aria-label="' + esc(S.navLabel) + '">' + G.nav.map((t, i) => '<a href="#' + TABS[i] + '">' + esc(t) + '</a>').join('') + '</nav>'
-    + '<div class="g-nav-r">' + langs + '<a class="g-btn g-pr g-sm" href="#contact">' + esc(G.cta) + '</a></div></header>';
+    + '<div class="g-nav-r">' + langs + '<a class="g-btn g-pr g-sm" href="#build">' + esc(G.cta) + '</a></div></header>';
 
   const chips = G.chips.map(([a, b], i) => '<p class="g-chip g-chip' + (i + 1) + '"><b>' + esc(a) + '</b><small>' + esc(b) + '</small></p>').join('');
   const faces = ['casa-montana.jpg', 'ashiana-cafe.jpg', 'beauty-salon.jpg'].map((f) => '<img src="assets/work/' + f + '" alt="" width="40" height="40" decoding="async">').join('');
@@ -57,7 +57,7 @@ export function classicHTML(PF, lang) {
     + '<div class="g-who"><i aria-hidden="true">AG</i><div><b>Ahmed Grabus</b><small>' + esc(T.role) + ' · ' + esc(S.place) + '</small></div><span class="g-avail">' + esc(G.avail) + '</span></div>'
     + '<h1 class="g-h1">' + esc(G.h1a) + ' <span class="g-box">' + esc(G.h1b) + '</span></h1>'
     + '<p class="g-lead">' + esc(G.lead) + '</p>'
-    + '<p class="g-btns"><a class="g-btn g-pr" href="#contact">' + esc(G.cta) + '</a><a class="g-btn g-po" href="#work">' + esc(G.ctaWork) + '</a></p>'
+    + '<p class="g-btns"><a class="g-btn g-pr" href="#build">' + esc(G.cta) + '</a><a class="g-btn g-po" href="#work">' + esc(G.ctaWork) + '</a></p>'
     + '<button type="button" class="g-room" data-room>' + ic('room') + '<span><b>' + esc(G.room) + '</b><small>' + esc(G.roomSub) + '</small></span><i aria-hidden="true">→</i></button>'
     + '<p class="g-trust"><span class="g-faces">' + faces + '</span><span><b>' + esc(fName) + '</b> ' + esc(G.trust) + '</span></p>'
     + '</div><div class="g-stage" aria-hidden="true"><div class="g-glow"></div><div class="g-phone"><img src="' + feat.phone + '" alt="" width="560" height="1212" decoding="async"></div>' + chips + '</div></section>';
@@ -101,8 +101,21 @@ export function classicHTML(PF, lang) {
   const stack = '<section class="g-sec g-stack" aria-labelledby="stack-h"><div class="g-head"><h2 class="g-an" id="stack-h">' + esc(G.stackH.toUpperCase()) + '</h2><p class="g-sub">' + esc(G.stackSub) + '</p></div>'
     + '<ul class="g-stack-l">' + G.stackG.map(([h, xs]) => '<li><b>' + esc(h) + '</b><p>' + xs.map((x) => '<span>' + esc(x) + '</span>').join('') + '</p></li>').join('') + '</ul></section>';
 
+  // sastavi svoju stranicu: izbor (radio i checkbox), poruka se slaže u js/site.js
+  const B = G.build;
+  const opt = (type, name, val, label, on) => '<label class="g-opt"><input type="' + type + '" name="' + name + '" value="' + val + '"' + (on ? ' checked' : '') + '><span>' + esc(label) + '</span></label>';
+  const build = '<section class="g-sec g-build" id="build" aria-labelledby="build-h" data-build="' + esc(JSON.stringify({ B, wa: C.whatsapp, items: Object.fromEntries(PF.work.map((w) => [w.id, [T.items[w.id][0], w.live || w.src]])) })) + '">'
+    + '<p class="g-kick">' + esc(B.k) + '</p><h2 class="g-an" id="build-h">' + esc(B.h.toUpperCase()) + '</h2><p class="g-sub">' + esc(B.sub) + '</p>'
+    + '<div class="g-build-in"><div class="g-build-q">'
+    + '<fieldset><legend><span>1</span>' + esc(B.q1) + '</legend><div class="g-opts">' + B.biz.map(([v, l], i) => opt('radio', 'biz', v, l, i === 0)).join('') + '</div></fieldset>'
+    + '<fieldset><legend><span>2</span>' + esc(B.q2) + '</legend><div class="g-opts">' + B.feats.map(([v, l]) => opt('checkbox', 'feat', v, l, B.pre.stay.includes(v))).join('') + '</div></fieldset>'
+    + '<fieldset><legend><span>3</span>' + esc(B.q3) + '</legend><div class="g-opts">' + B.when.map(([v, l], i) => opt('radio', 'when', v, l, i === 1)).join('') + '</div></fieldset>'
+    + '</div><div class="g-build-out"><p class="g-build-k">' + esc(B.msgK) + '</p><div class="g-bubble" id="build-msg" aria-live="polite"></div>'
+    + '<p class="g-build-like" id="build-like"></p>'
+    + '<p class="g-build-btns"><a class="g-btn g-wa" id="build-wa" href="' + C.whatsapp + '" ' + ext + '>' + ic('wa') + esc(B.sendWa) + '</a><button type="button" class="g-btn g-po" id="build-copy">' + ic('mail') + esc(B.copyMsg) + '</button></p>'
+    + '<p class="g-build-hint">' + esc(B.viberHint) + '</p></div></div></section>';
+
   const contact = '<section class="g-sec g-contact" id="contact" aria-labelledby="contact-h">'
-    + '<div class="g-band"><p>' + esc(G.ctaBand) + '</p><a class="g-btn g-wa" href="' + C.whatsapp + '" ' + ext + '>' + ic('wa') + esc(G.ctaWa) + '</a></div>'
     + '<h2 class="g-an" id="contact-h">' + esc(G.contactH.toUpperCase()) + '</h2><p class="g-sub">' + esc(G.contactP) + '</p>'
     + '<button type="button" class="g-mail" data-copy="' + C.email + '"><span>' + C.email + '</span><small>' + esc(G.copy) + '</small></button>'
     + '<ul class="g-chan"><li><a href="' + C.viber + '">' + ic('viber') + '<span>' + esc(T.viber) + '</span><b>' + C.phone + '</b></a></li>'
@@ -113,5 +126,5 @@ export function classicHTML(PF, lang) {
 
   const dock = '<nav class="g-dock" aria-label="' + esc(S.quickT) + '"><a class="g-d-v" href="' + C.viber + '">' + ic('viber') + 'Viber</a><a class="g-d-w" href="' + C.whatsapp + '" ' + ext + '>' + ic('wa') + 'WhatsApp</a><button type="button" data-copy="' + C.email + '">' + ic('mail') + 'Email</button></nav>';
 
-  return '<div class="g">' + nav + hero + ticker + featured + why + cols + more + stack + contact + '</div>' + dock;
+  return '<div class="g">' + nav + hero + ticker + featured + why + cols + more + stack + build + contact + '</div>' + dock;
 }
