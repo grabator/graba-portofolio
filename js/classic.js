@@ -46,7 +46,7 @@ export function classicHTML(PF, lang) {
   const langs = '<div class="g-langs" role="group" aria-label="' + esc(T.room.lang) + '">'
     + ['bs', 'en'].map((l) => '<button type="button" data-lang="' + l + '" aria-pressed="' + (l === lang) + '">' + l.toUpperCase() + '</button>').join('') + '</div>';
 
-  const nav = '<header class="g-nav"><a class="g-logo" href="#top" aria-label="Ahmed Grabus">AHMED <span class="g-box">GRABUS</span></a>'
+  const nav = '<header class="g-nav"><i class="g-prog" aria-hidden="true"></i><a class="g-logo" href="#top" aria-label="Ahmed Grabus">AHMED <span class="g-box">GRABUS</span></a>'
     + '<nav class="g-links" aria-label="' + esc(S.navLabel) + '">' + G.nav.map((t, i) => '<a href="#' + TABS[i] + '">' + esc(t) + '</a>').join('') + '</nav>'
     + '<div class="g-nav-r">' + langs + '<a class="g-btn g-pr g-sm" href="#build">' + esc(G.cta) + '</a></div></header>';
 
@@ -55,12 +55,12 @@ export function classicHTML(PF, lang) {
 
   const hero = '<section class="g-hero" id="top"><div class="g-hero-txt">'
     + '<div class="g-who"><i aria-hidden="true">AG</i><div><b>Ahmed Grabus</b><small>' + esc(T.role) + ' · ' + esc(S.place) + '</small></div><span class="g-avail">' + esc(G.avail) + '</span></div>'
-    + '<h1 class="g-h1">' + esc(G.h1a) + ' <span class="g-box">' + esc(G.h1b) + '</span></h1>'
+    + '<h1 class="g-h1">' + G.h1a.split(' ').map((w, i) => '<span class="g-w" style="--i:' + i + '">' + esc(w) + '</span>').join(' ') + ' <span class="g-box g-w" style="--i:' + G.h1a.split(' ').length + '">' + esc(G.h1b) + '</span></h1>'
     + '<p class="g-lead">' + esc(G.lead) + '</p>'
     + '<p class="g-btns"><a class="g-btn g-pr" href="#build">' + esc(G.cta) + '</a><a class="g-btn g-po" href="#work">' + esc(G.ctaWork) + '</a></p>'
     + '<button type="button" class="g-room" data-room>' + ic('room') + '<span><b>' + esc(G.room) + '</b><small>' + esc(G.roomSub) + '</small></span><i aria-hidden="true">→</i></button>'
     + '<p class="g-trust"><span class="g-faces">' + faces + '</span><span><b>' + esc(fName) + '</b> ' + esc(G.trust) + '</span></p>'
-    + '</div><div class="g-stage" aria-hidden="true"><div class="g-glow"></div><div class="g-phone"><img src="' + feat.phone + '" alt="" width="560" height="1212" decoding="async"></div>' + chips + '</div></section>';
+    + '</div><div class="g-stage" aria-hidden="true"><div class="g-glow"></div><div class="g-phone">' + (feat.long ? '<div class="g-roll"><img src="' + feat.long + '" alt="" width="600" height="6769" decoding="async"></div>' : '<img src="' + feat.phone + '" alt="" width="560" height="1212" decoding="async">') + '</div>' + chips + '</div></section>';
 
   const tick = G.ticker.map((x) => '<li>' + esc(x) + '</li>').join('');
   const ticker = '<div class="g-tick" aria-hidden="true"><ul>' + tick + tick + '</ul></div>';
@@ -68,7 +68,15 @@ export function classicHTML(PF, lang) {
   const why = '<section class="g-sec g-why" aria-labelledby="why-h"><p class="g-kick">' + esc(G.whyK) + '</p><h2 class="g-an" id="why-h">' + esc(G.whyH.toUpperCase()) + '</h2>'
     + '<ul class="g-why-l">' + G.why.map(([k, a, b]) => '<li><span class="g-why-i">' + ic(k) + '</span><b>' + esc(a) + '</b><span>' + esc(b) + '</span></li>').join('') + '</ul></section>';
 
-  const res = G.res.map(([a, b]) => '<li><b>' + esc(a) + '</b><span>' + esc(b) + '</span></li>').join('');
+  // uživo na mobitelu: prave stranice u telefonu, izbor projekta i listanje unutar ekrana (js/site.js)
+  const SH = G.show, shows = PF.work.filter((w) => w.long);
+  const show = '<section class="g-sec g-show" id="show" aria-labelledby="show-h"><div class="g-show-txt"><p class="g-kick">' + esc(SH.k) + '</p><h2 class="g-an" id="show-h">' + esc(SH.h.toUpperCase()) + '</h2><p class="g-sub">' + esc(SH.sub) + '</p>'
+    + '<div class="g-show-tabs" role="tablist" aria-label="' + esc(SH.label) + '">' + shows.map((w, i) => '<button type="button" role="tab" aria-selected="' + (i === 0) + '" data-i="' + i + '"><b>' + esc(T.items[w.id][0]) + '</b><small>' + esc(T.items[w.id][1]) + '</small><i aria-hidden="true"></i></button>').join('') + '</div>'
+    + '<div class="g-show-info">' + shows.map((w, i) => '<div class="g-show-p" data-i="' + i + '"' + (i ? ' hidden' : '') + '><p>' + esc(T.items[w.id][2]) + '</p>' + (w.live ? '<a class="g-show-a" href="' + w.live + '" ' + ext + '>' + esc(SH.open) + ' ↗</a>' : '') + '</div>').join('') + '</div></div>'
+    + '<div class="g-show-dev"><div class="g-dev"><div class="g-dev-scr" tabindex="0" aria-label="' + esc(SH.hint) + '">' + shows.map((w, i) => '<img src="' + w.long + '" alt="' + esc(T.items[w.id][0]) + '" width="600" height="6769" loading="lazy" decoding="async" data-i="' + i + '"' + (i ? ' hidden' : '') + '>').join('') + '</div><i class="g-dev-isl" aria-hidden="true"></i></div>'
+    + '<p class="g-show-hint"><span class="g-h-m">' + esc(SH.hint) + '</span><span class="g-h-t">' + esc(SH.hintT) + '</span></p></div></section>';
+
+  const res = G.res.map(([a, b]) => '<li><b data-n="' + esc(a) + '">' + esc(a) + '</b><span>' + esc(b) + '</span></li>').join('');
   const featTags = G.tagsF.map((t) => '<li>' + esc(t) + '</li>').join('') + '<li><a href="' + feat.live + '" ' + ext + '>' + esc(feat.live.replace(/^https?:\/\//, '').replace(/\/$/, '')) + ' ↗</a></li>';
   const featured = '<section class="g-sec g-work" id="work" aria-labelledby="feat-h"><article class="g-feat">'
     + '<img class="g-feat-bg" src="' + feat.img + '" alt="' + esc(fName) + '" width="1200" height="675" loading="lazy" decoding="async">'
@@ -126,5 +134,5 @@ export function classicHTML(PF, lang) {
 
   const dock = '<nav class="g-dock" aria-label="' + esc(S.quickT) + '"><a class="g-d-v" href="' + C.viber + '">' + ic('viber') + 'Viber</a><a class="g-d-w" href="' + C.whatsapp + '" ' + ext + '>' + ic('wa') + 'WhatsApp</a><button type="button" data-copy="' + C.email + '">' + ic('mail') + 'Email</button></nav>';
 
-  return '<div class="g">' + nav + hero + ticker + featured + why + cols + more + stack + build + contact + '</div>' + dock;
+  return '<div class="g">' + nav + hero + ticker + featured + show + why + cols + more + stack + build + contact + '</div>' + dock;
 }

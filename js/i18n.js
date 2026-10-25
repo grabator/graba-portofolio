@@ -93,14 +93,14 @@ window.PF = {
     }
   },
   work: [
-    { id: 'casa', cat: 'biz', year: '2026', client: true, img: 'assets/work/casa-montana.jpg', phone: 'assets/work/casa-mobile.webp', live: 'https://casamontanavlasic.com/', src: 'https://github.com/grabator/casa-montana', tags: ['JavaScript', 'HTML', 'CSS', 'Cloudflare Workers'] },
+    { id: 'casa', long: 'assets/work/long-casa.webp', cat: 'biz', year: '2026', client: true, img: 'assets/work/casa-montana.jpg', phone: 'assets/work/casa-mobile.webp', live: 'https://casamontanavlasic.com/', src: 'https://github.com/grabator/casa-montana', tags: ['JavaScript', 'HTML', 'CSS', 'Cloudflare Workers'] },
     { id: 'myshishapedia', cat: 'app', year: '2025', img: 'assets/work/myshishapedia.jpg', live: 'https://myshishapedia.com', src: 'https://github.com/grabator/myshishapedia', tags: ['JavaScript', 'Node.js', 'SVG', 'Cloudflare Pages'] },
     { id: 'squadjury', cat: 'app', year: '2026', img: 'assets/work/squadjury.jpg', live: 'https://squadjury.com', src: 'https://github.com/grabator/squadjury', tags: ['JavaScript', 'Cloudflare Workers', 'D1', 'OCR'] },
-    { id: 'salon', cat: 'biz', year: '2026', img: 'assets/work/beauty-salon.jpg', live: 'https://beauty-salon.grabafaceit.workers.dev/', src: 'https://github.com/grabator/beauty-salon', tags: ['JavaScript', 'SVG', 'PWA', 'Cloudflare Workers'] },
+    { id: 'salon', long: 'assets/work/long-salon.webp', cat: 'biz', year: '2026', img: 'assets/work/beauty-salon.jpg', live: 'https://beauty-salon.grabafaceit.workers.dev/', src: 'https://github.com/grabator/beauty-salon', tags: ['JavaScript', 'SVG', 'PWA', 'Cloudflare Workers'] },
     { id: 'lounge', cat: 'app', year: '2026', img: 'assets/work/exclusive-lounge.jpg', live: 'https://rezervacije-production-6f84.up.railway.app/r/exclusive/rezervacije', src: 'https://github.com/grabator/exclusive-lounge-caffe-rezervacije', tags: ['Angular 19', '.NET 10', 'SQLite', 'Railway'] },
-    { id: 'svecana', cat: 'biz', year: '2026', img: 'assets/work/svecana-sala.jpg', live: 'https://svecana-sala.grabafaceit.workers.dev/', src: 'https://github.com/grabator/svecana-sala', tags: ['JavaScript', 'Cloudflare Workers', 'Google Calendar', 'i18n'] },
-    { id: 'planinka', cat: 'biz', year: '2026', img: 'assets/work/planinka.jpg', live: 'https://planinka.grabafaceit.workers.dev/', src: 'https://github.com/grabator/planinka', tags: ['JavaScript', 'SVG', 'Cloudflare'] },
-    { id: 'ashiana', cat: 'biz', year: '2026', img: 'assets/work/ashiana-cafe.jpg', live: 'https://ashiana-cafe.grabafaceit.workers.dev/', src: 'https://github.com/grabator/ashiana-cafe', tags: ['JavaScript', 'HTML', 'CSS', 'Cloudflare Workers'] },
+    { id: 'svecana', long: 'assets/work/long-svecana.webp', cat: 'biz', year: '2026', img: 'assets/work/svecana-sala.jpg', live: 'https://svecana-sala.grabafaceit.workers.dev/', src: 'https://github.com/grabator/svecana-sala', tags: ['JavaScript', 'Cloudflare Workers', 'Google Calendar', 'i18n'] },
+    { id: 'planinka', long: 'assets/work/long-planinka.webp', cat: 'biz', year: '2026', img: 'assets/work/planinka.jpg', live: 'https://planinka.grabafaceit.workers.dev/', src: 'https://github.com/grabator/planinka', tags: ['JavaScript', 'SVG', 'Cloudflare'] },
+    { id: 'ashiana', long: 'assets/work/long-ashiana.webp', cat: 'biz', year: '2026', img: 'assets/work/ashiana-cafe.jpg', live: 'https://ashiana-cafe.grabafaceit.workers.dev/', src: 'https://github.com/grabator/ashiana-cafe', tags: ['JavaScript', 'HTML', 'CSS', 'Cloudflare Workers'] },
     { id: 'mostar', cat: 'biz', year: '2026', img: 'assets/work/old-bridge-mostar.jpg', src: 'https://github.com/grabator/old-bridge-mostar', tags: ['JavaScript', 'SVG', 'Scroll animation'] },
     { id: 'grabpoints', cat: 'app', year: '2025', art: 'pitch', src: 'https://github.com/grabator/IB210176-seminarski-rs2', tags: ['.NET 10', 'RabbitMQ', 'ONNX', 'Flutter', 'Docker'] },
     { id: 'apoteke', cat: 'app', year: '2025', art: 'map', src: 'https://github.com/grabator/dezurne-apoteke', tags: ['Next.js 16', 'React 19', 'PWA'] }
@@ -195,6 +195,7 @@ window.PF = {
         bizW: { stay: 'an apartment', cafe: 'a café', salon: 'a salon', venue: 'a wedding venue', other: 'a business' },
         sendWa: 'Send on WhatsApp', copyMsg: 'Copy message', copied: 'Message copied', viberHint: 'On Viber? Copy the message and paste it in the chat.'
       },
+      show: { k: 'Live on a phone', h: 'Scroll through real sites', sub: 'Client and demo sites exactly as guests see them on a phone. Pick a project and see it on the screen.', open: 'Open the site', hint: 'Scroll inside the phone', hintT: 'The phone scrolls by itself · tap to pause', label: 'Projects on a phone' },
       ctaBand: 'Have a business without a website, or one that looks old? Send me a message and I will show you how it could look.', ctaWa: 'Message on WhatsApp',
       live: 'Live', source: 'Source',
       contactH: 'Let\'s build something good.', contactP: 'Tell me about your idea or your business. I usually reply the same day.',
@@ -323,6 +324,7 @@ window.PF = {
         bizW: { stay: 'apartman', cafe: 'kafić', salon: 'salon', venue: 'svečanu salu', other: 'biznis' },
         sendWa: 'Pošalji na WhatsApp', copyMsg: 'Kopiraj poruku', copied: 'Poruka kopirana', viberHint: 'Više volite Viber? Kopirajte poruku i zalijepite je u chat.'
       },
+      show: { k: 'Uživo na mobitelu', h: 'Prelistajte prave stranice', sub: 'Stranice za klijente i demo projekti, tačno kako ih gosti vide na mobitelu. Izaberite projekat i pogledajte ga na ekranu.', open: 'Otvori stranicu', hint: 'Listajte unutar telefona', hintT: 'Telefon se sam lista · dodirnite za pauzu', label: 'Projekti na mobitelu' },
       ctaBand: 'Imate biznis bez stranice ili sa starom stranicom? Pošaljite poruku i pokazat ću vam kako bi mogla izgledati.', ctaWa: 'Piši na WhatsApp',
       live: 'Uživo', source: 'Kod',
       contactH: 'Napravimo nešto dobro.', contactP: 'Pišite mi o ideji ili biznisu. Obično odgovorim istog dana.',

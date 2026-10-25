@@ -24,7 +24,101 @@ export function initSite(el) {
     items.forEach((x) => { x.classList.add('rv'); io.observe(x); });
   }
   initBuild(el);
+  initShow(el);
+  initFx(el);
   onScroll();
+}
+
+/* "Uživo na mobitelu": telefon sam lista izabranu stranicu, traka na dugmetu pokazuje koliko je ostalo do sljedećeg projekta.
+   Kad posjetilac sam lista ili dodirne ekran, automatika stane na par sekundi. Radi samo dok je dio na ekranu. */
+let stopShow = null;
+function initShow(el) {
+  if (stopShow) stopShow();
+  const sec = el.querySelector('#show');
+  if (!sec) return;
+  const scr = sec.querySelector('.g-dev-scr'), tabs = [...sec.querySelectorAll('.g-show-tabs button')];
+  const imgs = [...scr.querySelectorAll('img')], infos = [...sec.querySelectorAll('.g-show-p')];
+  const STAY = 9000, SPEED = 42; // ms po projektu, px u sekundi
+  let cur = 0, t0 = 0, last = 0, held = 0, visible = false, raf = 0, y = 0;
+  function pick(i, user) {
+    cur = (i + tabs.length) % tabs.length;
+    tabs.forEach((b, k) => { b.setAttribute('aria-selected', String(k === cur)); b.style.setProperty('--p', 0); });
+    imgs.forEach((im, k) => { im.hidden = k !== cur; });
+    infos.forEach((x, k) => { x.hidden = k !== cur; });
+    scr.scrollTop = 0; y = 0; t0 = performance.now();
+    if (user && held !== Infinity) held = performance.now() + 2500;
+    const b = tabs[cur], bar = b.parentNode;
+    if (bar.scrollWidth > bar.clientWidth) bar.scrollTo({ left: b.offsetLeft - 16, behavior: reduced.matches ? 'auto' : 'smooth' });
+  }
+  function tick(now) {
+    raf = requestAnimationFrame(tick);
+    const dt = Math.min(64, now - (last || now)); last = now;
+    if (!visible || reduced.matches) return;
+    if (now < held) { t0 += dt; return; }
+    y += SPEED * dt / 1000;
+    if (y > scr.scrollHeight - scr.clientHeight) y = scr.scrollHeight - scr.clientHeight;
+    scr.scrollTop = y;
+    const p = (now - t0) / STAY;
+    tabs[cur].style.setProperty('--p', Math.min(1, p).toFixed(3));
+    if (p >= 1) pick(cur + 1);
+  }
+  const hold = () => { held = performance.now() + 4000; };
+  // na dodir telefon ne prima listanje (da ne zarobi listanje stranice); dodir pauzira ili pusti automatiku
+  if (matchMedia('(pointer: coarse)').matches) scr.addEventListener('click', () => { held = held > performance.now() ? 0 : Infinity; sec.classList.toggle('is-paused', held > 0); });
+  else {
+    scr.addEventListener('wheel', hold, { passive: true });
+    scr.addEventListener('pointerdown', hold);
+    scr.addEventListener('keydown', hold);
+    scr.addEventListener('scroll', () => { if (performance.now() < held) y = scr.scrollTop; }, { passive: true });
+  }
+  sec.querySelector('.g-show-tabs').addEventListener('click', (e) => { const b = e.target.closest('button[data-i]'); if (b) pick(+b.dataset.i, true); });
+  const vio = new IntersectionObserver((en) => { visible = en[0].isIntersecting; if (visible) imgs.forEach((im) => { im.loading = 'eager'; }); }, { threshold: 0.25 });
+  vio.observe(scr);
+  pick(0);
+  raf = requestAnimationFrame(tick);
+  stopShow = () => { cancelAnimationFrame(raf); vio.disconnect(); stopShow = null; };
+}
+
+/* sitni efekti: telefon na vrhu se nagne prema mišu, svjetlo prati miš, brojevi se odbroje kad dođu na ekran */
+function initFx(el) {
+  const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
+  const hero = el.querySelector('.g-hero'), stage = el.querySelector('.g-stage');
+  if (hero && stage && fine && !reduced.matches) {
+    let rq = 0, mx = 0, my = 0;
+    hero.addEventListener('pointermove', (e) => {
+      const r = hero.getBoundingClientRect();
+      mx = (e.clientX - r.left) / r.width; my = (e.clientY - r.top) / r.height;
+      if (!rq) rq = requestAnimationFrame(() => {
+        rq = 0;
+        hero.style.setProperty('--mx', (mx * 100).toFixed(1) + '%'); hero.style.setProperty('--my', (my * 100).toFixed(1) + '%');
+        stage.style.setProperty('--rx', ((0.5 - my) * 10).toFixed(2) + 'deg'); stage.style.setProperty('--ry', ((mx - 0.5) * 14).toFixed(2) + 'deg');
+        stage.style.setProperty('--tx', ((mx - 0.5) * 18).toFixed(1) + 'px'); stage.style.setProperty('--ty', ((my - 0.5) * 14).toFixed(1) + 'px');
+      });
+    });
+    hero.addEventListener('pointerleave', () => { ['--rx', '--ry', '--tx', '--ty'].forEach((k) => stage.style.removeProperty(k)); });
+  }
+  // kartice radova: blago nagnuće pod mišem
+  if (fine && !reduced.matches) el.querySelectorAll('.g-card figure').forEach((f) => {
+    f.addEventListener('pointermove', (e) => {
+      const r = f.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - 0.5, y = (e.clientY - r.top) / r.height - 0.5;
+      f.style.transform = 'perspective(900px) rotateX(' + (-y * 5).toFixed(2) + 'deg) rotateY(' + (x * 7).toFixed(2) + 'deg)';
+      f.style.setProperty('--gx', ((x + 0.5) * 100).toFixed(0) + '%'); f.style.setProperty('--gy', ((y + 0.5) * 100).toFixed(0) + '%');
+    });
+    f.addEventListener('pointerleave', () => { f.style.transform = ''; });
+  });
+  // brojevi (3 jezika, 28 slika...) se odbroje
+  const nums = el.querySelectorAll('.g-res b[data-n]');
+  if (!reduced.matches && 'IntersectionObserver' in window) {
+    const nio = new IntersectionObserver((en) => en.forEach((e) => {
+      if (!e.isIntersecting) return;
+      nio.unobserve(e.target);
+      const b = e.target, n = +b.dataset.n, t0 = performance.now(), D = 1100;
+      if (!(n > 1)) return;
+      const step = (now) => { const k = Math.min(1, (now - t0) / D), v = Math.round(n * (1 - Math.pow(1 - k, 3))); b.textContent = v; if (k < 1) requestAnimationFrame(step); };
+      b.textContent = '0'; requestAnimationFrame(step);
+    }), { threshold: 0.6 });
+    nums.forEach((b) => nio.observe(b));
+  }
 }
 
 /* "Sastavi svoju stranicu": iz izbora složi poruku i link za WhatsApp */
@@ -71,5 +165,7 @@ function onScroll() {
   const y = window.scrollY, h = document.documentElement;
   h.classList.toggle('g-scrolled', y > 24);
   h.classList.toggle('g-past', y > window.innerHeight * 0.55);
+  const max = h.scrollHeight - window.innerHeight;
+  h.style.setProperty('--g-p', max > 0 ? (y / max).toFixed(4) : 0);
 }
 addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(onScroll); } }, { passive: true });
