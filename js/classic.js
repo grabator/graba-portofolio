@@ -99,12 +99,16 @@ export function classicHTML(PF, lang) {
       : '<div class="s-art s-art-' + w.art + '" aria-hidden="true"><span>' + esc(name) + '</span></div>';
     const links = (w.live ? '<a href="' + w.live + '" ' + ext + '>' + esc(G.live) + ' ↗</a>' : '') + (w.src ? '<a href="' + w.src + '" ' + ext + '>' + esc(G.source) + ' ↗</a>' : '');
     const tags = (w.tags || []).slice(0, 3).map((t) => '<span>' + esc(t) + '</span>').join('');
-    const wide = ['myshishapedia', 'squadjury', 'grabpoints', 'apoteke'].includes(w.id);
+    const wide = ['mscarwash', 'myshishapedia', 'squadjury', 'salon', 'lounge', 'svecana', 'grabpoints', 'apoteke'].includes(w.id);
     return '<li class="g-card' + (wide ? ' g-card-w' : '') + '" data-cat="' + (w.cat || 'biz') + '"><figure>' + shot + '<p class="g-card-tags">' + tags + '</p></figure><div class="g-card-t"><div><h3>' + esc(name) + '</h3><p>' + esc(kind) + ' · ' + w.year + '</p></div><p class="g-card-l">' + links + '</p></div></li>';
   };
   const more = '<section class="g-sec g-more" aria-labelledby="more-h"><div class="g-head"><h2 class="g-an" id="more-h">' + esc(G.moreH.toUpperCase()) + '</h2><p class="g-sub">' + esc(G.moreSub) + '</p></div>'
     + '<div class="g-filt" role="group" aria-label="' + esc(G.moreH) + '">' + G.filt.map(([k, t], i) => '<button type="button" data-f="' + k + '" aria-pressed="' + (i === 0) + '">' + esc(t) + '</button>').join('') + '</div>'
     + '<ul class="g-grid">' + others.map(card).join('') + '</ul></section>';
+
+  // dizajn za štampu i Instagram: slike u kolonama, prirodne proporcije bez sjecanja
+  const des = '<section class="g-sec g-des" id="design" aria-labelledby="des-h"><p class="g-kick">' + esc(G.desK) + '</p><div class="g-head"><h2 class="g-an" id="des-h">' + esc(G.desH.toUpperCase()) + '</h2><p class="g-sub">' + esc(G.desSub) + '</p></div>'
+    + '<ul class="g-des-l">' + PF.design.map(([f, w, h], i) => '<li><figure><img src="assets/design/' + f + '" alt="' + esc(G.des[i]) + '" width="' + w + '" height="' + h + '" loading="lazy" decoding="async"><figcaption>' + esc(G.des[i]) + '</figcaption></figure></li>').join('') + '</ul></section>';
 
   const stack = '<section class="g-sec g-stack" aria-labelledby="stack-h"><div class="g-head"><h2 class="g-an" id="stack-h">' + esc(G.stackH.toUpperCase()) + '</h2><p class="g-sub">' + esc(G.stackSub) + '</p></div>'
     + '<ul class="g-stack-l">' + G.stackG.map(([h, xs]) => '<li><b>' + esc(h) + '</b><p>' + xs.map((x) => '<span>' + esc(x) + '</span>').join('') + '</p></li>').join('') + '</ul></section>';
@@ -134,5 +138,5 @@ export function classicHTML(PF, lang) {
 
   const dock = '<nav class="g-dock" aria-label="' + esc(S.quickT) + '"><a class="g-d-v" href="' + C.viber + '">' + ic('viber') + 'Viber</a><a class="g-d-w" href="' + C.whatsapp + '" ' + ext + '>' + ic('wa') + 'WhatsApp</a><button type="button" data-copy="' + C.email + '">' + ic('mail') + 'Email</button></nav>';
 
-  return '<div class="g">' + nav + hero + ticker + featured + show + why + cols + more + stack + build + contact + '</div>' + dock;
+  return '<div class="g">' + nav + hero + ticker + featured + show + why + cols + more + des + stack + build + contact + '</div>' + dock;
 }

@@ -9,7 +9,7 @@ window.PF = {
     github: 'https://github.com/grabator'
   },
   credit: { name: 'Andrea Jorgensen', site: 'hideou.se', url: 'https://hideou.se' },
-  exe: { casa: 'CASAMONT.EXE', myshishapedia: 'MYSHISHA.EXE', squadjury: 'SQUADJURY.EXE', salon: 'GLAZE.EXE', lounge: 'LOUNGE.EXE', svecana: 'SVECANA.EXE', planinka: 'PLANINKA.EXE', ashiana: 'ASHIANA.EXE', mostar: 'MOSTAR.EXE', grabpoints: 'GRABPTS.EXE', apoteke: 'APOTEKE.EXE' },
+  exe: { casa: 'CASAMONT.EXE', mscarwash: 'MSCARWSH.EXE', myshishapedia: 'MYSHISHA.EXE', squadjury: 'SQUADJURY.EXE', salon: 'GLAZE.EXE', lounge: 'LOUNGE.EXE', svecana: 'SVECANA.EXE', planinka: 'PLANINKA.EXE', ashiana: 'ASHIANA.EXE', mostar: 'MOSTAR.EXE', grabpoints: 'GRABPTS.EXE', apoteke: 'APOTEKE.EXE' },
   // dresovi u sobi: osnovni podaci o karijeri (klubovi, reprezentacija, trofeji)
   players: {
     ozil: {
@@ -92,8 +92,11 @@ window.PF = {
       fact: { en: 'Arsenal captain since 2022.', bs: 'Kapiten Arsenala od 2022.' }
     }
   },
+  // dizajn za štampu i Instagram (M&S Car Wash): fajl, širina, visina
+  design: [['ms-pano.webp', 900, 1000], ['ms-ig-1.webp', 720, 900], ['ms-story.webp', 600, 1067], ['ms-kartica-1.webp', 800, 536], ['ms-kartica-2.webp', 800, 536], ['ms-ig-2.webp', 720, 900], ['ms-ig-4.webp', 720, 900], ['ms-highlights.webp', 1200, 520], ['ms-qr.webp', 720, 720]],
   work: [
     { id: 'casa', long: 'assets/work/long-casa.webp', cat: 'biz', year: '2026', client: true, img: 'assets/work/casa-montana.jpg', phone: 'assets/work/casa-mobile.webp', live: 'https://casamontanavlasic.com/', src: 'https://github.com/grabator/casa-montana', tags: ['JavaScript', 'HTML', 'CSS', 'Cloudflare Workers'] },
+    { id: 'mscarwash', long: 'assets/work/long-mscarwash.webp', cat: 'biz', year: '2026', client: true, img: 'assets/work/ms-car-wash.jpg', live: 'https://mscarwashdetailing.com/', src: 'https://github.com/grabator/ms-car-wash-and-detailing', tags: ['JavaScript', 'Cloudflare Workers', 'Print design', 'Instagram'] },
     { id: 'myshishapedia', cat: 'app', year: '2025', img: 'assets/work/myshishapedia.jpg', live: 'https://myshishapedia.com', src: 'https://github.com/grabator/myshishapedia', tags: ['JavaScript', 'Node.js', 'SVG', 'Cloudflare Pages'] },
     { id: 'squadjury', cat: 'app', year: '2026', img: 'assets/work/squadjury.jpg', live: 'https://squadjury.com', src: 'https://github.com/grabator/squadjury', tags: ['JavaScript', 'Cloudflare Workers', 'D1', 'OCR'] },
     { id: 'salon', long: 'assets/work/long-salon.webp', cat: 'biz', year: '2026', img: 'assets/work/beauty-salon.jpg', live: 'https://beauty-salon.grabafaceit.workers.dev/', src: 'https://github.com/grabator/beauty-salon', tags: ['JavaScript', 'SVG', 'PWA', 'Cloudflare Workers'] },
@@ -116,6 +119,7 @@ window.PF = {
     view: 'View', live: 'Live site', code: 'Source', liveTag: 'Live',
     items: {
       casa: ['Casa Montana', 'Client · Mountain apartments', 'Mountain apartments on Vlašić. A website in three languages with real photos and video, inquiries straight to Viber, WhatsApp and email, both phone numbers, and a Google Business Profile set up so guests find it on Maps.'],
+      mscarwash: ['M&S Car Wash', 'Client · Car wash and detailing', 'A hand car wash and detailing studio in Travnik. A fast website with the full price list and packages, where customers tap the services they want and send the inquiry to WhatsApp or Viber. I also designed the brand for print and Instagram: an office board, business cards, a QR sticker and the opening posts.'],
       myshishapedia: ['MyShishapedia', 'Web app · Encyclopedia', 'A bilingual hookah flavor encyclopedia with 180+ flavors, a mixer, a quiz and comparisons. Its newest part is an interactive history of the hookah: a canvas globe through 14 cities, a museum and 8 sourced chapters. A custom static site generator prerenders 1,300+ pages.'],
       squadjury: ['SquadJury', 'Web app · Fantasy football', 'Fantasy Premier League managers post their squad with one screenshot and the community rates it from 1 to 10 before the deadline. The squad is read in the browser (OCR), with head to head duels, private leagues, real points after each gameweek and badges. Full stack on Cloudflare Workers, D1 and R2.'],
       salon: ['Glaze Nail Studio', 'Website · Nail salon', 'A website for a nail salon: try a polish colour, shape and style on a realistic hand drawn in SVG, browse designs by style and season, get shades that match an outfit photo and send a booking inquiry to Viber or WhatsApp in three steps. Three languages, installable as an app.'],
@@ -168,10 +172,12 @@ window.PF = {
       procH: 'How I work',
       proc: [['Talk', 'What you need and who your guests are.'], ['Proposal', 'A first look at your site.'], ['Build', 'Your photos, texts and changes.'], ['Launch', 'Domain, Google and support after.']],
       moreH: 'More work', moreSub: 'Websites, web apps and my own products.',
+      desK: 'Design', desH: 'Print and Instagram', desSub: 'Besides the website I can design the whole look of a business: an office board, business cards, stickers, Instagram posts, stories and highlight covers. Below is the set I made for M&S Car Wash.',
+      des: ['Office board, 72 × 80 cm', 'Instagram: carousel cover', 'Instagram story: opening day', 'Business card, front', 'Business card, back', 'Instagram: price list', 'Instagram: care packages', 'Highlight covers', 'QR sticker for the counter'],
       stackH: 'Tech I work with', stackSub: 'From a simple website to a full product with a backend, database and mobile app.',
       stackG: [['Frontend', ['JavaScript', 'TypeScript', 'Angular', 'React', 'Next.js', 'HTML / CSS', 'SVG · Canvas']], ['Backend', ['.NET · C#', 'Java · Spring Boot', 'Node.js', 'RabbitMQ']], ['Data and cloud', ['SQL Server', 'SQLite · D1', 'Cloudflare', 'Docker']], ['Mobile', ['Flutter', 'Dart', 'PWA']]],
       filt: [['all', 'All'], ['biz', 'Business websites'], ['app', 'Apps and products']],
-      ticker: ['Apartments', 'Cafés', 'Restaurants', 'Shisha lounges', 'Salons', 'Wedding venues', 'Mountain cabins', 'Web apps'],
+      ticker: ['Apartments', 'Cafés', 'Restaurants', 'Shisha lounges', 'Salons', 'Car washes', 'Wedding venues', 'Mountain cabins', 'Web apps'],
       whyK: 'What you get', whyH: 'Everything a local business needs online',
       why: [
         ['mobile', 'Made for phones', 'Most of your guests find you on a phone, so the site is designed for mobile first.'],
@@ -245,6 +251,7 @@ window.PF = {
     view: 'Pogledaj', live: 'Otvori stranicu', code: 'Kod', liveTag: 'Uživo',
     items: {
       casa: ['Casa Montana', 'Klijent · Planinski apartmani', 'Planinski apartmani na Vlašiću. Stranica na tri jezika sa pravim slikama i videom, upit direktno na Viber, WhatsApp i email, oba broja telefona i sređen Google profil da ih gosti nađu na mapi.'],
+      mscarwash: ['M&S Car Wash', 'Klijent · Autopraonica i detailing', 'Ručno pranje i detailing u Travniku. Brza stranica sa cijelim cjenovnikom i paketima, gdje kupac dodirom izabere usluge i pošalje upit na WhatsApp ili Viber. Dizajnirao sam i izgled za štampu i Instagram: pano za kancelariju, vizit karte, QR naljepnicu i objave za otvorenje.'],
       myshishapedia: ['MyShishapedia', 'Web aplikacija · Enciklopedija', 'Dvojezična enciklopedija sa 180+ okusa za nargile, mikserom, kvizom i poređenjima. Najnoviji dio je interaktivna evolucija nargile: globus kroz 14 gradova, muzej i 8 poglavlja sa izvorima. Vlastiti generator unaprijed pravi 1.300+ stranica.'],
       squadjury: ['SquadJury', 'Web aplikacija · Fantasy fudbal', 'Igrači Fantasy Premier Leaguea objave svoj tim jednim screenshotom, a zajednica ga ocijeni od 1 do 10 prije deadlinea. Tim se čita u pregledniku (OCR), uz duele, privatne lige, stvarne bodove poslije kola i značke. Cijeli sistem na Cloudflare Workers, D1 i R2.'],
       salon: ['Glaze Nail Studio', 'Web stranica · Salon za nokte', 'Stranica za salon za nokte: isprobavanje boje, oblika i stila na realistično nacrtanoj ruci u SVG-u, galerija dizajna po stilu i godišnjem dobu, prijedlog nijanse uz fotografiju outfita i upit za termin na Viber ili WhatsApp u tri koraka. Tri jezika, može se instalirati kao aplikacija.'],
@@ -297,10 +304,12 @@ window.PF = {
       procH: 'Kako radim',
       proc: [['Razgovor', 'Šta vam treba i ko su vaši gosti.'], ['Prijedlog', 'Prvi izgled stranice.'], ['Izrada', 'Vaše slike, tekstovi i izmjene.'], ['Objava', 'Domena, Google i podrška poslije.']],
       moreH: 'Ostali radovi', moreSub: 'Stranice, web aplikacije i moji proizvodi.',
+      desK: 'Dizajn', desH: 'Štampa i Instagram', desSub: 'Osim stranice mogu dizajnirati cijeli izgled biznisa: pano za kancelariju, vizit karte, naljepnice, Instagram objave, storije i naslovne slike za highlights. Ispod je komplet koji sam uradio za M&S Car Wash.',
+      des: ['Pano za kancelariju, 72 × 80 cm', 'Instagram: prva slika objave', 'Instagram story: otvorenje', 'Vizit karta, prednja strana', 'Vizit karta, zadnja strana', 'Instagram: cjenovnik', 'Instagram: paketi njege', 'Naslovne slike za highlights', 'QR naljepnica za pult'],
       stackH: 'Tehnologije', stackSub: 'Od jednostavne stranice do cijelog proizvoda sa backendom, bazom i mobilnom aplikacijom.',
       stackG: [['Frontend', ['JavaScript', 'TypeScript', 'Angular', 'React', 'Next.js', 'HTML / CSS', 'SVG · Canvas']], ['Backend', ['.NET · C#', 'Java · Spring Boot', 'Node.js', 'RabbitMQ']], ['Baze i cloud', ['SQL Server', 'SQLite · D1', 'Cloudflare', 'Docker']], ['Mobilno', ['Flutter', 'Dart', 'PWA']]],
       filt: [['all', 'Sve'], ['biz', 'Stranice za biznise'], ['app', 'Aplikacije i proizvodi']],
-      ticker: ['Apartmani', 'Kafići', 'Restorani', 'Shisha lounge', 'Saloni', 'Svečane sale', 'Vikendice', 'Web aplikacije'],
+      ticker: ['Apartmani', 'Kafići', 'Restorani', 'Shisha lounge', 'Saloni', 'Autopraonice', 'Svečane sale', 'Vikendice', 'Web aplikacije'],
       whyK: 'Šta dobijate', whyH: 'Sve što lokalnom biznisu treba na internetu',
       why: [
         ['mobile', 'Napravljeno za mobitel', 'Većina gostiju vas traži na mobitelu, zato se stranica pravi prvo za mobitel.'],

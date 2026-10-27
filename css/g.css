@@ -393,3 +393,13 @@
   .g-w, .g-who, .g-lead, .g-btns, .g-room, .g-trust, .g-stage, .g-chip, .g-roll img, .g-show-p, .g-dev-scr img { animation: none !important; }
   .g-stage .g-phone, .g-card figure { transition: none; }
 }
+
+/* dizajn za štampu i Instagram */
+.g-des { padding-top: 80px; }
+.g-des-l { list-style: none; margin: 28px 0 0; padding: 0; columns: 4; column-gap: 18px; }
+.g-des-l li { break-inside: avoid; margin-bottom: 18px; }
+.g-des-l figure { margin: 0; }
+.g-des-l img { display: block; width: 100%; height: auto; border-radius: 14px; border: 1px solid var(--g-line); background: var(--g-card); }
+.g-des-l figcaption { margin-top: 8px; color: var(--g-mut); font-size: 14px; }
+@media (max-width: 1100px) { .g-des-l { columns: 3; } }
+@media (max-width: 760px) { .g-des { padding-top: 56px; } .g-des-l { columns: 2; column-gap: 10px; } .g-des-l li { margin-bottom: 12px; } .g-des-l figcaption { font-size: 13px; } }
