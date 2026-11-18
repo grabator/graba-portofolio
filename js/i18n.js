@@ -120,7 +120,7 @@ window.PF = {
     items: {
       casa: ['Casa Montana', 'Client · Mountain apartments', 'Mountain apartments on Vlašić. A website in three languages with real photos and video, inquiries straight to Viber, WhatsApp and email, both phone numbers, and a Google Business Profile set up so guests find it on Maps.'],
       mscarwash: ['M&S Car Wash', 'Client · Car wash and detailing', 'A hand car wash and detailing studio in Travnik. A fast website with the full price list and packages, where customers tap the services they want and send the inquiry to WhatsApp or Viber. I also designed the brand for print and Instagram: an office board, business cards, a QR sticker and the opening posts.'],
-      myshishapedia: ['MyShishapedia', 'Web app · Encyclopedia', 'A hookah flavor encyclopedia in Bosnian, English and German: 300+ flavors from 22 brands with what each one is made of, a mixer, a quiz, comparisons and an interactive history of the hookah. New: Shisha Drop, a fruit merging game with a daily challenge and leaderboards. A custom static site generator prerenders 3,600+ pages.'],
+      myshishapedia: ['MyShishapedia', 'Web app · Encyclopedia', 'A hookah flavor encyclopedia in English, Bosnian, German and Russian: 300+ flavors from 22 brands with what each one is made of, a mixer, a quiz, comparisons, an interactive history of the hookah and Shisha Drop, a fruit merging game with leaderboards. I look after it every day: new pages and better titles based on what people search on Google. A custom generator builds about 5,000 pages.'],
       squadjury: ['SquadJury', 'Web app · Fantasy football', 'Your Fantasy Premier League team at a glance: captain picks, a transfer planner, live points with bonus and DefCon, fixtures and your league, with predicted points for every gameweek. The community also rates squads before the deadline, with duels, private leagues and badges. English and Bosnian, full stack on Cloudflare Workers, D1 and R2.'],
       salon: ['Glaze Nail Studio', 'Website · Nail salon', 'A website for a nail salon: try a polish colour, shape and style on a realistic hand drawn in SVG, browse designs by style and season, get shades that match an outfit photo and send a booking inquiry to Viber or WhatsApp in three steps. Three languages, installable as an app.'],
       svecana: ['Svečana sala', 'Website · Wedding venue', 'A demo site for wedding venues: an availability calendar synced from Google Calendar through a Cloudflare Worker, an instant price estimate, inquiries straight to Viber, viewing booking and a guest page with a QR code.'],
@@ -156,6 +156,46 @@ window.PF = {
     credit: 'Room inspired by',
     role: 'Software engineer',
     hero: 'I build fast, beautiful websites and full-stack products, from the database to the last animation.',
+    p: {
+      nav: ['Work', 'Services', 'About', 'Contact'],
+      write: 'Write to me', avail: 'Available for new projects', place: 'Mostar, Bosnia and Herzegovina',
+      h1a: 'Websites that look good', h1b: 'and bring customers.',
+      lead: 'I am Ahmed, a software engineer from Mostar. I design and build fast websites and web apps, from the first sketch to the first customer from Google.',
+      cta1: 'See my work', cta2: 'Message on WhatsApp',
+      room: 'Step into my 3D room', roomSub: 'An interactive room, made for touch',
+      proof: 'Trusted by Casa Montana and M&S Car Wash',
+      float: [['Inquiry sent', 'straight to Viber'], ['MyShishapedia', '4 languages · 5,000 pages']],
+      ticker: ['Apartments', 'Cafés', 'Salons', 'Car washes', 'Wedding venues', 'Web apps', 'SEO', 'Brand design'],
+      workK: 'Selected work', workH: 'Real businesses, *real results.*', workSub: 'A few projects I am proud of. Each one designed, built and launched by me.',
+      cases: {
+        casa: { k: 'Client · Mountain apartments · Vlašić', d: 'A website in three languages with real photos and video. Guests send an inquiry with their dates straight to Viber, WhatsApp or email, and the Google Business Profile I set up brings them in from Maps.', stats: [['3', 'languages'], ['28', 'photos and 5 videos'], ['1 tap', 'to send an inquiry']] },
+        mscarwash: { k: 'Client · Car wash and detailing · Travnik', d: 'A fast website with the full price list, where customers tap the services they want and send the inquiry to WhatsApp or Viber. I also designed the whole brand: an office board, business cards, a QR sticker and the Instagram launch.', stats: [['Web', 'price list and inquiries'], ['Print', 'board, cards, sticker'], ['Instagram', 'posts, stories, highlights']] },
+        myshishapedia: { k: 'My product · SEO and daily care', d: 'A hookah flavor encyclopedia that keeps growing on Google. I look after it every day: new flavors and articles based on what people search in Search Console, titles and descriptions tuned page by page, four languages with hreflang, FAQ structured data and fast pages on mobile. Plus Shisha Drop, a game with a daily challenge and leaderboards.', stats: [['300+', 'flavors from 22 brands'], ['4', 'languages: EN, BS, DE, RU'], ['~5,000', 'pages, built automatically'], ['150+', 'updates since October']] }
+      },
+      live: 'Visit the site', source: 'Source',
+      moreH: 'More projects', moreSub: 'Websites, web apps and my own products.',
+      desK: 'Brand design for M&S Car Wash',
+      quotesK: 'Clients', quotesH: 'What they *say.*',
+      quotes: [
+        ['Working with Ahmed was really easy. He understood what we wanted right away, explained everything simply and made every change quickly. The website looks exactly the way we imagined it, even better. We recommend him to everyone.', 'Owners', 'Casa Montana · Vlašić'],
+        ['From the first conversation to the finished site, everything went smoothly. Ahmed made our website and our whole look for print and Instagram, always on time and without any complications. We are more than happy.', 'Owners', 'M&S Car Wash · Travnik']
+      ],
+      servK: 'Services', servH: 'One person for *the whole thing.*', servSub: 'You talk to me directly, from the idea to the launch and after it.',
+      serv: [
+        ['globe', 'Websites for businesses', 'Apartments, cafés, salons and venues. Fast on phones, in several languages, with inquiries straight to Viber and WhatsApp.'],
+        ['code', 'Web apps and products', 'From the database to the last animation: booking systems, admin panels and full products. .NET, Angular, React, Next.js, Flutter.'],
+        ['pin', 'SEO and Google', 'Google Business Profile, titles and descriptions, structured data and fast pages. This is how I grew MyShishapedia.'],
+        ['spark', 'Brand and Instagram', 'Business cards, boards, stickers, posts and stories, so everything looks like one brand.']
+      ],
+      procH: 'How we work',
+      proc: [['Talk', 'You tell me about your business and what you need.'], ['Proposal', 'You see a first version within days.'], ['Build', 'Your photos, your texts, your changes.'], ['Launch', 'Domain, Google and support after launch.']],
+      aboutK: 'About', aboutH: 'I care about the details *nobody notices,* until they are missing.',
+      aboutP: 'I am Ahmed Grabus, a software engineer from Mostar. I build full-stack software and websites that help businesses get found and booked. I write clean code, test on real phones and stay with you after the launch.',
+      why: [['Fast', 'Pages that open in a blink, even on a weak mobile signal.'], ['Personal', 'No agencies and no tickets. You write to me and I usually reply the same day.'], ['Complete', 'Design, code, Google and Instagram in one place.']],
+      stackK: 'Tech I work with',
+      contactK: 'Contact', contactH: 'Have an idea? *Let us talk.*', contactP: 'Tell me about your business or your project. I usually reply the same day.',
+      copy: 'Copy email', foot: 'Designed and built by Ahmed Grabus.', top: 'Back to top'
+    },
     g: {
       nav: ['Services', 'Work', 'Process', 'Contact'],
       avail: 'Available for new projects',
@@ -252,7 +292,7 @@ window.PF = {
     items: {
       casa: ['Casa Montana', 'Klijent · Planinski apartmani', 'Planinski apartmani na Vlašiću. Stranica na tri jezika sa pravim slikama i videom, upit direktno na Viber, WhatsApp i email, oba broja telefona i sređen Google profil da ih gosti nađu na mapi.'],
       mscarwash: ['M&S Car Wash', 'Klijent · Autopraonica i detailing', 'Ručno pranje i detailing u Travniku. Brza stranica sa cijelim cjenovnikom i paketima, gdje kupac dodirom izabere usluge i pošalje upit na WhatsApp ili Viber. Dizajnirao sam i izgled za štampu i Instagram: pano za kancelariju, vizit karte, QR naljepnicu i objave za otvorenje.'],
-      myshishapedia: ['MyShishapedia', 'Web aplikacija · Enciklopedija', 'Enciklopedija okusa za nargile na bosanskom, engleskom i njemačkom: 300+ okusa od 22 brenda sa sastojcima, mikser, kviz, poređenja i interaktivna evolucija nargile. Novo: Shisha Drop, igra spajanja voća sa dnevnim izazovom i rang listom. Vlastiti generator unaprijed pravi 3.600+ stranica.'],
+      myshishapedia: ['MyShishapedia', 'Web aplikacija · Enciklopedija', 'Enciklopedija okusa za nargile na engleskom, bosanskom, njemačkom i ruskom: 300+ okusa od 22 brenda sa sastojcima, mikser, kviz, poređenja, interaktivna evolucija nargile i Shisha Drop, igra spajanja voća sa rang listom. Održavam je svaki dan: nove stranice i bolji naslovi prema onome što ljudi traže na Googleu. Vlastiti generator pravi oko 5.000 stranica.'],
       squadjury: ['SquadJury', 'Web aplikacija · Fantasy fudbal', 'Tvoj Fantasy Premier League tim na jednom mjestu: izbor kapitena, planer transfera, bodovi uživo sa bonusom i DefConom, raspored i tvoja liga, uz predviđene bodove za svako kolo. Zajednica ocjenjuje timove prije deadlinea, uz duele, privatne lige i značke. Engleski i bosanski, cijeli sistem na Cloudflare Workers, D1 i R2.'],
       salon: ['Glaze Nail Studio', 'Web stranica · Salon za nokte', 'Stranica za salon za nokte: isprobavanje boje, oblika i stila na realistično nacrtanoj ruci u SVG-u, galerija dizajna po stilu i godišnjem dobu, prijedlog nijanse uz fotografiju outfita i upit za termin na Viber ili WhatsApp u tri koraka. Tri jezika, može se instalirati kao aplikacija.'],
       svecana: ['Svečana sala', 'Web stranica · Svadbeni salon', 'Demo stranica za svadbene salone: kalendar slobodnih datuma povezan sa Google Kalendarom preko Cloudflare Workera, okvirna cijena odmah, upit na Viber, zakazivanje razgledanja i stranica za goste sa QR kodom.'],
@@ -288,6 +328,46 @@ window.PF = {
     credit: 'Soba inspirisana radom',
     role: 'Softverski inženjer',
     hero: 'Pravim brze i lijepe web stranice i full-stack proizvode, od baze do zadnje animacije.',
+    p: {
+      nav: ['Radovi', 'Usluge', 'O meni', 'Kontakt'],
+      write: 'Pišite mi', avail: 'Slobodan za nove projekte', place: 'Mostar, Bosna i Hercegovina',
+      h1a: 'Web stranice koje izgledaju lijepo', h1b: 'i donose klijente.',
+      lead: 'Ja sam Ahmed, softverski inženjer iz Mostara. Dizajniram i pravim brze web stranice i aplikacije, od prve skice do prvog klijenta sa Googlea.',
+      cta1: 'Pogledajte radove', cta2: 'Pišite na WhatsApp',
+      room: 'Uđite u moju 3D sobu', roomSub: 'Interaktivna soba, napravljena za dodir',
+      proof: 'Vjeruju mi Casa Montana i M&S Car Wash',
+      float: [['Upit poslan', 'direktno na Viber'], ['MyShishapedia', '4 jezika · 5.000 stranica']],
+      ticker: ['Apartmani', 'Kafići', 'Saloni', 'Autopraonice', 'Svečane sale', 'Web aplikacije', 'SEO', 'Dizajn brenda'],
+      workK: 'Izdvojeni radovi', workH: 'Pravi biznisi, *pravi rezultati.*', workSub: 'Nekoliko projekata na koje sam ponosan. Svaki sam sam dizajnirao, napravio i objavio.',
+      cases: {
+        casa: { k: 'Klijent · Planinski apartmani · Vlašić', d: 'Stranica na tri jezika sa pravim slikama i videom. Gosti šalju upit sa datumima direktno na Viber, WhatsApp ili email, a Google profil koji sam postavio dovodi ih sa Mapa.', stats: [['3', 'jezika'], ['28', 'slika i 5 videa'], ['1 dodir', 'do poslanog upita']] },
+        mscarwash: { k: 'Klijent · Autopraonica i detailing · Travnik', d: 'Brza stranica sa cijelim cjenovnikom, gdje kupac izabere usluge i pošalje upit na WhatsApp ili Viber. Dizajnirao sam i cijeli brend: tablu, vizit karte, QR naljepnicu i otvaranje na Instagramu.', stats: [['Web', 'cjenovnik i upiti'], ['Štampa', 'tabla, karte, naljepnica'], ['Instagram', 'objave, story, highlights']] },
+        myshishapedia: { k: 'Moj proizvod · SEO i svakodnevno održavanje', d: 'Enciklopedija okusa za nargile koja stalno raste na Googleu. Održavam je svaki dan: novi okusi i članci prema onome što ljudi traže u Search Consoleu, naslovi i opisi dotjerani stranicu po stranicu, četiri jezika sa hreflang oznakama, FAQ strukturirani podaci i brze stranice na mobitelu. Uz to Shisha Drop, igra sa dnevnim izazovom i rang listom.', stats: [['300+', 'okusa od 22 brenda'], ['4', 'jezika: EN, BS, DE, RU'], ['~5.000', 'stranica, pravljenih automatski'], ['150+', 'izmjena od oktobra']] }
+      },
+      live: 'Otvori stranicu', source: 'Kod',
+      moreH: 'Još projekata', moreSub: 'Web stranice, aplikacije i moji proizvodi.',
+      desK: 'Dizajn brenda za M&S Car Wash',
+      quotesK: 'Klijenti', quotesH: 'Šta *kažu.*',
+      quotes: [
+        ['Saradnja sa Ahmedom je bila jako laka. Odmah je shvatio šta želimo, sve nam je jednostavno objasnio i svaku izmjenu uradio brzo. Stranica izgleda tačno onako kako smo zamislili, čak i bolje. Preporučujemo ga svima.', 'Vlasnici', 'Casa Montana · Vlašić'],
+        ['Od prvog razgovora do gotove stranice sve je išlo glatko. Ahmed je uradio našu stranicu i cijeli izgled za štampu i Instagram, uvijek na vrijeme i bez ikakvih komplikacija. Više smo nego zadovoljni.', 'Vlasnici', 'M&S Car Wash · Travnik']
+      ],
+      servK: 'Usluge', servH: 'Jedna osoba za *sve.*', servSub: 'Razgovarate direktno sa mnom, od ideje do objave i poslije nje.',
+      serv: [
+        ['globe', 'Stranice za biznise', 'Apartmani, kafići, saloni i sale. Brze na mobitelu, na više jezika, sa upitima direktno na Viber i WhatsApp.'],
+        ['code', 'Web aplikacije i proizvodi', 'Od baze do zadnje animacije: sistemi za rezervacije, admin paneli i cijeli proizvodi. .NET, Angular, React, Next.js, Flutter.'],
+        ['pin', 'SEO i Google', 'Google Business profil, naslovi i opisi, strukturirani podaci i brze stranice. Tako sam razvio MyShishapediju.'],
+        ['spark', 'Brend i Instagram', 'Vizit karte, table, naljepnice, objave i story, da sve izgleda kao jedan brend.']
+      ],
+      procH: 'Kako radimo',
+      proc: [['Razgovor', 'Ispričate mi o svom biznisu i šta vam treba.'], ['Prijedlog', 'Prvu verziju vidite za par dana.'], ['Izrada', 'Vaše slike, vaši tekstovi, vaše izmjene.'], ['Objava', 'Domena, Google i podrška nakon objave.']],
+      aboutK: 'O meni', aboutH: 'Pazim na detalje *koje niko ne primijeti,* dok ne nedostaju.',
+      aboutP: 'Ja sam Ahmed Grabus, softverski inženjer iz Mostara. Pravim full-stack softver i web stranice koje pomažu biznisima da ih ljudi nađu i kontaktiraju. Pišem čist kod, testiram na pravim mobitelima i ostajem uz vas i nakon objave.',
+      why: [['Brzo', 'Stranice koje se otvore u trenu, i na slabom mobilnom signalu.'], ['Lično', 'Bez agencija i tiketa. Pišete meni i obično odgovorim isti dan.'], ['Kompletno', 'Dizajn, kod, Google i Instagram na jednom mjestu.']],
+      stackK: 'Tehnologije',
+      contactK: 'Kontakt', contactH: 'Imate ideju? *Hajde da pričamo.*', contactP: 'Napišite mi nešto o svom biznisu ili projektu. Obično odgovorim isti dan.',
+      copy: 'Kopiraj email', foot: 'Dizajnirao i napravio Ahmed Grabus.', top: 'Nazad na vrh'
+    },
     g: {
       nav: ['Usluge', 'Radovi', 'Kako radim', 'Kontakt'],
       avail: 'Slobodan za nove projekte',
