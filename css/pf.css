@@ -329,3 +329,18 @@ html.is-classic { color-scheme: dark; background: var(--pf-bg); }
 }
 html.js:not(.is-classic) .pf-dock, html.js:not(.is-classic) .pf-bar { display: none; }
 html:not(.js) .pf-bar { position: absolute; }
+/* mobitel: tekst u karticama nikad ne izlazi van okvira, a footer se vidi iznad donje trake */
+.pf-cbtn b { overflow-wrap: anywhere; }
+@media (max-width: 680px) {
+  .pf-stats b { font-size: 17px; font-stretch: 105%; letter-spacing: -0.01em; }
+  .pf-case h3 { font-size: clamp(26px, 8.4vw, 34px); }
+  .pf-contact { padding-bottom: calc(104px + env(safe-area-inset-bottom)); }
+  .pf-foot { display: grid; grid-template-columns: auto 1fr; gap: 10px 14px; align-items: center; margin-top: 48px; }
+  .pf-foot .pf-logo { grid-row: span 2; }
+  .pf-foot > *:not(.pf-logo) { grid-column: 2; }
+  .pf-foot .pf-credit, .pf-foot .pf-top { grid-column: 1 / -1; }
+}
+@media (max-width: 680px) { .pf-contact-h { font-size: 12.4vw; } .pf-head h2 { font-size: min(9.6vw, 54px); } }
+.pf-case-txt, .pf-case-img { min-width: 0; }
+@media (max-width: 680px) { .pf-case h3 { font-size: min(7.2vw, 34px); } }
+@media (max-width: 680px) { .pf-stats { grid-template-columns: 1fr 1fr; } .pf-stats b { font-size: 19px; font-stretch: 120%; } }
